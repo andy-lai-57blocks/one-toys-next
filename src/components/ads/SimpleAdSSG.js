@@ -75,7 +75,8 @@ const SimpleAdSSG = ({
         }}
         data-ad-client={adClient}
         data-ad-slot={adSlot}
-        data-ad-format="rectangle"
+        data-ad-format="auto"
+        data-full-width-responsive="true"
       />
     </div>
   );
