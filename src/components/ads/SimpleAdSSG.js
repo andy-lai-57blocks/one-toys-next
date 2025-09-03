@@ -58,7 +58,6 @@ const SimpleAdSSG = ({
       className={`ad-container ${className}`} 
       style={{
         width: '300px',
-        height: '250px',
         maxWidth: '100%',
         margin: '0 auto',
         ...style
@@ -70,7 +69,6 @@ const SimpleAdSSG = ({
         style={{ 
           display: 'block', 
           width: '300px', 
-          height: '250px',
           maxWidth: '100%'
         }}
         data-ad-client={adClient}
