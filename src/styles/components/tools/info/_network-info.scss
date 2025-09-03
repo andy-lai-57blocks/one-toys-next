@@ -1,0 +1,107 @@
+@import '../../../shared/variables';
+
+// Network Info Specific Styles
+.network-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: $spacing-xl;
+  padding: $spacing-md;
+  background: linear-gradient(135deg, #fafafa 0%, $bg-card 100%);
+  border-radius: $border-radius-xl;
+  border: 2px solid #f1f5f9;
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  font-weight: 600;
+  font-size: $font-size-lg;
+
+  &.offline .status-dot {
+    background: $error-color;
+  }
+}
+
+.status-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: $success-color;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  }
+  
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+  }
+  
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+
+.loading-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-xl;
+  color: $text-secondary;
+}
+
+.loading-spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 3px solid #f1f5f9;
+  border-top: 3px solid $primary-color;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error-section {
+  padding: $spacing-md;
+  background: #fef2f2;
+  border: 2px solid #fecaca;
+  border-radius: $border-radius-lg;
+  margin: $spacing-md 0;
+}
+
+.error-text {
+  color: $error-color;
+  font-weight: 600;
+}
+
+.privacy-notice,
+.browser-notice {
+  background: #eff6ff;
+  border: 2px solid #dbeafe;
+  border-radius: $border-radius-xl;
+  padding: $spacing-md;
+  margin-top: $spacing-xl;
+  color: #1e40af;
+  font-size: $font-size-sm;
+}
+
+// Dark mode support
+body.dark-theme {
+  .privacy-notice,
+  .browser-notice {
+    background: rgba(30, 41, 59, 0.6);
+    border: 2px solid #475569;
+    color: #94c3f8;
+  }
+}

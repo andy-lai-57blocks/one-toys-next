@@ -1,0 +1,583 @@
+@import '../../../shared/variables';
+
+// DateTime Tools General Styling
+.current-time-section,
+.world-clock-section {
+  background: linear-gradient(135deg, #fafafa 0%, $bg-card 100%);
+  border: 2px solid #f1f5f9;
+  border-radius: $border-radius-xl;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-xl;
+}
+
+.current-time-display {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.time-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $spacing-sm 0;
+  border-bottom: 1px solid #f1f5f9;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.time-label {
+  font-weight: 600;
+  color: $text-secondary;
+}
+
+.time-value {
+  font-family: $font-family-mono;
+  color: $text-primary;
+  font-weight: 600;
+}
+
+.world-clock-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: $spacing-md;
+  margin-top: $spacing-md;
+}
+
+.world-clock-item {
+  background: $bg-card;
+  border: 2px solid #f1f5f9;
+  border-radius: $border-radius-lg;
+  padding: $spacing-md;
+  text-align: center;
+  transition: all $transition-fast;
+
+  &:hover {
+    border-color: #e2e8f0;
+    transform: translateY(-2px);
+    box-shadow: $shadow-md;
+  }
+}
+
+.clock-city {
+  font-weight: 600;
+  color: $text-primary;
+  margin-bottom: $spacing-sm;
+}
+
+.clock-time {
+  font-family: $font-family-mono;
+  font-size: $font-size-lg;
+  font-weight: 700;
+  color: $primary-color;
+  margin-bottom: $spacing-xs;
+}
+
+.clock-date {
+  font-size: $font-size-sm;
+  color: $text-secondary;
+  margin-bottom: $spacing-xs;
+}
+
+.clock-offset {
+  font-size: $font-size-xs;
+  color: #94a3b8;
+}
+
+// Results Section
+.results-section {
+  margin-top: $spacing-xl;
+}
+
+.result-group {
+  background: $bg-card;
+  border: 2px solid #f1f5f9;
+  border-radius: $border-radius-xl;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-lg;
+  transition: $transition-normal;
+
+  &:hover {
+    border-color: #e2e8f0;
+    box-shadow: $shadow-sm;
+  }
+
+  h4 {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    font-size: $font-size-lg;
+    font-weight: 700;
+    color: $text-primary;
+    margin-bottom: $spacing-md;
+    padding-bottom: $spacing-sm;
+    border-bottom: 2px solid #f1f5f9;
+  }
+}
+
+.result-icon {
+  font-size: $font-size-xl;
+}
+
+.result-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: $spacing-md;
+}
+
+.result-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-md;
+  padding: 0.75rem;
+  background: #fafafa;
+  border: 1px solid #f1f5f9;
+  border-radius: $border-radius-lg;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: $bg-card;
+    border-color: #e2e8f0;
+  }
+
+  &.large {
+    grid-column: 1 / -1;
+    padding: 1.25rem;
+  }
+}
+
+.result-label {
+  font-weight: 600;
+  color: $text-secondary;
+  min-width: 120px;
+  text-align: left;
+}
+
+.result-value {
+  flex: 1;
+  color: $text-primary;
+  font-family: $font-family-mono;
+  word-break: break-all;
+  text-align: right;
+
+  &.custom {
+    font-size: $font-size-lg;
+    font-weight: 700;
+    color: $primary-color;
+  }
+
+  &.large {
+    font-size: $font-size-xl;
+    font-weight: 700;
+    color: $primary-color;
+    text-align: center;
+  }
+}
+
+.human-readable-result {
+  text-align: center;
+  padding: $spacing-md;
+  background: linear-gradient(135deg, #eff6ff, #dbeafe);
+  border-radius: $border-radius-lg;
+  border: 2px solid #bfdbfe;
+}
+
+// Timezone Converter Specific Styles
+.timezone-selector {
+  margin-bottom: $spacing-md;
+}
+
+.selected-timezones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+  margin-top: $spacing-md;
+}
+
+.timezone-tag {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-sm $spacing-md;
+  background: $primary-color;
+  color: white;
+  border-radius: $border-radius-lg;
+  font-size: $font-size-sm;
+  font-weight: 600;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: darken($primary-color, 10%);
+    transform: translateY(-1px);
+    box-shadow: $shadow-sm;
+  }
+
+  .remove-timezone {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: $font-size-lg;
+    font-weight: 700;
+    padding: 0;
+    margin: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color $transition-fast;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+  }
+}
+
+.conversion-results {
+  display: grid;
+  gap: $spacing-lg;
+  margin-top: $spacing-lg;
+}
+
+.conversion-item {
+  background: $bg-card;
+  border: 2px solid #f1f5f9;
+  border-radius: $border-radius-xl;
+  padding: $spacing-lg;
+  transition: all $transition-normal;
+
+  &:hover {
+    border-color: #e2e8f0;
+    transform: translateY(-2px);
+    box-shadow: $shadow-md;
+  }
+}
+
+.conversion-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $spacing-md;
+  padding-bottom: $spacing-sm;
+  border-bottom: 2px solid #f1f5f9;
+
+  h4 {
+    font-size: $font-size-lg;
+    font-weight: 700;
+    color: $text-primary;
+    margin: 0;
+  }
+}
+
+.timezone-offset {
+  font-family: $font-family-mono;
+  font-size: $font-size-sm;
+  font-weight: 600;
+  color: $primary-color;
+  background: rgba($primary-color, 0.1);
+  padding: 0.25rem 0.5rem;
+  border-radius: $border-radius-md;
+}
+
+.conversion-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-lg;
+  margin-bottom: $spacing-lg;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: $spacing-md;
+  }
+}
+
+.time-display,
+.date-display {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.time-main,
+.date-full {
+  font-size: $font-size-lg;
+  font-weight: 700;
+  color: $text-primary;
+}
+
+.time-24,
+.date-short {
+  font-size: $font-size-sm;
+  color: $text-secondary;
+  font-family: $font-family-mono;
+}
+
+.conversion-actions {
+  display: flex;
+  gap: $spacing-sm;
+  flex-wrap: wrap;
+}
+
+.timezone-info {
+  background: linear-gradient(135deg, #f8fafc, $bg-card);
+  border: 2px solid #f1f5f9;
+  border-radius: $border-radius-xl;
+  padding: $spacing-lg;
+  margin-top: $spacing-xl;
+
+  h3 {
+    font-size: $font-size-lg;
+    font-weight: 700;
+    color: $text-primary;
+    margin-bottom: $spacing-md;
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+  }
+}
+
+.info-grid {
+  display: grid;
+  gap: $spacing-md;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-md;
+  padding: $spacing-sm 0;
+  border-bottom: 1px solid #f1f5f9;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.info-label {
+  font-weight: 600;
+  color: $text-secondary;
+}
+
+.info-value {
+  font-family: $font-family-mono;
+  color: $text-primary;
+  font-weight: 600;
+  text-align: right;
+}
+
+/* ========================================
+   DARK THEME STYLES
+   ======================================== */
+
+body.dark-theme {
+  .current-time-section,
+  .world-clock-section {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    border: 2px solid #475569;
+    box-shadow: 
+      0 4px 6px -1px rgba(0, 0, 0, 0.3), 
+      0 2px 4px -1px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    
+    &:hover {
+      border-color: #64748b;
+      box-shadow: 
+        0 8px 25px -8px rgba(0, 0, 0, 0.4), 
+        0 4px 6px -2px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+  }
+  
+  .current-time-display {
+    .time-item {
+      border-bottom-color: #475569;
+    }
+  }
+  
+  .time-label {
+    color: #94a3b8;
+  }
+  
+  .time-value {
+    color: #e2e8f0;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+  
+  .world-clock-item {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    border: 2px solid #475569;
+    box-shadow: 
+      0 2px 4px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    
+    &:hover {
+      border-color: #64748b;
+      box-shadow: 
+        0 8px 12px -2px rgba(0, 0, 0, 0.4),
+        0 4px 6px -1px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      transform: translateY(-3px);
+    }
+  }
+  
+  .clock-city {
+    color: #f1f5f9;
+  }
+  
+  .clock-time {
+    color: #60a5fa;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+  
+  .clock-date {
+    color: #94a3b8;
+  }
+  
+  .clock-offset {
+    color: #64748b;
+  }
+  
+  .result-group {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    border: 2px solid #475569;
+    box-shadow: 
+      0 4px 6px -1px rgba(0, 0, 0, 0.3), 
+      0 2px 4px -1px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    
+    &:hover {
+      border-color: #64748b;
+      box-shadow: 
+        0 8px 25px -8px rgba(0, 0, 0, 0.4), 
+        0 4px 6px -2px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+    
+    h4 {
+      color: #f1f5f9;
+      border-bottom-color: #475569;
+      
+      .result-icon {
+        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+      }
+    }
+  }
+  
+  .result-item {
+    background: rgba(30, 41, 59, 0.5);
+    border: 1px solid #475569;
+    
+    &:hover {
+      background: rgba(51, 65, 85, 0.7);
+      border-color: #64748b;
+    }
+  }
+  
+  .result-label {
+    color: #94a3b8;
+  }
+  
+  .result-value {
+    color: #e2e8f0;
+    
+    &.custom,
+    &.large {
+      color: #60a5fa;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+  }
+  
+  .human-readable-result {
+    background: linear-gradient(135deg, rgba(96, 165, 250, 0.15), rgba(59, 130, 246, 0.08));
+    border: 2px solid rgba(96, 165, 250, 0.3);
+    color: #60a5fa;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+  
+  .timezone-tag {
+    background: linear-gradient(135deg, #3b82f6, #60a5fa);
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+    
+    &:hover {
+      background: linear-gradient(135deg, #60a5fa, #93c5fd);
+      box-shadow: 0 4px 8px rgba(59, 130, 246, 0.4);
+    }
+  }
+  
+  .conversion-item {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    border: 2px solid #475569;
+    box-shadow: 
+      0 4px 6px -1px rgba(0, 0, 0, 0.3), 
+      0 2px 4px -1px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    
+    &:hover {
+      border-color: #64748b;
+      box-shadow: 
+        0 8px 25px -8px rgba(0, 0, 0, 0.4), 
+        0 4px 6px -2px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+  }
+  
+  .conversion-header {
+    border-bottom-color: #475569;
+    
+    h4 {
+      color: #f1f5f9;
+    }
+  }
+  
+  .timezone-offset {
+    background: rgba(96, 165, 250, 0.15);
+    color: #60a5fa;
+    border: 1px solid rgba(96, 165, 250, 0.3);
+  }
+  
+  .time-main,
+  .date-full {
+    color: #f1f5f9;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+  
+  .time-24,
+  .date-short {
+    color: #94a3b8;
+  }
+  
+  .timezone-info {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    border: 2px solid #475569;
+    box-shadow: 
+      0 4px 6px -1px rgba(0, 0, 0, 0.3), 
+      0 2px 4px -1px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    
+    h3 {
+      color: #f1f5f9;
+    }
+  }
+  
+  .info-item {
+    border-bottom-color: #475569;
+    
+    .info-label {
+      color: #94a3b8;
+    }
+    
+    .info-value {
+      color: #e2e8f0;
+    }
+  }
+}

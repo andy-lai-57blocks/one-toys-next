@@ -1,0 +1,634 @@
+@import '../../../shared/variables';
+
+// Countdown Tool Styling
+.countdown-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-md;
+  margin-bottom: $spacing-xl;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem $spacing-xl;
+  background: linear-gradient(135deg, #fafafa 0%, $bg-card 100%);
+  border: 2px dashed $border-light;
+  border-radius: $border-radius-xl;
+  margin: $spacing-xl 0;
+
+  h3 {
+    color: $text-primary;
+    margin-bottom: $spacing-sm;
+    font-size: $font-size-2xl;
+  }
+
+  p {
+    color: $text-secondary;
+    margin: 0;
+  }
+}
+
+.add-countdown-form {
+  background: $bg-card;
+  border: 2px solid #f1f5f9;
+  border-radius: $border-radius-xl;
+  padding: $spacing-xl;
+  margin-bottom: $spacing-xl;
+  box-shadow: $shadow-sm;
+
+  h3 {
+    margin-top: 0;
+    margin-bottom: $spacing-lg;
+    color: $text-primary;
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+  }
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: $spacing-md;
+  margin-bottom: $spacing-lg;
+
+  .input-group.full-width {
+    grid-column: 1 / -1;
+  }
+}
+
+.preset-countdowns {
+  background: #f8fafc;
+  border: 2px solid #f1f5f9;
+  border-radius: $border-radius-xl;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-xl;
+}
+
+.preset-header {
+  margin-bottom: $spacing-lg;
+
+  h3 {
+    margin: 0 0 $spacing-sm 0;
+    color: $text-primary;
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+  }
+}
+
+.preset-subtitle {
+  margin: 0;
+  color: $text-secondary;
+  font-size: $font-size-sm;
+  font-style: italic;
+}
+
+.preset-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: $spacing-md;
+}
+
+.preset-countdown-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.375rem;
+  padding: $spacing-md;
+  background: $bg-card;
+  border: 2px solid $border-light;
+  border-radius: $border-radius-lg;
+  cursor: pointer;
+  transition: all $transition-fast;
+  text-decoration: none;
+  color: inherit;
+  min-height: 110px;
+
+  &:hover:not(:disabled) {
+    border-color: $primary-color;
+    transform: translateY(-2px);
+    box-shadow: $shadow-md;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #f8fafc;
+  }
+}
+
+.preset-icon {
+  font-size: $font-size-2xl;
+}
+
+.preset-title {
+  font-weight: 600;
+  color: $text-primary;
+  text-align: center;
+  font-size: $font-size-sm;
+}
+
+.preset-date {
+  font-size: $font-size-xs;
+  color: $text-secondary;
+  text-align: center;
+}
+
+.preset-days {
+  font-size: 0.7rem;
+  color: $primary-color;
+  font-weight: 600;
+  background: #eff6ff;
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $border-radius-md;
+  text-align: center;
+}
+
+.countdowns-section {
+  margin-bottom: $spacing-xl;
+
+  h3 {
+    margin-bottom: $spacing-lg;
+    color: $text-primary;
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+  }
+}
+
+.countdowns-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: $spacing-lg;
+}
+
+.countdown-card {
+  background: $bg-card;
+  border: 2px solid #f1f5f9;
+  border-radius: $border-radius-xl;
+  padding: $spacing-lg;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, $primary-color, #8b5cf6);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform $transition-normal;
+  }
+
+  &:hover {
+    border-color: #e2e8f0;
+    box-shadow: 0 8px 25px -8px rgba(0, 0, 0, 0.12), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    transform: translateY(-4px);
+
+    &::before {
+      transform: scaleX(1);
+    }
+  }
+
+  &.expired {
+    background: linear-gradient(135deg, #fef2f2, $bg-card);
+    border-color: #fecaca;
+
+    &::before {
+      background: $error-color;
+    }
+
+    .time-number {
+      color: $error-color;
+    }
+  }
+}
+
+.countdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-md;
+}
+
+.countdown-category {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-xs 0.75rem;
+  background: #f1f5f9;
+  border-radius: 1rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: $text-secondary;
+}
+
+.category-icon {
+  font-size: $font-size-base;
+}
+
+.remove-countdown {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  font-size: $font-size-2xl;
+  font-weight: bold;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: $error-color;
+    color: $text-white;
+  }
+}
+
+.countdown-content {
+  position: relative;
+  z-index: 1;
+}
+
+.countdown-title {
+  font-size: $font-size-xl;
+  font-weight: 700;
+  color: $text-primary;
+  margin: 0 0 $spacing-sm 0;
+}
+
+.countdown-description {
+  color: $text-secondary;
+  font-size: $font-size-sm;
+  margin: 0 0 $spacing-lg 0;
+  line-height: 1.4;
+}
+
+.countdown-display {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.time-units {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-md;
+}
+
+.time-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 60px;
+}
+
+.time-number {
+  font-size: $spacing-xl;
+  font-weight: 700;
+  color: $primary-color;
+  font-family: $font-family-mono;
+  line-height: 1;
+}
+
+.time-label {
+  font-size: 0.7rem;
+  color: $text-secondary;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: $spacing-xs;
+}
+
+.time-separator {
+  font-size: $font-size-2xl;
+  font-weight: bold;
+  color: #cbd5e1;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.countdown-progress {
+  width: 100%;
+  height: 6px;
+  background: #f1f5f9;
+  border-radius: 3px;
+  overflow: hidden;
+  margin: $spacing-md 0;
+}
+
+.progress-bar {
+  height: 100%;
+  background: $primary-color;
+  border-radius: 3px;
+  transition: width 0.5s ease;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.2),
+      transparent
+    );
+    animation: shimmer 2s infinite;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.countdown-meta {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+  text-align: center;
+}
+
+.target-date {
+  font-size: $font-size-sm;
+  color: $text-secondary;
+  font-weight: 500;
+}
+
+.status-text {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.375rem 0.75rem;
+  border-radius: 1rem;
+  display: inline-block;
+
+  &.active {
+    background: #dbeafe;
+    color: #1e40af;
+  }
+
+  &.expired {
+    background: #fecaca;
+    color: $error-color;
+  }
+}
+
+.countdown-stats {
+  background: linear-gradient(135deg, #fafafa 0%, $bg-card 100%);
+  border: 2px solid #f1f5f9;
+  border-radius: $border-radius-xl;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-xl;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-md;
+}
+
+.stat-item {
+  text-align: center;
+  padding: $spacing-md;
+  background: $bg-card;
+  border: 1px solid #f1f5f9;
+  border-radius: $border-radius-lg;
+}
+
+.stat-number {
+  display: block;
+  font-size: $spacing-xl;
+  font-weight: 700;
+  color: $primary-color;
+  margin-bottom: $spacing-xs;
+}
+
+.stat-label {
+  font-size: $font-size-sm;
+  color: $text-secondary;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.countdown-info {
+  background: #eff6ff;
+  border: 2px solid #dbeafe;
+  border-radius: $border-radius-xl;
+  padding: $spacing-lg;
+
+  h3 {
+    margin-top: 0;
+    color: #1e40af;
+  }
+
+  ul {
+    margin: 0;
+    padding-left: $spacing-lg;
+    color: #1e40af;
+  }
+
+  li {
+    margin-bottom: $spacing-sm;
+    line-height: 1.4;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  strong {
+    color: #1e3a8a;
+  }
+}
+
+/* ========================================
+   DARK THEME STYLES
+   ======================================== */
+
+body.dark-theme {
+  .countdown-controls {
+    .btn {
+      background: linear-gradient(135deg, #475569, #334155);
+      color: #e2e8f0;
+      border: 1px solid #64748b;
+      
+      &:hover {
+        background: linear-gradient(135deg, #64748b, #475569);
+        color: #f1f5f9;
+        border-color: #94a3b8;
+      }
+    }
+  }
+  
+  .empty-state {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    border: 2px dashed #475569;
+    
+    h3 {
+      color: #f1f5f9;
+    }
+    
+    p {
+      color: #94a3b8;
+    }
+  }
+  
+  .add-countdown-form {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    border: 2px solid #475569;
+    box-shadow: 
+      0 4px 6px -1px rgba(0, 0, 0, 0.3), 
+      0 2px 4px -1px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    
+    h3 {
+      color: #f1f5f9;
+    }
+  }
+  
+  .countdown-card {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    border: 2px solid #475569;
+    box-shadow: 
+      0 4px 6px -1px rgba(0, 0, 0, 0.3), 
+      0 2px 4px -1px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    
+    &:hover {
+      border-color: #64748b;
+      box-shadow: 
+        0 8px 25px -8px rgba(0, 0, 0, 0.4), 
+        0 4px 6px -2px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+    
+    &.expired {
+      border-color: #ef4444;
+      background: linear-gradient(135deg, #1e293b 0%, #374151 100%);
+      box-shadow: 
+        0 4px 6px -1px rgba(239, 68, 68, 0.3), 
+        0 2px 4px -1px rgba(239, 68, 68, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+    
+    .card-header {
+      border-bottom-color: rgba(71, 85, 105, 0.5);
+      
+      h3 {
+        color: #f1f5f9;
+      }
+    }
+    
+    .countdown-display {
+      .time-unit {
+        background: linear-gradient(135deg, rgba(96, 165, 250, 0.1), rgba(59, 130, 246, 0.05));
+        border: 1px solid rgba(96, 165, 250, 0.2);
+        box-shadow: 
+          0 2px 4px rgba(96, 165, 250, 0.1),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        
+        .time-value {
+          color: #60a5fa;
+          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        
+        .time-label {
+          color: #94a3b8;
+        }
+        
+        &.expired {
+          background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.08));
+          border-color: rgba(239, 68, 68, 0.3);
+          
+          .time-value {
+            color: #f87171;
+          }
+        }
+      }
+    }
+    
+    .card-actions {
+      border-top-color: rgba(71, 85, 105, 0.5);
+      
+      .btn-danger {
+        background: linear-gradient(135deg, #dc2626, #b91c1c);
+        color: white;
+        border: 1px solid #ef4444;
+        
+        &:hover {
+          background: linear-gradient(135deg, #ef4444, #dc2626);
+          border-color: #f87171;
+        }
+      }
+    }
+  }
+  
+  .quick-presets {
+    h4 {
+      color: #f1f5f9;
+    }
+    
+    .preset-button {
+      background: rgba(30, 41, 59, 0.5);
+      color: #cbd5e1;
+      border: 1px solid #475569;
+      
+      &:hover {
+        background: rgba(51, 65, 85, 0.7);
+        color: #f1f5f9;
+        border-color: #64748b;
+        transform: translateY(-1px);
+      }
+      
+      &:active {
+        transform: translateY(0);
+        background: rgba(51, 65, 85, 0.8);
+      }
+    }
+  }
+  
+  .about-countdown {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    border: 1px solid #475569;
+    
+    h4 {
+      color: #f1f5f9;
+    }
+    
+    p {
+      color: #cbd5e1;
+    }
+    
+    strong {
+      color: #60a5fa;
+    }
+  }
+}

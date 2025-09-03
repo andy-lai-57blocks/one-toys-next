@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>One Toys Icon Generator</title>
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; }
+        
+        .icon-16 {
+            width: 16px; height: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 8px; font-weight: bold;
+            border-radius: 2px;
+        }
+        
+        .icon-32 {
+            width: 32px; height: 32px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 14px; font-weight: bold;
+            border-radius: 4px;
+        }
+        
+        .icon-192 {
+            width: 192px; height: 192px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: white; font-weight: bold; text-align: center;
+            border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        }
+        
+        .icon-512 {
+            width: 512px; height: 512px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: white; font-weight: bold; text-align: center;
+            border-radius: 50px; box-shadow: 0 16px 64px rgba(0,0,0,0.3);
+        }
+        
+        .logo-text { font-size: 48px; }
+        .logo-sub { font-size: 18px; opacity: 0.8; margin-top: 10px; }
+        
+        .logo-text-512 { font-size: 120px; }
+        .logo-sub-512 { font-size: 48px; opacity: 0.8; margin-top: 20px; }
+        
+        .icon-container { margin: 20px; display: inline-block; }
+        
+        .screenshot-wide {
+            width: 1280px; height: 720px;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            display: flex; align-items: center; justify-content: center;
+            border: 2px solid #e2e8f0; border-radius: 12px;
+        }
+        
+        .screenshot-narrow {
+            width: 750px; height: 1334px;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            display: flex; align-items: center; justify-content: center;
+            border: 2px solid #e2e8f0; border-radius: 24px;
+        }
+        
+        .demo-content {
+            text-align: center; color: #4a5568;
+        }
+        .demo-title { font-size: 36px; font-weight: bold; margin-bottom: 20px; }
+        .demo-subtitle { font-size: 18px; opacity: 0.8; }
+    </style>
+</head>
+<body>
+    <h2>One Toys PWA Icons</h2>
+    
+    <div class="icon-container">
+        <h3>16x16 (favicon)</h3>
+        <div class="icon-16">OT</div>
+    </div>
+    
+    <div class="icon-container">
+        <h3>32x32 (favicon)</h3>
+        <div class="icon-32">OT</div>
+    </div>
+    
+    <div class="icon-container">
+        <h3>192x192 (Android icon)</h3>
+        <div class="icon-192">
+            <div class="logo-text">OT</div>
+            <div class="logo-sub">Tools</div>
+        </div>
+    </div>
+    
+    <div class="icon-container">
+        <h3>512x512 (Large app icon)</h3>
+        <div class="icon-512">
+            <div class="logo-text-512">OT</div>
+            <div class="logo-sub-512">Tools</div>
+        </div>
+    </div>
+    
+    <div class="icon-container">
+        <h3>1280x720 (Wide screenshot)</h3>
+        <div class="screenshot-wide">
+            <div class="demo-content">
+                <div class="demo-title">One Toys Platform</div>
+                <div class="demo-subtitle">22+ Comprehensive Productivity Tools</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="icon-container">
+        <h3>750x1334 (Mobile screenshot)</h3>
+        <div class="screenshot-narrow">
+            <div class="demo-content">
+                <div class="demo-title">One Toys</div>
+                <div class="demo-subtitle">Mobile-First Design<br/>Professional Tools</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        console.log(`
+Instructions to create PWA icons:
+1. Right-click on each icon/screenshot
+2. "Save image as..." or take a screenshot
+3. Save with exact filenames:
+   - favicon.ico (16x16 and 32x32 combined)
+   - logo192.png (192x192)
+   - logo512.png (512x512)
+   - screenshot-wide.png (1280x720)
+   - screenshot-narrow.png (750x1334)
+
+Alternative: Use online converters:
+- favicon.ico: favicon.io/favicon-converter/
+- PNG icons: Use any screenshot tool at exact dimensions
+- Canva.com for professional designs
+        `);
+    </script>
+</body>
+</html>

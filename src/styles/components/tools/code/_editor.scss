@@ -1,0 +1,2424 @@
+@import '../../../shared/variables';
+
+// Enhanced IDE-like Code Editor Styles for All Code Tools
+
+// Source Code Pro font for all code-related text areas and code output
+.text-area.code-editor,
+.text-area.code-input,
+.code-input,
+.uuid-text,
+.password-result,
+.password-output {
+  font-family: $font-family-mono !important;
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+  tab-size: 2;
+  letter-spacing: 0.025em;
+  font-weight: 400;
+}
+
+// IDE-like Enhanced Input Editor Styling
+.enhanced-code-input {
+  // Professional IDE appearance
+  border: 2px solid #e2e8f0 !important;
+  border-radius: 8px !important;
+  background: #fafafa !important;
+  color: #2d3748 !important;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+  transition: all 0.2s ease-in-out !important;
+  position: relative;
+  
+  // Line numbers background effect
+  background-image: linear-gradient(90deg, 
+    #f1f5f9 0px, 
+    #f1f5f9 50px, 
+    transparent 50px, 
+    transparent 100%
+  ) !important;
+  padding-left: 60px !important; // Space for line numbers
+  background-attachment: local !important;
+  
+  // IDE-like focus state
+  &:focus {
+    outline: none !important;
+    border-color: #3b82f6 !important;
+    box-shadow: 
+      inset 0 1px 3px rgba(0, 0, 0, 0.1),
+      0 0 0 3px rgba(59, 130, 246, 0.1),
+      0 4px 6px rgba(0, 0, 0, 0.05) !important;
+    background-color: #ffffff !important;
+  }
+  
+  // Enhanced hover state
+  &:hover:not(:focus) {
+    border-color: #cbd5e0 !important;
+    box-shadow: 
+      inset 0 1px 3px rgba(0, 0, 0, 0.1),
+      0 2px 4px rgba(0, 0, 0, 0.06) !important;
+  }
+  
+  // Professional text selection
+  &::selection {
+    background: rgba(59, 130, 246, 0.25) !important;
+    color: inherit !important;
+  }
+  
+  &::-moz-selection {
+    background: rgba(59, 130, 246, 0.25) !important;
+    color: inherit !important;
+  }
+  
+  // Enhanced placeholder
+  &::placeholder {
+    color: #94a3b8 !important;
+    font-style: normal !important;
+    opacity: 0.8 !important;
+  }
+  
+  // IDE-like scrollbar
+  &::-webkit-scrollbar {
+    width: 12px !important;
+    height: 12px !important;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: #f1f5f9 !important;
+    border-radius: 6px !important;
+    border: 1px solid #e2e8f0 !important;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: #cbd5e0 !important;
+    border-radius: 6px !important;
+    border: 2px solid #f1f5f9 !important;
+    
+    &:hover {
+      background: #9ca3af !important;
+    }
+    
+    &:active {
+      background: #6b7280 !important;
+    }
+  }
+  
+  &::-webkit-scrollbar-corner {
+    background: #f1f5f9 !important;
+  }
+  
+  // Firefox scrollbar
+  scrollbar-width: auto !important;
+  scrollbar-color: #cbd5e0 #f1f5f9 !important;
+}
+
+// Light theme (default)
+.code-editor-container {
+  transition: $transition-normal;
+}
+
+.code-input {
+  border: 2px solid $code-border-light;
+  border-radius: $border-radius-lg;
+  background-color: $code-bg-light;
+  color: $code-text-light;
+  transition: all $transition-fast;
+
+  &:focus {
+    border-color: $primary-color;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    background-color: $bg-card;
+    outline: none;
+  }
+
+  &::placeholder {
+    color: $text-secondary;
+  }
+}
+
+// IDE-like Code Output Styles - Professional appearance
+.code-output {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.2s ease-in-out;
+  border: 2px solid #e2e8f0;
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 1px 3px rgba(0, 0, 0, 0.1),
+    0 1px 2px rgba(0, 0, 0, 0.06);
+  background-color: #ffffff;
+  
+  // IDE-like inner shadow for depth
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.1), transparent);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  pre {
+    // Enhanced padding for better readability
+    padding: 16px 20px !important;
+    margin: 0 !important;
+    font-size: 14px !important;
+    line-height: 1.6 !important;
+    
+    // Ensure syntax highlighter background fills height
+    &[class*="language-"] {
+      height: 100% !important;
+      min-height: 100% !important;
+      border-radius: 6px !important;
+      
+      > code[class*="language-"] {
+        height: 100% !important;
+        min-height: 100% !important;
+        padding: 0 !important; // Pre handles padding
+      }
+    }
+    
+    // Enhanced default background for non-highlighted code
+    &:not([class*="language-"]) {
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+      height: 100% !important;
+      min-height: 100% !important;
+      border-radius: 6px !important;
+      border: 1px solid rgba(226, 232, 240, 0.5) !important;
+    }
+    
+    // Professional scrollbar for code output
+    &::-webkit-scrollbar {
+      width: 12px;
+      height: 12px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: rgba(241, 245, 249, 0.8);
+      border-radius: 6px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: #cbd5e0;
+      border-radius: 6px;
+      border: 2px solid rgba(241, 245, 249, 0.8);
+      
+      &:hover {
+        background: #9ca3af;
+      }
+    }
+  }
+  
+  code {
+    height: 100% !important;
+    min-height: 100% !important;
+    font-size: 14px !important;
+    line-height: 1.6 !important;
+    
+    &[class*="language-"] {
+      height: 100% !important;
+      min-height: 100% !important;
+    }
+  }
+
+  // Enhanced hover effects for desktop
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        0 4px 12px rgba(0, 0, 0, 0.15),
+        0 2px 4px rgba(0, 0, 0, 0.08);
+      border-color: #cbd5e0;
+    }
+  }
+}
+
+// Enhanced IDE-like Dark Theme - ONLY for output column when dark-theme class is applied
+.output-column .code-output.dark-theme {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
+  border: 2px solid #334155 !important;
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 4px 12px rgba(0, 0, 0, 0.4),
+    0 2px 4px rgba(0, 0, 0, 0.3);
+  
+  // Enhanced dark theme inner shadow
+  &::before {
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+  }
+
+  pre {
+    color: #e2e8f0 !important;
+    padding: 16px 20px !important;
+    
+    // For syntax highlighted code - preserve React Syntax Highlighter's dark theme
+    &[class*="language-"] {
+      height: 100% !important;
+      min-height: 100% !important;
+      border-radius: 6px !important;
+      // Enhanced dark theme for syntax highlighter
+      background: #0f172a !important;
+      
+      > code[class*="language-"] {
+        height: 100% !important;
+        min-height: 100% !important;
+        color: #e2e8f0 !important;
+        // Preserve syntax highlighter's dark theme colors for tokens
+      }
+    }
+    
+    // Enhanced dark background for non-highlighted code
+    &:not([class*="language-"]) {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
+      height: 100% !important;
+      min-height: 100% !important;
+      border-radius: 6px !important;
+      border: 1px solid rgba(51, 65, 85, 0.6) !important;
+    }
+    
+    // Professional dark scrollbar
+    &::-webkit-scrollbar {
+      width: 12px;
+      height: 12px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.8);
+      border-radius: 6px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: #475569;
+      border-radius: 6px;
+      border: 2px solid rgba(15, 23, 42, 0.8);
+      
+      &:hover {
+        background: #64748b;
+      }
+      
+      &:active {
+        background: #94a3b8;
+      }
+    }
+  }
+
+  code {
+    color: #e2e8f0 !important;
+    height: 100% !important;
+    min-height: 100% !important;
+    
+    // For syntax highlighted code - enhance readability
+    &[class*="language-"] {
+      height: 100% !important;
+      min-height: 100% !important;
+      color: #e2e8f0 !important;
+    }
+    
+    // Enhanced dark background for non-syntax highlighted code
+    &:not([class*="language-"]) {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
+      color: #cbd5e1 !important;
+    }
+  }
+
+  // Enhanced dark theme hover effects
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        0 6px 20px rgba(0, 0, 0, 0.5),
+        0 4px 8px rgba(0, 0, 0, 0.3);
+      border-color: #475569;
+    }
+  }
+}
+
+// Input areas stay light even in dark mode
+.input-column .code-output.dark-theme {
+  // Override dark theme for input areas - keep them light
+  box-shadow: $shadow-sm;
+  background-color: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+
+  pre {
+    color: $text-primary !important;
+    
+    &:not([class*="language-"]) {
+      background-color: #f8fafc !important;
+    }
+  }
+
+  code {
+    color: $text-primary !important;
+    
+    &:not([class*="language-"]) {
+      color: $text-primary !important;
+    }
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+  }
+}
+
+// Specific overrides for React Syntax Highlighter to ensure proper background fill
+.code-output {
+  // Target React Syntax Highlighter's structure directly
+  pre[class*="language-"] {
+    height: 100% !important;
+    min-height: 100% !important;
+    margin: 0 !important;
+    
+    // Ensure the code element inside also fills height
+    > code[class*="language-"] {
+      height: 100% !important;
+      min-height: 100% !important;
+      display: block !important;
+      padding: $spacing-md !important; // Maintain consistent padding
+    }
+  }
+  
+  // For any background that React Syntax Highlighter doesn't cover
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: inherit;
+    z-index: -1;
+  }
+}
+
+// Enhanced React Syntax Highlighter overrides for dark theme when applied
+.output-column .code-output.dark-theme {
+  // Ensure dark theme syntax highlighter fills properly
+  pre[class*="language-"] {
+    height: 100% !important;
+    min-height: 100% !important;
+    margin: 0 !important;
+    
+    // Dark theme specific code element styling
+    > code[class*="language-"] {
+      height: 100% !important;
+      min-height: 100% !important;
+      display: block !important;
+      padding: $spacing-md !important;
+      // Let React Syntax Highlighter's oneDark theme handle background colors
+    }
+  }
+  
+  // Dark background fallback for areas not covered by syntax highlighter
+  &::before {
+    background: $code-bg-dark;
+    z-index: -1;
+  }
+}
+
+.code-placeholder {
+  font-family: $font-family-mono !important;
+  font-size: $font-size-sm !important;
+  line-height: 1.5 !important;
+  transition: all $transition-fast !important;
+  text-align: center;
+  font-style: italic;
+
+  &:hover {
+    background-color: #f1f5f9 !important;
+  }
+}
+
+// Theme toggle button styling - use class-based selectors instead
+.button-group .btn {
+  min-width: 80px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-xs;
+}
+
+// Enhanced syntax highlighting container
+.code-output pre {
+  margin: 0 !important;
+  padding: $spacing-md !important;
+  font-family: $font-family-mono !important;
+  font-size: $font-size-sm !important;
+  line-height: 1.5 !important;
+  tab-size: 2 !important;
+  white-space: pre-wrap !important;
+  word-wrap: break-word !important;
+  
+  // Ensure syntax highlighted code fills container but preserves theme colors
+  &[class*="language-"] {
+    height: 100% !important;
+    min-height: 100% !important;
+    // Don't override background - let React Syntax Highlighter handle theme colors
+  }
+  
+  // Default background for non-highlighted code
+  &:not([class*="language-"]) {
+    background: #f8fafc !important; // Light gray background for plain text
+    height: 100% !important;
+    min-height: 100% !important;
+  }
+}
+
+// IDE-like Custom scrollbar for all code areas (legacy compatibility)
+.code-output pre::-webkit-scrollbar,
+.code-input::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+.code-output pre::-webkit-scrollbar-track,
+.code-input::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+}
+
+.code-output pre::-webkit-scrollbar-thumb,
+.code-input::-webkit-scrollbar-thumb {
+  background: #cbd5e0;
+  border-radius: 6px;
+  border: 2px solid #f1f5f9;
+
+  &:hover {
+    background: #9ca3af;
+  }
+  
+  &:active {
+    background: #6b7280;
+  }
+}
+
+// Line numbers simulation for code areas
+.code-input,
+.enhanced-code-input {
+  // Add line numbers counter
+  counter-reset: line-number;
+  position: relative;
+  
+  // Simulate line numbers with a pseudo-element overlay
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50px;
+    height: 100%;
+    background: linear-gradient(180deg, 
+      #f8fafc 0%, 
+      #f1f5f9 50%, 
+      #f8fafc 100%
+    );
+    border-right: 1px solid #e2e8f0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.8;
+  }
+}
+
+// Responsive adjustments for code editors
+@media (max-width: $breakpoint-md) {
+  .code-input,
+  .code-placeholder {
+    font-size: 13px;
+  }
+  
+  .code-output pre {
+    font-size: 13px;
+    padding: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .code-input,
+  .code-placeholder {
+    font-size: 12px;
+  }
+  
+  .code-output {
+    // Ensure consistent border on very small screens
+    border: 1px solid #e2e8f0 !important;
+    display: flex !important; // Maintain flex layout on small screens
+    flex-direction: column !important;
+    
+    pre {
+      font-size: 12px;
+      padding: $spacing-sm;
+      height: auto !important;
+      min-height: 100% !important; // Fill container height
+      flex: 1 !important; // Stretch to fill parent
+    }
+  }
+  
+  // Dark theme only for output column on very small screens when dark-theme is applied
+  .output-column .code-output.dark-theme {
+    border: 1px solid $code-border-dark !important; // Thinner border on small screens
+    background-color: $code-bg-dark !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  }
+  
+  .button-group {
+    flex-wrap: wrap;
+    gap: $spacing-sm;
+
+    .btn {
+      min-width: auto;
+      flex: 1 1 calc(50% - 0.25rem);
+    }
+  }
+}
+
+// HLS Player Styles
+.hls-player-container {
+  position: relative;
+  background: #000;
+  border-radius: $border-radius-lg;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.hls-video-player {
+  width: 100%;
+  height: auto;
+  min-height: 300px;
+  max-height: 500px;
+  background: #000;
+  border: none;
+  border-radius: $border-radius-lg;
+  
+  &:focus {
+    outline: 2px solid $primary-color;
+    outline-offset: 2px;
+  }
+}
+
+.player-overlay {
+  position: absolute;
+  top: $spacing-sm;
+  right: $spacing-sm;
+  z-index: 10;
+}
+
+.stream-indicator {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+}
+
+.stream-status {
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $border-radius-md;
+  font-size: $font-size-xs;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  
+  &.live {
+    background: rgba(239, 68, 68, 0.9);
+    color: white;
+    animation: pulse 2s infinite;
+  }
+  
+  &.vod {
+    background: rgba(59, 130, 246, 0.9);
+    color: white;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+// Sample Streams
+.sample-streams {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+  margin-top: $spacing-sm;
+}
+
+.sample-stream-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-md;
+  background: $bg-secondary;
+  border: 1px solid $border-light;
+  border-radius: $border-radius-md;
+  transition: all $transition-fast;
+  
+  &:hover {
+    border-color: $primary-color;
+    background: rgba($primary-color, 0.05);
+  }
+}
+
+.sample-stream-info {
+  flex: 1;
+  
+  strong {
+    display: block;
+    color: $text-primary;
+    margin-bottom: 2px;
+  }
+  
+  p {
+    color: $text-secondary;
+    font-size: $font-size-sm;
+    margin: 0;
+  }
+}
+
+// Stream Information Cards
+.stream-info-section {
+  margin: $spacing-lg 0;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: $spacing-md;
+  margin-top: $spacing-md;
+}
+
+.info-card {
+  background: $bg-secondary;
+  border: 1px solid $border-light;
+  border-radius: $border-radius-lg;
+  padding: $spacing-md;
+  
+  h4 {
+    color: $text-primary;
+    margin: 0 0 $spacing-sm 0;
+    font-size: $font-size-lg;
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+  }
+  
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    
+    li {
+      display: flex;
+      justify-content: space-between;
+      padding: $spacing-xs 0;
+      border-bottom: 1px solid rgba($border-light, 0.5);
+      font-size: $font-size-sm;
+      
+      &:last-child {
+        border-bottom: none;
+      }
+      
+      strong {
+        color: $text-secondary;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+// Quality Levels
+.quality-levels-section {
+  margin: $spacing-lg 0;
+}
+
+.quality-levels-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: $spacing-sm;
+  margin-top: $spacing-md;
+}
+
+.quality-level-card {
+  position: relative;
+  background: $bg-secondary;
+  border: 2px solid $border-light;
+  border-radius: $border-radius-md;
+  padding: $spacing-md;
+  cursor: pointer;
+  transition: all $transition-fast;
+  text-align: center;
+  
+  &:hover {
+    border-color: $primary-color;
+    background: rgba($primary-color, 0.05);
+    transform: translateY(-2px);
+  }
+  
+  &.active {
+    border-color: $primary-color;
+    background: rgba($primary-color, 0.1);
+    box-shadow: 0 4px 12px rgba($primary-color, 0.2);
+  }
+}
+
+.quality-resolution {
+  font-weight: 600;
+  color: $text-primary;
+  font-size: $font-size-lg;
+  margin-bottom: $spacing-xs;
+}
+
+.quality-bitrate {
+  color: $primary-color;
+  font-weight: 500;
+  font-size: $font-size-sm;
+  margin-bottom: $spacing-xs;
+}
+
+.quality-fps {
+  color: $text-secondary;
+  font-size: $font-size-xs;
+  margin-bottom: $spacing-xs;
+}
+
+.quality-codecs {
+  color: $text-secondary;
+  font-size: $font-size-xs;
+  font-family: 'Source Code Pro', monospace;
+  background: rgba($text-secondary, 0.1);
+  padding: 2px 6px;
+  border-radius: $border-radius-sm;
+  display: inline-block;
+}
+
+.quality-active-indicator {
+  position: absolute;
+  top: $spacing-xs;
+  right: $spacing-xs;
+  color: $primary-color;
+  font-size: 12px;
+  animation: pulse 2s infinite;
+}
+
+// Input with button
+.input-with-button {
+  display: flex;
+  gap: $spacing-sm;
+  
+  .text-input {
+    flex: 1;
+  }
+}
+
+// Error messages
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-sm $spacing-md;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: $border-radius-md;
+  color: rgb(185, 28, 28);
+  font-size: $font-size-sm;
+  margin: $spacing-sm 0;
+  
+  .error-icon {
+    font-size: $font-size-lg;
+  }
+}
+
+// Responsive design for HLS player
+@media (max-width: 768px) {
+  .hls-video-player {
+    min-height: 200px;
+  }
+  
+  .sample-stream-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $spacing-sm;
+  }
+  
+  .quality-levels-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+  
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .input-with-button {
+    flex-direction: column;
+    
+    .text-input {
+      margin-bottom: $spacing-sm;
+    }
+  }
+}
+
+// Clean Flat Design - Light Mode Toggle (No Borders)
+.tab-group,
+.mode-toggle {
+  display: inline-flex;
+  background: #f8fafc;
+  border: none;
+  border-radius: 8px;
+  padding: 3px;
+  margin-bottom: $spacing-md;
+  transition: background-color 0.2s ease;
+  
+  &:hover {
+    background: rgba(241, 245, 249, 0.8);
+  }
+}
+
+.tab-btn {
+  background: transparent;
+  border: none;
+  margin: 0;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 14px;
+  color: $text-secondary;
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  // Hover state - simple and clean
+  &:hover:not(.active) {
+    background: rgba(59, 130, 246, 0.08);
+    color: $text-primary;
+  }
+
+  // Active state - clean blue background
+  &.active {
+    background: #3b82f6;
+    color: white;
+    font-weight: 600;
+  }
+
+  // Press feedback
+  &:active {
+    transform: scale(0.98);
+  }
+
+  // Clean focus state
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+  }
+}
+
+// Gzip Tool Specific Styles
+.radio-group {
+  display: flex;
+  gap: $spacing-md;
+  margin-top: $spacing-sm;
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  cursor: pointer;
+
+  input[type="radio"] {
+    margin: 0;
+  }
+
+  .radio-label {
+    font-weight: 500;
+    color: $text-primary;
+  }
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  background: #fef2f2;
+  border: 2px solid #fecaca;
+  border-radius: $border-radius-lg;
+  padding: $spacing-md;
+  color: $error-color;
+  font-weight: 500;
+  margin: $spacing-md 0;
+
+  .error-icon {
+    font-size: $font-size-lg;
+    flex-shrink: 0;
+  }
+}
+
+.output-container {
+  position: relative;
+
+  .copy-btn {
+    position: absolute;
+    top: $spacing-sm;
+    right: $spacing-sm;
+    background: $primary-color;
+    color: $text-white;
+    border: none;
+    border-radius: $border-radius-sm;
+    padding: $spacing-xs $spacing-sm;
+    cursor: pointer;
+    font-size: $font-size-sm;
+    transition: $transition-fast;
+
+    &:hover {
+      background: darken($primary-color, 10%);
+      transform: translateY(-1px);
+    }
+  }
+}
+
+// MIME Type Info Styling
+.mime-type-info {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+  
+  p {
+    margin: 0;
+    padding: $spacing-xs;
+    background: $bg-secondary;
+    border-radius: $border-radius-sm;
+    font-size: $font-size-sm;
+    
+    strong {
+      font-family: 'Source Code Pro', 'Monaco', 'Menlo', monospace;
+      color: $primary-color;
+    }
+  }
+  
+  small {
+    color: $text-muted;
+    font-style: italic;
+    margin-top: $spacing-xs;
+  }
+}
+
+// Stream info code styling
+.stream-info-section code {
+  background: $bg-secondary;
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $border-radius-sm;
+  font-family: 'Source Code Pro', 'Monaco', 'Menlo', monospace;
+  font-size: $font-size-sm;
+  color: $primary-color;
+}
+
+// 3-Column Layout for Formatting and Encoding Tools
+.three-column-layout {
+  display: grid;
+  grid-template-columns: minmax(300px, 1fr) auto minmax(300px, 1fr);
+  gap: $spacing-xl;
+  align-items: start;
+  min-height: calc(100vh - 12rem); /* Fill most of viewport height */
+  height: 100%;
+  overflow: hidden; // Prevent layout breaking
+
+  .input-column {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-width: 0; // Allow column to shrink and enable text wrapping
+
+    .input-group {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0; // Allow content to wrap
+    }
+
+    .text-area,
+    .code-input {
+      flex: 1;
+      min-height: calc(100vh - 16rem); /* Larger textarea using viewport height */
+      resize: vertical;
+      overflow-x: auto; // Enable horizontal scroll for very long lines
+      word-wrap: break-word; // Break long words
+      overflow-wrap: break-word; // Modern syntax
+      white-space: pre-wrap; // Preserve formatting but wrap long lines
+    }
+
+    // IDE-like Enhanced Code Input - Professional appearance
+    .enhanced-code-input {
+      font-family: 'Source Code Pro', 'Monaco', 'Menlo', monospace !important;
+      font-size: 14px !important;
+      line-height: 1.6 !important;
+      tab-size: 2;
+      -moz-tab-size: 2;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      word-break: break-word;
+      overflow-x: hidden;
+      overflow-y: auto;
+      transition: all 0.2s ease-in-out !important;
+      
+      // Professional IDE appearance
+      border: 2px solid #e2e8f0 !important;
+      border-radius: 8px !important;
+      background: #fafafa !important;
+      color: #2d3748 !important;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+      position: relative;
+      
+      // Line numbers background effect
+      background-image: linear-gradient(90deg, 
+        #f1f5f9 0px, 
+        #f1f5f9 50px, 
+        transparent 50px, 
+        transparent 100%
+      ) !important;
+      padding-left: 60px !important;
+      background-attachment: local !important;
+
+      // Enhanced text selection
+      &::selection {
+        background: rgba(59, 130, 246, 0.25) !important;
+        color: inherit !important;
+      }
+
+      &::-moz-selection {
+        background: rgba(59, 130, 246, 0.25) !important;
+        color: inherit !important;
+      }
+
+      // Professional placeholder
+      &::placeholder {
+        color: #94a3b8 !important;
+        font-style: normal !important;
+        opacity: 0.8 !important;
+      }
+
+      // IDE-like focus state
+      &:focus {
+        outline: none !important;
+        border-color: #3b82f6 !important;
+        box-shadow: 
+          inset 0 1px 3px rgba(0, 0, 0, 0.1),
+          0 0 0 3px rgba(59, 130, 246, 0.1),
+          0 4px 6px rgba(0, 0, 0, 0.05) !important;
+        background-color: #ffffff !important;
+      }
+      
+      // Enhanced hover state
+      &:hover:not(:focus) {
+        border-color: #cbd5e0 !important;
+        box-shadow: 
+          inset 0 1px 3px rgba(0, 0, 0, 0.1),
+          0 2px 4px rgba(0, 0, 0, 0.06) !important;
+      }
+
+      // Professional scrollbar
+      &::-webkit-scrollbar {
+        width: 12px !important;
+        height: 12px !important;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: #f1f5f9 !important;
+        border-radius: 6px !important;
+        border: 1px solid #e2e8f0 !important;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: #cbd5e0 !important;
+        border-radius: 6px !important;
+        border: 2px solid #f1f5f9 !important;
+        
+        &:hover {
+          background: #9ca3af !important;
+        }
+        
+        &:active {
+          background: #6b7280 !important;
+        }
+      }
+
+      // Firefox scrollbar
+      scrollbar-width: auto !important;
+      scrollbar-color: #cbd5e0 #f1f5f9 !important;
+
+      // Line numbers overlay effect
+      &::after {
+        content: '';
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 48px;
+        height: calc(100% - 4px);
+        background: linear-gradient(180deg, 
+          #f8fafc 0%, 
+          #f1f5f9 50%, 
+          #f8fafc 100%
+        );
+        border-right: 1px solid #e2e8f0;
+        border-radius: 6px 0 0 6px;
+        pointer-events: none;
+        z-index: 1;
+        opacity: 0.9;
+      }
+    }
+  }
+
+  .action-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: $spacing-sm;
+    padding: $spacing-sm 0; // Top/bottom padding only, no left/right padding
+    min-width: 300px; // Content area is exactly 300px, padding is additional
+    max-width: 300px; // Ensure it doesn't exceed 300px
+    
+    // Clean flat background for light mode - no border
+    background: rgba(248, 250, 252, 0.6);
+    border: none;
+    border-radius: 12px;
+    backdrop-filter: none;
+    box-shadow: none;
+
+    .mode-toggle {
+      margin-bottom: $spacing-md;
+      
+      // Ensure flat design in action-column - no borders
+      background: #f8fafc !important;
+      border: none !important;
+      backdrop-filter: none !important;
+      box-shadow: none !important;
+    }
+
+    // Language selector styling
+    .language-selector {
+      width: 100%;
+      margin-bottom: $spacing-md;
+      
+      .input-label {
+        font-size: $font-size-sm;
+        font-weight: 600;
+        color: $text-secondary;
+        margin-bottom: $spacing-xs;
+        display: block;
+      }
+      
+      .language-select {
+        width: 100%;
+        padding: $spacing-sm $spacing-md;
+        border: 2px solid $border-light;
+        border-radius: $border-radius-md;
+        background: $bg-card;
+        color: $text-primary;
+        font-size: $font-size-sm;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all $transition-fast;
+        
+        &:focus {
+          outline: none;
+          border-color: $primary-color;
+          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        &:hover {
+          border-color: #cbd5e1;
+          background: #f8fafc;
+        }
+      }
+      
+      .language-hint {
+        font-size: $font-size-xs;
+        color: $text-muted;
+        font-style: italic;
+        text-align: center;
+        margin-top: $spacing-xs;
+      }
+    }
+
+    .primary-actions {
+      display: flex;
+      flex-direction: column;
+      gap: $spacing-xs;
+      width: 100%;
+
+      .btn {
+        width: 100%;
+        font-size: $font-size-sm;
+        padding: $spacing-sm $spacing-md;
+        border-radius: $border-radius-md;
+        font-weight: 500;
+        text-transform: none;
+        letter-spacing: 0.025em;
+        transition: all $transition-fast;
+        min-height: auto;
+
+        &.btn-primary {
+          background: linear-gradient(135deg, $primary-color, #60a5fa);
+          border: none;
+          box-shadow: 0 2px 6px rgba($primary-color, 0.2);
+
+          &:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba($primary-color, 0.3);
+          }
+        }
+
+        &.btn-secondary {
+          background: $bg-secondary;
+          color: $text-secondary;
+          border: 1px solid $border-light;
+
+          &:hover {
+            background: #e2e8f0;
+            transform: translateY(-1px);
+          }
+        }
+      }
+    }
+
+    .secondary-actions {
+      display: flex;
+      flex-direction: column;
+      gap: $spacing-xs;
+      width: 100%;
+      margin-top: $spacing-sm;
+      padding-top: $spacing-sm;
+      border-top: 1px solid $border-light;
+
+      .btn {
+        font-size: 0.875rem;
+        padding: 0.5rem 1rem;
+        border-radius: $border-radius-md;
+        font-weight: 500;
+        background: rgba(248, 250, 252, 0.8);
+        color: $text-secondary;
+        border: 1px solid $border-medium;
+        
+        &:hover {
+          background: rgba(241, 245, 249, 0.9);
+          color: $text-primary;
+          border-color: $border-medium;
+        }
+        
+        &:active {
+          background: rgba(226, 232, 240, 0.8);
+        }
+      }
+    }
+
+
+  }
+
+  .output-column {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-width: 0; // Allow column to shrink and enable text wrapping
+
+    .input-group {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0; // Allow content to wrap
+    }
+
+    .text-area,
+    .code-output,
+    .code-placeholder {
+      flex: 1;
+      min-height: calc(100vh - 16rem); /* Larger output area using viewport height */
+      overflow-x: auto; // Enable horizontal scroll for very long content
+      word-wrap: break-word; // Break long words
+      overflow-wrap: break-word; // Modern syntax
+    }
+
+    // Specific handling for SyntaxHighlighter in output
+    .code-output {
+      display: flex; // Make container flexbox
+      flex-direction: column; // Stack content vertically
+      
+      pre {
+        flex: 1 !important; // Fill remaining container height
+        min-height: 100% !important; // Ensure it takes full height
+        white-space: pre-wrap !important; // Wrap long lines
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        max-width: 100% !important;
+        margin: 0 !important; // Remove default margins that could affect height
+        
+        // Ensure syntax highlighter background fills full height
+        > code {
+          display: block !important;
+          height: 100% !important;
+          min-height: 100% !important;
+          padding: 0 !important; // Pre handles padding
+        }
+        
+        // Handle react-syntax-highlighter specific classes
+        &[class*="language-"] {
+          height: 100% !important;
+          min-height: 100% !important;
+          // Don't override background - let React Syntax Highlighter handle theme colors
+          
+          > code[class*="language-"] {
+            height: 100% !important;
+            min-height: 100% !important;
+            display: block !important;
+            // Don't force background - preserve syntax highlighter's theme colors
+          }
+        }
+        
+        // For plain text (non-highlighted) - provide fallback background
+        &:not([class*="language-"]) {
+          height: 100% !important;
+          min-height: 100% !important;
+          background-color: #f8fafc; // Light background for plain text
+          
+          .dark-theme & {
+            background-color: $code-bg-dark; // Dark background for plain text in dark mode
+          }
+        }
+      }
+
+      code {
+        white-space: pre-wrap !important; // Wrap long lines
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        display: block !important;
+        max-width: 100% !important;
+        min-height: 100% !important; // Fill parent height
+        height: 100% !important;
+      }
+    }
+
+    .result-actions {
+      margin-top: $spacing-md;
+      display: flex;
+      gap: $spacing-sm;
+      justify-content: flex-start;
+
+      .btn {
+        font-size: $font-size-sm;
+        padding: $spacing-sm $spacing-md;
+      }
+    }
+  }
+}
+
+// Status indicators for the 3-column layout
+.three-column-layout {
+  .status-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-xs;
+    margin-left: $spacing-sm;
+    font-size: $font-size-sm;
+    font-weight: 600;
+
+    &.valid {
+      color: $success-color;
+    }
+
+    &.invalid {
+      color: $error-color;
+    }
+  }
+}
+
+// Height-based responsive design
+@media (max-height: 700px) {
+  .three-column-layout {
+    min-height: auto;
+    
+    .input-column,
+    .output-column {
+      .text-area,
+      .code-input,
+      .code-output,
+      .code-placeholder {
+        min-height: 250px; /* Smaller min-height for shorter screens */
+      }
+      
+      // Fix border height on short screens
+      .code-output {
+        border: 1px solid #e2e8f0;
+        overflow: visible; // Prevent border clipping
+        display: flex !important; // Maintain flex layout
+        flex-direction: column !important;
+        
+        pre {
+          max-height: 230px; // Ensure it fits within container
+          overflow-y: auto;
+          flex: 1 !important; // Fill available space
+          min-height: 100% !important;
+        }
+      }
+      
+      // Dark theme only for output column on short screens when dark-theme is applied
+      &.output-column .code-output.dark-theme {
+        border: 1px solid $code-border-dark !important;
+        background-color: $code-bg-dark !important;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+      }
+    }
+  }
+  
+  .content-area {
+    min-height: auto; /* Don't force viewport height on short screens */
+  }
+}
+
+// Responsive design for 3-column layout
+@media (max-width: 1200px) {
+  .three-column-layout {
+    grid-template-columns: 1fr auto 1fr;
+    gap: $spacing-lg;
+
+    .action-column {
+      min-width: 300px; // Content area is exactly 300px, padding is additional
+      max-width: 300px; // Ensure it doesn't exceed 300px
+    }
+  }
+}
+
+@media (max-width: 900px) {
+  .three-column-layout {
+    display: block;
+    min-height: auto; /* Reset viewport height for mobile */
+
+    .input-column,
+    .output-column {
+      margin-bottom: $spacing-lg;
+
+      .text-area,
+      .code-input,
+      .code-output,
+      .code-placeholder {
+        min-height: 300px; /* Smaller but still usable on mobile */
+      }
+      
+      // Fix code-output border height issues on mobile
+      .code-output {
+        border: 1px solid #e2e8f0;
+        height: auto;
+        display: flex !important; // Maintain flex layout on mobile
+        flex-direction: column !important;
+        
+        // Ensure proper container height
+        pre {
+          height: auto !important;
+          min-height: 280px !important; // Slightly smaller than container
+          flex: 1 !important; // Fill available space
+        }
+      }
+      
+      // Dark theme only for output column on mobile when dark-theme is applied
+      &.output-column .code-output.dark-theme {
+        border: 2px solid $code-border-dark !important;
+        background-color: $code-bg-dark !important;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+      }
+    }
+
+    .action-column {
+      margin: $spacing-lg 0;
+      padding: $spacing-md 0; // Top/bottom padding only, no left/right padding
+      background: $bg-secondary;
+      border-radius: $border-radius-lg;
+      border: 1px solid $border-light;
+      min-width: 300px; // Content area is exactly 300px, padding is additional
+      max-width: 300px; // Ensure it doesn't exceed 300px
+
+      .primary-actions,
+      .secondary-actions {
+        flex-direction: row;
+        flex-wrap: wrap;
+
+        .btn {
+          flex: 1;
+          min-width: 120px;
+        }
+      }
+    }
+  }
+}
+
+// Enhanced HLS Info Section Styling
+.info-section {
+  margin-top: $spacing-xl;
+  padding: $spacing-lg;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  border-radius: $border-radius-xl;
+  border: 1px solid $border-light;
+  box-shadow: $shadow-sm;
+
+  h3 {
+    text-align: center;
+    color: $text-primary;
+    margin-bottom: $spacing-lg;
+    font-size: $font-size-2xl;
+    font-weight: 700;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: $spacing-lg;
+    margin-top: $spacing-lg;
+  }
+
+  .info-item {
+    background: white;
+    padding: $spacing-lg;
+    border-radius: $border-radius-lg;
+    border: 1px solid $border-light;
+    box-shadow: $shadow-md;
+    transition: all $transition-fast;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, $primary-color, #60a5fa);
+    }
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: $shadow-lg;
+      border-color: $primary-color;
+    }
+
+    h4 {
+      color: $text-primary;
+      margin-bottom: $spacing-md;
+      font-size: $font-size-lg;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: $spacing-sm;
+    }
+
+    p {
+      color: $text-secondary;
+      line-height: 1.6;
+      margin-bottom: $spacing-sm;
+      font-size: $font-size-base;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        color: $text-secondary;
+        margin-bottom: $spacing-xs;
+        padding-left: $spacing-md;
+        position: relative;
+        line-height: 1.5;
+        font-size: $font-size-sm;
+
+        &::before {
+          content: '▸';
+          position: absolute;
+          left: 0;
+          color: $primary-color;
+          font-weight: bold;
+        }
+
+        &:hover {
+          color: $text-primary;
+          transform: translateX(2px);
+          transition: all $transition-fast;
+        }
+      }
+    }
+  }
+
+  .mime-type-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    
+    p {
+      background: rgba(248, 250, 252, 0.9);
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 0.875rem;
+      margin: 0;
+      color: #374151;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      transition: all 0.2s ease;
+      
+      strong {
+        color: #1d4ed8;
+        font-weight: 600;
+        font-family: 'Source Code Pro', monospace;
+        background: rgba(29, 78, 216, 0.1);
+        padding: 3px 6px;
+        border-radius: 4px;
+        border: 1px solid rgba(29, 78, 216, 0.2);
+      }
+
+      &:hover {
+        background: rgba(241, 245, 249, 0.95);
+        border-color: #cbd5e1;
+        transform: translateX(2px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      }
+    }
+
+    small {
+      background: rgba(59, 130, 246, 0.08);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 8px;
+      padding: 0.75rem;
+      margin-top: 0.5rem;
+      color: #475569;
+      font-style: italic;
+      text-align: center;
+      
+      &:before {
+        content: '💡';
+        margin-right: 0.5rem;
+        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+      }
+    }
+  }
+
+  // Responsive adjustments
+  @media (max-width: 768px) {
+    padding: $spacing-md;
+    margin-top: $spacing-lg;
+
+    h3 {
+      font-size: $font-size-xl;
+    }
+
+    .info-grid {
+      grid-template-columns: 1fr;
+      gap: $spacing-md;
+    }
+
+    .info-item {
+      padding: $spacing-md;
+    }
+  }
+}
+
+// Input header and language indicator - applies to both light and dark modes
+.input-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-sm;
+  
+  .input-label {
+    margin-bottom: 0;
+  }
+  
+  .language-indicator {
+    font-size: $font-size-xs;
+    font-weight: 500;
+    color: $primary-color;
+    background: rgba($primary-color, 0.15);
+    padding: $spacing-xs $spacing-sm;
+    border-radius: $border-radius-sm;
+    border: 1px solid rgba($primary-color, 0.3);
+    transition: all $transition-fast;
+    
+    &:hover {
+      background: rgba($primary-color, 0.2);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba($primary-color, 0.3);
+    }
+  }
+}
+
+/* Dark theme styles for three-column layout */
+body.dark-theme {
+  .three-column-layout {
+    .input-label {
+      color: #cbd5e1;
+    }
+    
+    // Remove borders from input-group to match light mode
+    .input-column,
+    .output-column {
+      .input-group {
+        // No background or border - match light mode exactly
+        // Only change text colors for dark theme
+      }
+    }
+    
+    .action-column {
+      // Clean flat background for dark mode - no border
+      background: rgba(30, 41, 59, 0.4) !important;
+      backdrop-filter: none !important;
+      border: none !important;
+      border-radius: 12px !important;
+      
+      // Ensure mode-toggle inherits flat design - no borders
+      .mode-toggle {
+        background: #1e293b !important;
+        border: none !important;
+        backdrop-filter: none !important;
+        box-shadow: none !important;
+      }
+    }
+    
+    // Clean Flat Design - Dark Mode Toggle (No Borders)
+    .tab-group,
+    .mode-toggle {
+      background: #1e293b !important;
+      border: none !important;
+      border-radius: 8px !important;
+      padding: 3px !important;
+      transition: background-color 0.2s ease !important;
+      
+      &:hover {
+        background: rgba(51, 65, 85, 0.6) !important;
+      }
+    }
+    
+    .tab-btn {
+      background: transparent !important;
+      border: none !important;
+      margin: 0 !important;
+      padding: 8px 16px !important;
+      border-radius: 6px !important;
+      font-weight: 500 !important;
+      font-size: 14px !important;
+      color: #94a3b8 !important;
+      cursor: pointer !important;
+      transition: all 0.15s ease !important;
+
+      // Hover state - simple and clean
+      &:hover:not(.active) {
+        background: rgba(96, 165, 250, 0.12) !important;
+        color: #e2e8f0 !important;
+      }
+
+      // Active state - clean blue background
+      &.active {
+        background: #3b82f6 !important;
+        color: white !important;
+        font-weight: 600 !important;
+      }
+
+      // Press feedback
+      &:active {
+        transform: scale(0.98) !important;
+      }
+
+      // Clean focus state
+      &:focus {
+        outline: none !important;
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3) !important;
+      }
+    }
+      
+    // Better primary button styling for dark mode
+    .btn-primary {
+        background: linear-gradient(135deg, #475569, #334155);
+        color: #e2e8f0;
+        border: 1px solid #64748b;
+        box-shadow: 
+          0 2px 4px -1px rgba(0, 0, 0, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        
+        &:hover {
+          background: linear-gradient(135deg, #64748b, #475569);
+          color: #f1f5f9;
+          border-color: #94a3b8;
+          box-shadow: 
+            0 4px 8px -2px rgba(0, 0, 0, 0.4),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15);
+          transform: translateY(-1px);
+        }
+        
+        &:active {
+          transform: translateY(0);
+          background: linear-gradient(135deg, #334155, #1e293b);
+          box-shadow: 
+            0 1px 2px -1px rgba(0, 0, 0, 0.3),
+            inset 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+      }
+      
+      // Better outline button styling for dark mode  
+      .btn-outline {
+        background: rgba(51, 65, 85, 0.2);
+        color: #94a3b8;
+        border: 1px solid #475569;
+        backdrop-filter: blur(4px);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        
+        &:hover {
+          background: rgba(71, 85, 105, 0.3);
+          color: #cbd5e1;
+          border-color: #64748b;
+          box-shadow: 
+            0 2px 4px rgba(0, 0, 0, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.05);
+          transform: translateY(-1px);
+        }
+        
+        &:active {
+          transform: translateY(0);
+          background: rgba(71, 85, 105, 0.4);
+          color: #e2e8f0;
+        }
+      }
+      
+      // Dark mode language indicator styling  
+      .language-indicator {
+        color: #60a5fa;
+        background: rgba(96, 165, 250, 0.15);
+        border-color: rgba(96, 165, 250, 0.3);
+        
+        &:hover {
+          background: rgba(96, 165, 250, 0.2);
+          transform: translateY(-1px);
+          box-shadow: 0 2px 4px rgba(96, 165, 250, 0.3);
+        }
+      }
+
+      // Clean secondary-actions styling for dark mode
+      .secondary-actions {
+        border-top-color: #475569;
+        
+        .btn {
+          background: rgba(51, 65, 85, 0.3);
+          color: #cbd5e1;
+          border: 1px solid #475569;
+          font-size: 0.875rem;
+          padding: 0.5rem 1rem;
+          font-weight: 500;
+          
+          &:hover {
+            background: rgba(71, 85, 105, 0.4);
+            color: #f1f5f9;
+            border-color: #64748b;
+          }
+          
+          &:active {
+            background: rgba(71, 85, 105, 0.5);
+          }
+        }
+      }
+      }
+  
+  .status-indicator {
+    &.valid {
+      color: #34d399;
+    }
+    
+    &.invalid {
+      color: #f87171;
+    }
+  }
+
+
+}
+
+// Ace Editor Container Styles
+.code-editor-container {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.2s ease-in-out;
+
+  // Light theme styles
+  &.light-theme {
+    border: 2px solid #e2e8f0;
+    box-shadow: 
+      inset 0 1px 0 rgba(255, 255, 255, 0.1),
+      0 1px 3px rgba(0, 0, 0, 0.1),
+      0 1px 2px rgba(0, 0, 0, 0.06);
+
+    &:hover {
+      border-color: #cbd5e0;
+      box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        0 4px 12px rgba(0, 0, 0, 0.15),
+        0 2px 4px rgba(0, 0, 0, 0.08);
+      transform: translateY(-1px);
+    }
+
+    .ace_gutter {
+      border-right: 1px solid #e2e8f0 !important;
+      background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%) !important;
+    }
+
+    .ace_gutter-active-line {
+      background: #dbeafe !important;
+    }
+
+    .ace_active-line {
+      background: rgba(59, 130, 246, 0.1) !important;
+    }
+
+    .ace_selection {
+      background: rgba(59, 130, 246, 0.25) !important;
+    }
+
+    .ace_cursor {
+      color: #3b82f6 !important;
+    }
+  }
+
+  // Dark theme styles
+  &.dark-theme {
+    border: 2px solid #334155;
+    box-shadow: 
+      inset 0 1px 0 rgba(255, 255, 255, 0.05),
+      0 1px 3px rgba(0, 0, 0, 0.4),
+      0 1px 2px rgba(0, 0, 0, 0.3);
+
+    &:hover {
+      border-color: #475569;
+      box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        0 4px 12px rgba(0, 0, 0, 0.5),
+        0 2px 4px rgba(0, 0, 0, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .ace_gutter {
+      border-right: 1px solid #334155 !important;
+      background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%) !important;
+    }
+
+    .ace_gutter-active-line {
+      background: #334155 !important;
+    }
+
+    .ace_active-line {
+      background: rgba(51, 65, 85, 0.3) !important;
+    }
+
+    .ace_selection {
+      background: rgba(96, 165, 250, 0.3) !important;
+    }
+
+    .ace_cursor {
+      color: #60a5fa !important;
+    }
+  }
+
+  // Common Ace Editor styles
+  .ace_editor {
+    border-radius: 6px;
+    font-family: 'Source Code Pro', 'Monaco', 'Menlo', 'Courier New', monospace !important;
+  }
+
+  .ace_scrollbar-h {
+    height: 12px !important;
+  }
+
+  .ace_scrollbar-v {
+    width: 12px !important;
+  }
+}
+
+// Comprehensive dark mode styles for HLS components
+body.dark-theme {
+  // Sample stream items
+  .sample-stream-item {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    border: 2px solid #475569;
+    color: #e2e8f0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+
+    &:hover {
+      border-color: #60a5fa;
+      background: linear-gradient(135deg, #334155 0%, #475569 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    }
+
+    .sample-stream-info {
+      strong {
+        color: #f1f5f9;
+      }
+      
+      p {
+        color: #cbd5e1;
+      }
+    }
+
+    .stream-url {
+      color: #94a3b8;
+    }
+  }
+
+  // Video player container
+  .hls-player-container {
+    border: 2px solid #334155;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+
+    &:hover {
+      border-color: #475569;
+    }
+  }
+
+  // Player overlay and stream indicators
+  .player-overlay {
+    .stream-indicator {
+      .stream-status {
+        background: rgba(15, 23, 42, 0.9);
+        color: #f1f5f9;
+        border: 1px solid #475569;
+        backdrop-filter: blur(8px);
+
+        &.live {
+          border-color: #dc2626;
+          color: #fecaca;
+        }
+
+        &.vod {
+          border-color: #059669;
+          color: #a7f3d0;
+        }
+      }
+    }
+  }
+
+  // Stream info section
+  .stream-info-section {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    border: 2px solid #334155;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+
+    h3 {
+      color: #f1f5f9;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    }
+
+    code {
+      background: rgba(51, 65, 85, 0.9);
+      color: #fbbf24;
+      border: 1px solid #475569;
+      font-family: 'Source Code Pro', monospace;
+      font-weight: 500;
+      padding: 3px 6px;
+      border-radius: 4px;
+    }
+  }
+
+  // Info cards
+  .info-card {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    border: 2px solid #475569;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+
+    &:hover {
+      border-color: #64748b;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    h4 {
+      color: #f1f5f9;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    ul li {
+      color: #e2e8f0;
+      line-height: 1.6;
+      
+      strong {
+        color: #f8fafc;
+        font-weight: 600;
+      }
+    }
+
+    p {
+      color: #e2e8f0;
+      line-height: 1.7;
+    }
+  }
+
+  // About HLS info section
+  .info-section {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    border: 2px solid #334155;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+
+    h3 {
+      color: #f1f5f9;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    }
+  }
+
+  .info-item {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    border: 2px solid #475569;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+
+    &:hover {
+      border-color: #64748b;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+    }
+
+    h4 {
+      color: #f1f5f9;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    p {
+      color: #e2e8f0;
+      line-height: 1.7;
+    }
+
+    ul {
+      li {
+        color: #e2e8f0;
+        line-height: 1.6;
+        
+        &:hover {
+          color: #f8fafc;
+        }
+      }
+    }
+
+    &.mime-type-card {
+      background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+      border-color: #475569;
+
+      &:hover {
+        border-color: #64748b;
+      }
+    }
+  }
+
+  .mime-type-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    
+    p {
+      background: rgba(51, 65, 85, 0.4);
+      border: 1px solid #475569;
+      border-radius: 8px;
+      padding: 0.875rem;
+      margin: 0;
+      color: #e2e8f0;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      transition: all 0.2s ease;
+      
+      strong {
+        color: #fbbf24;
+        font-weight: 600;
+        font-family: 'Source Code Pro', monospace;
+        background: rgba(251, 191, 36, 0.15);
+        padding: 3px 6px;
+        border-radius: 4px;
+        border: 1px solid rgba(251, 191, 36, 0.25);
+      }
+
+      &:hover {
+        background: rgba(51, 65, 85, 0.6);
+        border-color: #64748b;
+        transform: translateX(2px);
+      }
+    }
+
+    small {
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid #475569;
+      border-radius: 8px;
+      padding: 0.75rem;
+      margin-top: 0.5rem;
+      color: #cbd5e1;
+      font-style: italic;
+      text-align: center;
+      
+      &:before {
+        content: '💡';
+        margin-right: 0.5rem;
+        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+      }
+    }
+  }
+
+  // Quality levels section
+  .quality-levels-section {
+    h3 {
+      color: #f1f5f9;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  .quality-level-card {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    border: 2px solid #475569;
+    color: #e2e8f0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+
+    &:hover {
+      border-color: #60a5fa;
+      background: linear-gradient(135deg, #334155 0%, #475569 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    }
+
+    &.active {
+      border-color: #10b981;
+      background: linear-gradient(135deg, #065f46 0%, #047857 100%);
+      color: #ecfdf5;
+      box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
+    }
+
+    .quality-resolution {
+      color: #f8fafc;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .quality-bitrate {
+      color: #60a5fa;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .quality-fps {
+      color: #e2e8f0;
+      font-weight: 500;
+    }
+
+    .quality-codecs {
+      color: #cbd5e1;
+      font-size: 0.85rem;
+      font-weight: 400;
+    }
+
+    .quality-active-indicator {
+      color: #10b981;
+    }
+  }
+
+  // Button group
+  .button-group {
+    .btn {
+      background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+      border: 2px solid #475569;
+      color: #e2e8f0;
+      font-weight: 500;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+
+      &:hover {
+        border-color: #60a5fa;
+        background: linear-gradient(135deg, #334155 0%, #475569 100%);
+        color: #f8fafc;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      }
+
+      &:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+    }
+  }
+
+  // Error messages
+  .error-message {
+    background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);
+    border: 2px solid #dc2626;
+    color: #fef2f2;
+    font-weight: 500;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+
+    .error-icon {
+      filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+      margin-right: 0.5rem;
+    }
+  }
+
+  // Input labels in HLS tool
+  .input-label {
+    color: #e2e8f0;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+
+  // Enhanced text readability for all HLS components
+  .tool-container {
+    // Main headings
+    h3, h4 {
+      color: #f8fafc;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    }
+
+    // Paragraph text
+    p {
+      color: #e2e8f0;
+      line-height: 1.6;
+    }
+
+    // List items
+    ul li {
+      color: #e2e8f0;
+      
+      strong {
+        color: #f8fafc;
+        font-weight: 600;
+      }
+    }
+
+    // Strong text in paragraphs
+    p strong {
+      color: #f8fafc;
+      font-weight: 600;
+    }
+
+    // Code elements
+    code {
+      background: rgba(51, 65, 85, 0.8);
+      color: #fbbf24;
+      border: 1px solid #475569;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'Source Code Pro', monospace;
+    }
+
+    // Input labels
+    .input-label {
+      color: #f1f5f9;
+      font-weight: 500;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    // Sample stream info text
+    .sample-stream-info {
+      strong {
+        color: #f8fafc;
+        font-weight: 600;
+      }
+      
+      p {
+        color: #d1d5db;
+      }
+    }
+  }
+}

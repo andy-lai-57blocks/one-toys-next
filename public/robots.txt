@@ -1,0 +1,29 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://one-toys.com/sitemap.xml
+
+# Crawl delay (optional)
+Crawl-delay: 1
+
+# Specific rules for common bots
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+# Block access to build files and internal paths
+Disallow: /static/js/
+Disallow: /static/css/
+Disallow: /build/
+Disallow: /node_modules/
+
+# Allow important assets
+Allow: /static/media/
+Allow: /favicon.ico
+Allow: /manifest.json

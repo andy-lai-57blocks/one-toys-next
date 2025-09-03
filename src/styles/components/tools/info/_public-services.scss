@@ -1,0 +1,410 @@
+@import '../../../shared/variables';
+
+// Public Service Numbers Styling
+.country-selection-section {
+  background: linear-gradient(135deg, #fafafa 0%, $bg-card 100%);
+  border: 2px solid #f1f5f9;
+  border-radius: $border-radius-xl;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-xl;
+
+  h3 {
+    margin-top: 0;
+    margin-bottom: $spacing-md;
+    color: $text-primary;
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+  }
+}
+
+.country-selector {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: $spacing-md;
+}
+
+.country-button {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: $spacing-md;
+  background: $bg-card;
+  border: 2px solid $border-light;
+  border-radius: $border-radius-lg;
+  cursor: pointer;
+  transition: all $transition-fast;
+  font-size: $font-size-base;
+  font-weight: 600;
+  color: $text-primary;
+
+  &:hover {
+    border-color: $primary-color;
+    transform: translateY(-2px);
+    box-shadow: $shadow-md;
+  }
+
+  &.active {
+    border-color: $primary-color;
+    background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%);
+    color: #1e40af;
+  }
+}
+
+.country-flag-large {
+  font-size: 1.75rem;
+  flex-shrink: 0;
+}
+
+.country-name {
+  flex: 1;
+  font-weight: 600;
+}
+
+.emergency-quick-section {
+  background: linear-gradient(135deg, #fef2f2 0%, #fef7f7 100%);
+  border: 2px solid #fecaca;
+  border-radius: $border-radius-xl;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-xl;
+
+  h3 {
+    margin-top: 0;
+    margin-bottom: $spacing-md;
+    color: $error-color;
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+  }
+}
+
+.emergency-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: $spacing-md;
+}
+
+.emergency-card {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-md;
+  background: $bg-card;
+  border: 2px solid #fca5a5;
+  border-radius: $border-radius-lg;
+  transition: all $transition-fast;
+
+  &:hover {
+    border-color: $error-color;
+    box-shadow: 0 4px 6px -1px rgba(220, 38, 38, 0.1);
+    transform: translateY(-2px);
+  }
+}
+
+.emergency-icon {
+  font-size: $spacing-xl;
+  flex-shrink: 0;
+}
+
+.emergency-info {
+  flex: 1;
+}
+
+.emergency-name {
+  margin: 0 0 $spacing-xs 0;
+  font-size: $font-size-base;
+  font-weight: 700;
+  color: $error-color;
+}
+
+.emergency-number {
+  font-family: $font-family-mono;
+  font-size: $font-size-xl;
+  font-weight: 700;
+  color: $error-color;
+  margin-bottom: $spacing-xs;
+}
+
+.emergency-description {
+  margin: 0;
+  font-size: $font-size-sm;
+  color: #991b1b;
+  line-height: 1.3;
+}
+
+.btn-emergency {
+  background: $error-color;
+  color: $text-white;
+  border: 2px solid $error-color;
+  padding: $spacing-sm $spacing-md;
+  border-radius: $border-radius-md;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all $transition-fast;
+  flex-shrink: 0;
+
+  &:hover {
+    background: #b91c1c;
+    border-color: #b91c1c;
+    transform: translateY(-1px);
+  }
+}
+
+.search-section {
+  background: $bg-card;
+  border: 2px solid #f1f5f9;
+  border-radius: $border-radius-xl;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-xl;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: $spacing-md;
+  margin-top: $spacing-md;
+}
+
+.service-card {
+  background: $bg-card;
+  border: 2px solid #f1f5f9;
+  border-radius: $border-radius-xl;
+  padding: 1.25rem;
+  transition: $transition-normal;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, $primary-color, #8b5cf6);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform $transition-normal;
+  }
+
+  &:hover {
+    border-color: #e2e8f0;
+    box-shadow: $shadow-md;
+    transform: translateY(-2px);
+
+    &::before {
+      transform: scaleX(1);
+    }
+  }
+
+  // Category-specific styling
+  &[data-category="Government"] .service-category {
+    background: #eff6ff;
+    color: #1e40af;
+  }
+
+  &[data-category="Healthcare"] .service-category {
+    background: #f0fdf4;
+    color: #16a34a;
+  }
+
+  &[data-category="Consumer"] .service-category {
+    background: #fef3c7;
+    color: #d97706;
+  }
+
+  &[data-category="Transportation"] .service-category {
+    background: #f3e8ff;
+    color: #7c3aed;
+  }
+
+  &[data-category="Utilities"] .service-category {
+    background: #fdf4ff;
+    color: #c026d3;
+  }
+
+  &[data-category="Legal"] .service-category {
+    background: #fafaf9;
+    color: #44403c;
+  }
+
+  &[data-category="Veterans"] .service-category {
+    background: #ecfccb;
+    color: #65a30d;
+  }
+}
+
+.emergency-card .service-category[data-category="Emergency"] {
+  background: #fef2f2;
+  color: $error-color;
+}
+
+.service-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: $spacing-md;
+}
+
+.service-icon {
+  font-size: $font-size-2xl;
+  flex-shrink: 0;
+}
+
+.service-info {
+  flex: 1;
+}
+
+.service-name {
+  margin: 0 0 $spacing-xs 0;
+  font-size: $font-size-lg;
+  font-weight: 700;
+  color: $text-primary;
+  line-height: 1.3;
+}
+
+.service-category {
+  font-size: $font-size-xs;
+  color: $text-secondary;
+  background: #f1f5f9;
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $border-radius-md;
+  font-weight: 500;
+}
+
+.service-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.service-number {
+  font-family: $font-family-mono;
+  font-size: $font-size-xl;
+  font-weight: 700;
+  color: $primary-color;
+  background: #eff6ff;
+  padding: $spacing-sm;
+  border-radius: $border-radius-md;
+  border: 1px solid #bfdbfe;
+}
+
+.service-description {
+  margin: 0;
+  color: $text-secondary;
+  line-height: 1.4;
+  font-size: 0.9375rem;
+}
+
+.service-actions {
+  display: flex;
+  gap: $spacing-sm;
+  flex-wrap: wrap;
+
+  .btn {
+    flex: 1;
+    min-width: 120px;
+  }
+}
+
+.usage-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: $spacing-lg;
+}
+
+// Responsive adjustments for public service numbers
+@media (max-width: $breakpoint-md) {
+  .country-selection-section {
+    padding: $spacing-md;
+    margin-bottom: $spacing-lg;
+  }
+  
+  .country-selector {
+    grid-template-columns: 1fr;
+  }
+  
+  .country-button {
+    padding: 0.875rem;
+  }
+  
+  .country-flag-large {
+    font-size: $font-size-2xl;
+  }
+  
+  .emergency-quick-section {
+    padding: $spacing-md;
+    margin-bottom: $spacing-lg;
+  }
+  
+  .emergency-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .emergency-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.75rem;
+    padding: $spacing-md;
+  }
+  
+  .emergency-info {
+    text-align: center;
+  }
+  
+  .search-section {
+    padding: $spacing-md;
+    margin-bottom: $spacing-lg;
+  }
+  
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .service-card {
+    padding: $spacing-md;
+  }
+  
+  .service-actions {
+    flex-direction: column;
+
+    .btn {
+      flex: none;
+      width: 100%;
+      min-width: auto;
+    }
+  }
+  
+  .usage-grid {
+    grid-template-columns: 1fr;
+    gap: $spacing-md;
+  }
+}
+
+@media (max-width: 480px) {
+  .country-button {
+    padding: 0.75rem;
+    font-size: 0.9375rem;
+  }
+  
+  .emergency-card {
+    padding: 0.875rem;
+  }
+  
+  .emergency-icon {
+    font-size: 1.75rem;
+  }
+  
+  .emergency-number {
+    font-size: $font-size-lg;
+  }
+  
+  .service-number {
+    font-size: $font-size-lg;
+    padding: 0.375rem;
+  }
+  
+  .service-name {
+    font-size: $font-size-base;
+  }
+}

@@ -1,0 +1,126 @@
+// Breadcrumb Navigation Styles
+.breadcrumbs {
+  margin: $spacing-md 0;
+  padding: 0;
+  font-size: $font-size-sm;
+  
+  @media (max-width: 768px) {
+    margin: $spacing-sm 0;
+    padding: 0 $spacing-sm;
+  }
+}
+
+.breadcrumb-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: $spacing-xs;
+}
+
+.breadcrumb-item {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  
+  &:not(:last-child) {
+    .breadcrumb-separator {
+      margin-left: $spacing-xs;
+      color: $text-secondary;
+      font-weight: 400;
+      opacity: 0.6;
+    }
+  }
+}
+
+.breadcrumb-link {
+  color: $text-secondary;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all $transition-fast;
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $border-radius-sm;
+  
+  &:hover {
+    color: $primary-color;
+    background: rgba($primary-color, 0.1);
+    text-decoration: none;
+  }
+  
+  &:focus {
+    outline: 2px solid $primary-color;
+    outline-offset: 2px;
+  }
+  
+  @media (max-width: 768px) {
+    padding: $spacing-xs;
+    font-size: 0.9rem;
+  }
+}
+
+.breadcrumb-current {
+  color: $text-primary;
+  font-weight: 600;
+  padding: $spacing-xs $spacing-sm;
+  
+  @media (max-width: 768px) {
+    padding: $spacing-xs;
+    font-size: 0.9rem;
+  }
+}
+
+.breadcrumb-separator {
+  color: $text-secondary;
+  font-weight: 400;
+  opacity: 0.6;
+  user-select: none;
+  
+  @media (max-width: 768px) {
+    margin: 0 2px;
+  }
+}
+
+// Dark mode support
+body.dark-theme {
+  .breadcrumb-link {
+    color: #cbd5e1;
+    
+    &:hover {
+      color: #60a5fa;
+      background: rgba(96, 165, 250, 0.15);
+    }
+  }
+  
+  .breadcrumb-current {
+    color: #f1f5f9;
+  }
+  
+  .breadcrumb-separator {
+    color: #94a3b8;
+  }
+}
+
+// Structured data for SEO
+.breadcrumbs {
+  &[itemscope] {
+    ol {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    
+    li[itemprop="itemListElement"] {
+      display: flex;
+      align-items: center;
+      
+      &:not(:last-child)::after {
+        content: "›";
+        margin: 0 $spacing-xs;
+        color: $text-secondary;
+        opacity: 0.6;
+      }
+    }
+  }
+}

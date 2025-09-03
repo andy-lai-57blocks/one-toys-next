@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>One Toys OG Image Generator</title>
+    <style>
+        body { margin: 0; font-family: 'Arial', sans-serif; }
+        .og-image {
+            width: 1200px;
+            height: 630px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            color: white;
+            text-align: center;
+        }
+        .logo {
+            font-size: 72px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .subtitle {
+            font-size: 36px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        .tools-count {
+            font-size: 24px;
+            background: rgba(255,255,255,0.2);
+            padding: 15px 30px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+        }
+        .tools-grid {
+            position: absolute;
+            bottom: 60px;
+            display: flex;
+            gap: 20px;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        .decoration {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+        }
+        .decoration.top-left { top: -100px; left: -100px; }
+        .decoration.bottom-right { bottom: -100px; right: -100px; }
+    </style>
+</head>
+<body>
+    <div class="og-image">
+        <div class="decoration top-left"></div>
+        <div class="decoration bottom-right"></div>
+        
+        <div class="logo">One Toys</div>
+        <div class="subtitle">Comprehensive Productivity Platform</div>
+        <div class="tools-count">22+ Professional Tools</div>
+        
+        <div class="tools-grid">
+            <span>Base64 • JSON • URL • HTML • XML • Gzip</span>
+            <span>•</span>
+            <span>UUID • Password • Text • DateTime • Info</span>
+        </div>
+    </div>
+
+    <script>
+        // Instructions for creating the actual PNG:
+        console.log(`
+To create og-image.png:
+1. Open this HTML file in a browser
+2. Right-click on the image and "Save as..." 
+3. Or use a screenshot tool to capture at exactly 1200x630px
+4. Save as "og-image.png" in the public/ folder
+
+Alternative: Use online tools like:
+- Canva.com (Social Media -> Facebook Post -> 1200x630px)
+- Figma.com (create 1200x630 frame)
+- bannerbear.com/tools/social-media-image-generator/
+        `);
+    </script>
+</body>
+</html>

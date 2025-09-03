@@ -1,0 +1,15 @@
+{
+  "short_name": "OneToys",
+  "name": "One Toys - Comprehensive Platform",
+  "description": "Comprehensive platform with hundreds of practical functions for efficient data processing and productivity",
+  "icons": [],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#3b82f6",
+  "background_color": "#ffffff",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en-US",
+  "categories": ["productivity", "utilities", "tools"],
+  "screenshots": []
+}

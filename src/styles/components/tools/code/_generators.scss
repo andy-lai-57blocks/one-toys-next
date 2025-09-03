@@ -1,0 +1,1170 @@
+@import '../../../shared/variables';
+
+// Password Generator Specific Styles
+.password-generator-tool {
+  .settings-panel {
+    background: linear-gradient(135deg, $bg-card 0%, $bg-secondary 100%);
+    border: 2px solid rgba($primary-color, 0.08);
+    border-radius: $border-radius-xl;
+    padding: $spacing-xl;
+    box-shadow: 
+      $shadow-md,
+      inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    transition: all $transition-normal;
+
+    &:hover {
+      border-color: rgba($primary-color, 0.12);
+      box-shadow: 
+        $shadow-lg,
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+      transform: translateY(-1px);
+    }
+    
+    .setting-group {
+      background: rgba($bg-card, 0.7);
+      border: 1px solid rgba($primary-color, 0.1);
+      border-radius: $border-radius-lg;
+      padding: $spacing-lg;
+      margin-bottom: $spacing-lg;
+      position: relative;
+      overflow: hidden;
+      transition: all $transition-normal;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, $primary-color, lighten($primary-color, 10%));
+        opacity: 0.6;
+        transition: opacity $transition-normal;
+      }
+
+      &:hover {
+        border-color: rgba($primary-color, 0.2);
+        box-shadow: 0 4px 12px rgba($primary-color, 0.15);
+        transform: translateY(-2px);
+        
+        &::before {
+          opacity: 1;
+        }
+      }
+      
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+    
+    .setting-label {
+      font-size: $font-size-base;
+      font-weight: 700;
+      color: $text-primary;
+      margin-bottom: $spacing-md;
+      display: flex;
+      align-items: center;
+      gap: $spacing-sm;
+      text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+      
+      &::before {
+        content: '';
+        width: 4px;
+        height: 20px;
+        background: $primary-color;
+        border-radius: 2px;
+        box-shadow: 0 2px 4px rgba($primary-color, 0.3);
+      }
+    }
+    
+    .length-slider {
+      width: 100%;
+      margin: $spacing-md 0;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 8px;
+      border-radius: 6px;
+      background: linear-gradient(to right, $border-light 0%, $border-medium 50%, $text-muted 100%);
+      outline: none;
+      position: relative;
+      transition: all $transition-normal;
+      box-shadow: 
+        inset 0 1px 2px rgba(0, 0, 0, 0.08),
+        0 1px 2px rgba(255, 255, 255, 0.5);
+      
+      &:hover {
+        background: linear-gradient(to right, $border-medium 0%, $text-muted 50%, $secondary-color 100%);
+        box-shadow: 
+          inset 0 1px 2px rgba(0, 0, 0, 0.12),
+          0 2px 6px rgba($primary-color, 0.15);
+      }
+      
+      &::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, $primary-color, darken($primary-color, 10%));
+        cursor: pointer;
+        box-shadow: 
+          0 2px 6px rgba($primary-color, 0.25),
+          0 1px 2px rgba(0, 0, 0, 0.1),
+          inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        transition: all $transition-fast;
+        
+        &:hover {
+          transform: scale(1.1);
+          box-shadow: 
+            0 3px 8px rgba($primary-color, 0.3),
+            0 1px 3px rgba(0, 0, 0, 0.15),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+        
+        &:active {
+          transform: scale(0.95);
+          box-shadow: 
+            0 1px 3px rgba($primary-color, 0.4),
+            inset 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+      }
+      
+      &::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, $primary-color, darken($primary-color, 10%));
+        cursor: pointer;
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        box-shadow: 
+          0 2px 6px rgba($primary-color, 0.25),
+          0 1px 2px rgba(0, 0, 0, 0.1),
+          inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      }
+    }
+    
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: $font-size-xs;
+      color: $text-secondary;
+      font-weight: 600;
+      margin-top: $spacing-xs;
+      
+      span {
+        background: rgba($primary-color, 0.1);
+        padding: 2px 6px;
+        border-radius: 4px;
+        border: 1px solid rgba($primary-color, 0.2);
+      }
+    }
+    
+    .checkbox-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: $spacing-sm;
+      margin-top: $spacing-sm;
+      
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      padding: $spacing-sm;
+      border-radius: $border-radius-md;
+      background: rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(59, 130, 246, 0.1);
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+        transition: left 0.5s ease;
+      }
+      
+      &:hover {
+        background: rgba($primary-color, 0.08);
+        border-color: rgba($primary-color, 0.2);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15);
+        
+        &::before {
+          left: 100%;
+        }
+      }
+      
+      &.exclude-similar {
+        grid-column: 1 / -1;
+        background: rgba(251, 146, 60, 0.1);
+        border-color: rgba(251, 146, 60, 0.2);
+        margin-top: $spacing-sm;
+        
+        &:hover {
+          background: rgba(251, 146, 60, 0.15);
+          border-color: rgba(251, 146, 60, 0.3);
+        }
+        
+        span {
+          color: #ea580c;
+          font-weight: 600;
+        }
+      }
+      
+      input[type="checkbox"] {
+        margin-right: $spacing-sm;
+        width: 18px;
+        height: 18px;
+        accent-color: $primary-color;
+        cursor: pointer;
+        
+        &:checked + span {
+          color: $primary-color;
+          font-weight: 600;
+        }
+      }
+      
+      span {
+        font-size: $font-size-sm;
+        font-weight: 500;
+        color: $text-primary;
+        transition: all 0.2s ease;
+      }
+    }
+    
+    .preview-info {
+      background: $bg-secondary;
+      border: 1px solid $border-light;
+      border-radius: $border-radius-lg;
+      padding: $spacing-lg;
+      margin-top: $spacing-lg;
+      
+      .info-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: $spacing-sm;
+        padding: $spacing-sm;
+        
+        &:last-child {
+          margin-bottom: 0;
+        }
+        
+        .info-label {
+          font-size: $font-size-sm;
+          color: $text-secondary;
+          font-weight: 600;
+        }
+        
+        .info-value {
+          font-size: $font-size-sm;
+          font-weight: 700;
+          color: $primary-color;
+          background: rgba($primary-color, 0.1);
+          padding: 4px 10px;
+          border-radius: $border-radius-md;
+          min-width: 45px;
+          text-align: center;
+          
+          &.strength-weak { 
+            color: $error-color; 
+            background: rgba($error-color, 0.12);
+            border-color: rgba($error-color, 0.25);
+            box-shadow: 
+              0 1px 3px rgba($error-color, 0.2),
+              inset 0 1px 0 rgba(255, 255, 255, 0.3);
+          }
+          &.strength-fair { 
+            color: $warning-color; 
+            background: rgba($warning-color, 0.12);
+            border-color: rgba($warning-color, 0.25);
+            box-shadow: 
+              0 1px 3px rgba($warning-color, 0.2),
+              inset 0 1px 0 rgba(255, 255, 255, 0.3);
+          }
+          &.strength-good { 
+            color: $primary-color; 
+            background: rgba($primary-color, 0.12);
+            border-color: rgba($primary-color, 0.25);
+            box-shadow: 
+              0 1px 3px rgba($primary-color, 0.2),
+              inset 0 1px 0 rgba(255, 255, 255, 0.3);
+          }
+          &.strength-strong { 
+            color: $success-color; 
+            background: rgba($success-color, 0.12);
+            border-color: rgba($success-color, 0.25);
+            box-shadow: 
+              0 1px 3px rgba($success-color, 0.2),
+              inset 0 1px 0 rgba(255, 255, 255, 0.3);
+          }
+        }
+      }
+    }
+  }
+}
+
+// UUID Generator Specific Styles
+.uuid-generator-tool {
+  .settings-panel {
+    background: linear-gradient(135deg, $bg-card 0%, $bg-secondary 100%);
+    border: 2px solid rgba($primary-color, 0.08);
+    border-radius: $border-radius-xl;
+    padding: $spacing-xl;
+    box-shadow: 
+      $shadow-md,
+      inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    transition: all $transition-normal;
+
+    &:hover {
+      border-color: rgba($primary-color, 0.12);
+      box-shadow: 
+        $shadow-lg,
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+      transform: translateY(-1px);
+    }
+    
+    .setting-group {
+      background: rgba($bg-card, 0.7);
+      border: 1px solid rgba($primary-color, 0.1);
+      border-radius: $border-radius-lg;
+      padding: $spacing-lg;
+      margin-bottom: $spacing-lg;
+      position: relative;
+      overflow: hidden;
+      transition: all $transition-normal;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, $primary-color, lighten($primary-color, 10%));
+        opacity: 0.6;
+        transition: opacity $transition-normal;
+      }
+
+      &:hover {
+        border-color: rgba($primary-color, 0.2);
+        box-shadow: 0 4px 12px rgba($primary-color, 0.15);
+        transform: translateY(-2px);
+        
+        &::before {
+          opacity: 1;
+        }
+      }
+      
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+    
+    .setting-label {
+      font-size: $font-size-base;
+      font-weight: 700;
+      color: $text-primary;
+      margin-bottom: $spacing-md;
+      display: flex;
+      align-items: center;
+      gap: $spacing-sm;
+      text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+      
+      &::before {
+        content: '';
+        width: 4px;
+        height: 20px;
+        background: $primary-color;
+        border-radius: 2px;
+        box-shadow: 0 2px 4px rgba($primary-color, 0.3);
+      }
+    }
+  }
+
+  .version-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $spacing-md;
+    margin-bottom: $spacing-lg;
+  }
+  
+  .version-btn {
+    background: rgba($bg-card, 0.8);
+    border: 2px solid rgba($primary-color, 0.15);
+    border-radius: $border-radius-lg;
+    padding: $spacing-lg;
+    cursor: pointer;
+    transition: all $transition-normal;
+    position: relative;
+    overflow: hidden;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba($primary-color, 0.1), transparent);
+      transition: left 0.5s ease;
+    }
+    
+    &:hover {
+      border-color: rgba($primary-color, 0.3);
+      background: rgba($primary-color, 0.08);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba($primary-color, 0.2);
+      
+      &::before {
+        left: 100%;
+      }
+    }
+    
+    &.active {
+      border-color: $primary-color;
+      background: linear-gradient(135deg, rgba($primary-color, 0.15) 0%, rgba($primary-color, 0.1) 100%);
+      box-shadow: 
+        0 4px 12px rgba($primary-color, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+      
+      .version-info {
+        .version-name {
+          color: darken($primary-color, 10%);
+          font-weight: 700;
+        }
+        
+        .version-desc {
+          color: darken($primary-color, 15%);
+          font-weight: 600;
+        }
+      }
+    }
+    
+    .version-info {
+      text-align: center;
+      
+      .version-name {
+        display: block;
+        font-size: $font-size-base;
+        font-weight: 600;
+        color: $text-primary;
+        margin-bottom: 4px;
+      }
+      
+      .version-desc {
+        display: block;
+        font-size: $font-size-sm;
+        color: $text-secondary;
+        font-weight: 500;
+      }
+    }
+  }
+  
+  .count-slider {
+    width: 100%;
+    margin: $spacing-md 0;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 8px;
+    border-radius: 6px;
+    background: linear-gradient(to right, $border-light 0%, $border-medium 50%, $text-muted 100%);
+    outline: none;
+    position: relative;
+    transition: all $transition-normal;
+    box-shadow: 
+      inset 0 1px 2px rgba(0, 0, 0, 0.08),
+      0 1px 2px rgba(255, 255, 255, 0.5);
+    
+    &:hover {
+      background: linear-gradient(to right, $border-medium 0%, $text-muted 50%, $secondary-color 100%);
+      box-shadow: 
+        inset 0 1px 2px rgba(0, 0, 0, 0.12),
+        0 2px 6px rgba($primary-color, 0.15);
+    }
+    
+    &::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, $primary-color, darken($primary-color, 10%));
+      cursor: pointer;
+      box-shadow: 
+        0 2px 6px rgba($primary-color, 0.25),
+        0 1px 2px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      transition: all $transition-fast;
+      
+      &:hover {
+        transform: scale(1.1);
+        box-shadow: 
+          0 3px 8px rgba($primary-color, 0.3),
+          0 1px 3px rgba(0, 0, 0, 0.15),
+          inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      }
+      
+      &:active {
+        transform: scale(0.95);
+        box-shadow: 
+          0 1px 3px rgba($primary-color, 0.4),
+          inset 0 1px 2px rgba(0, 0, 0, 0.1);
+      }
+    }
+    
+    &::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, $primary-color, darken($primary-color, 10%));
+      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 
+        0 2px 6px rgba($primary-color, 0.25),
+        0 1px 2px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+  }
+  
+  .slider-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: $font-size-xs;
+    color: $text-secondary;
+    font-weight: 600;
+    margin-top: $spacing-xs;
+    
+    span {
+      background: rgba($primary-color, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid rgba($primary-color, 0.2);
+    }
+  }
+  
+  .preview-info {
+    background: $bg-secondary;
+    border: 1px solid $border-light;
+    border-radius: $border-radius-lg;
+    padding: $spacing-lg;
+    margin-top: $spacing-lg;
+    
+    .info-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: $spacing-sm;
+      padding: $spacing-sm;
+      
+      &:last-child {
+        margin-bottom: 0;
+      }
+      
+      .info-label {
+        font-size: $font-size-sm;
+        color: $text-secondary;
+        font-weight: 600;
+      }
+      
+      .info-value {
+        font-size: $font-size-sm;
+        font-weight: 700;
+        color: $primary-color;
+        background: rgba($primary-color, 0.1);
+        padding: 4px 10px;
+        border-radius: $border-radius-md;
+        min-width: 45px;
+        text-align: center;
+      }
+    }
+  }
+}
+
+// Enhanced Generator Tool Styles
+.uuid-list {
+  background: linear-gradient(135deg, #fafafa 0%, $bg-card 100%);
+  border: 2px solid #f1f5f9;
+  border-radius: $border-radius-xl;
+  padding: $spacing-lg;
+  max-height: 500px;
+  overflow-y: auto;
+  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+}
+
+.uuid-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $spacing-md 1.25rem;
+  background: $bg-card;
+  border: 2px solid #f1f5f9;
+  border-radius: $border-radius-lg;
+  margin-bottom: 0.75rem;
+  font-family: $font-family-mono;
+  font-size: 0.9rem;
+  transition: $transition-normal;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(135deg, $primary-color, #8b5cf6);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform $transition-normal;
+  }
+
+  &:hover {
+    border-color: #e2e8f0;
+    box-shadow: $shadow-sm;
+    transform: translateX(4px);
+
+    &::before {
+      transform: scaleY(1);
+    }
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.uuid-text {
+  flex: 1;
+  color: #374151;
+  word-break: break-all;
+  margin-right: $spacing-md;
+  line-height: 1.4;
+  font-family: 'Source Code Pro', 'Monaco', 'Courier New', monospace;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.password-result {
+  background: linear-gradient(135deg, #fafafa 0%, $bg-card 100%);
+  border: 2px solid $border-light;
+  border-radius: $border-radius-xl;
+  padding: 1.25rem $spacing-lg;
+  font-family: $font-family-mono;
+  font-size: 1.1rem;
+  color: #374151;
+  word-break: break-all;
+  min-height: 3.5rem;
+  display: flex;
+  align-items: center;
+  transition: all $transition-fast;
+  position: relative;
+  overflow: hidden;
+
+  &:hover {
+    border-color: #cbd5e1;
+    background: $bg-card;
+    box-shadow: $shadow-sm;
+  }
+}
+
+// Dark mode support
+body.dark-theme {
+  // Password Generator Dark Mode
+  .password-generator-tool {
+    .settings-panel {
+      background: linear-gradient(135deg, $dark-bg-secondary 0%, $dark-bg-card 100%);
+      border: 2px solid rgba($primary-color, 0.2);
+      box-shadow: 
+        $shadow-lg,
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      
+      &:hover {
+        border-color: rgba($primary-color, 0.3);
+        box-shadow: 
+          $shadow-xl,
+          inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      }
+      
+      .setting-group {
+        background: rgba($dark-bg-card, 0.6);
+        border: 1px solid rgba($primary-color, 0.2);
+        
+        &:hover {
+          background: rgba($dark-bg-card, 0.8);
+          border-color: rgba($primary-color, 0.3);
+          box-shadow: 0 4px 16px rgba($primary-color, 0.2);
+        }
+      }
+      
+      .setting-label {
+        color: $dark-text-primary;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        
+        &::before {
+          background: $primary-color;
+          box-shadow: 0 2px 6px rgba($primary-color, 0.4);
+        }
+      }
+      
+      .length-slider {
+        background: linear-gradient(to right, $dark-border 0%, lighten($dark-border, 10%) 50%, lighten($dark-border, 20%) 100%);
+        box-shadow: 
+          inset 0 1px 2px rgba(0, 0, 0, 0.4),
+          0 1px 0 rgba(255, 255, 255, 0.05);
+        
+        &:hover {
+          background: linear-gradient(to right, lighten($dark-border, 10%) 0%, lighten($dark-border, 20%) 50%, lighten($dark-border, 30%) 100%);
+          box-shadow: 
+            inset 0 1px 2px rgba(0, 0, 0, 0.5),
+            0 2px 6px rgba($primary-color, 0.2);
+        }
+        
+        &::-webkit-slider-thumb {
+          background: linear-gradient(135deg, lighten($primary-color, 5%), $primary-color);
+          box-shadow: 
+            0 2px 6px rgba($primary-color, 0.4),
+            0 1px 2px rgba(0, 0, 0, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        &::-moz-range-thumb {
+          background: linear-gradient(135deg, lighten($primary-color, 5%), $primary-color);
+          box-shadow: 
+            0 2px 6px rgba($primary-color, 0.4),
+            0 1px 2px rgba(0, 0, 0, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+      }
+      
+      .slider-labels {
+        color: $dark-text-secondary;
+        
+        span {
+          background: rgba($primary-color, 0.2);
+          border: 1px solid rgba($primary-color, 0.3);
+          color: $dark-text-primary;
+        }
+      }
+      
+      .checkbox-item {
+        background: rgba($dark-bg-card, 0.4);
+        border: 1px solid rgba($primary-color, 0.2);
+        
+        &:hover {
+          background: rgba($primary-color, 0.15);
+          border-color: rgba($primary-color, 0.3);
+          box-shadow: 0 2px 12px rgba($primary-color, 0.2);
+        }
+        
+        &.exclude-similar {
+          background: rgba($warning-color, 0.2);
+          border-color: rgba($warning-color, 0.3);
+          
+          &:hover {
+            background: rgba($warning-color, 0.25);
+            border-color: rgba($warning-color, 0.4);
+          }
+          
+          span {
+            color: lighten($warning-color, 20%);
+          }
+        }
+        
+        span {
+          color: $dark-text-secondary;
+        }
+        
+        input[type="checkbox"]:checked + span {
+          color: lighten($primary-color, 20%);
+        }
+      }
+      
+      .preview-info {
+        background: $dark-bg-secondary;
+        border: 1px solid $dark-border;
+        
+        .info-item {
+          .info-label {
+            color: $dark-text-secondary;
+          }
+          
+          .info-value {
+            color: lighten($primary-color, 15%);
+            background: rgba($primary-color, 0.2);
+            
+            &.strength-weak { 
+              color: lighten($error-color, 25%); 
+              background: rgba($error-color, 0.25);
+            }
+            &.strength-fair { 
+              color: lighten($warning-color, 25%); 
+              background: rgba($warning-color, 0.25);
+            }
+            &.strength-good { 
+              color: lighten($primary-color, 25%); 
+              background: rgba($primary-color, 0.25);
+            }
+            &.strength-strong { 
+              color: lighten($success-color, 25%); 
+              background: rgba($success-color, 0.25);
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  // UUID Generator Dark Mode  
+  .uuid-generator-tool {
+    .settings-panel {
+      background: linear-gradient(135deg, $dark-bg-secondary 0%, $dark-bg-card 100%);
+      border: 2px solid rgba($primary-color, 0.2);
+      box-shadow: 
+        $shadow-lg,
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      
+      &:hover {
+        border-color: rgba($primary-color, 0.3);
+        box-shadow: 
+          $shadow-xl,
+          inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      }
+      
+      .setting-group {
+        background: rgba($dark-bg-card, 0.6);
+        border: 1px solid rgba($primary-color, 0.2);
+        
+        &:hover {
+          background: rgba($dark-bg-card, 0.8);
+          border-color: rgba($primary-color, 0.3);
+          box-shadow: 0 4px 16px rgba($primary-color, 0.2);
+        }
+      }
+      
+      .setting-label {
+        color: $dark-text-primary;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        
+        &::before {
+          background: $primary-color;
+          box-shadow: 0 2px 6px rgba($primary-color, 0.4);
+        }
+      }
+    }
+    
+    .version-btn {
+      background: rgba($dark-bg-card, 0.6);
+      border: 2px solid rgba($primary-color, 0.2);
+      
+      &::before {
+        background: linear-gradient(90deg, transparent, rgba($primary-color, 0.2), transparent);
+      }
+      
+      &:hover {
+        border-color: rgba($primary-color, 0.4);
+        background: rgba($primary-color, 0.15);
+        box-shadow: 0 4px 16px rgba($primary-color, 0.3);
+      }
+      
+      &.active {
+        border-color: $primary-color;
+        background: linear-gradient(135deg, rgba($primary-color, 0.3) 0%, rgba($primary-color, 0.2) 100%);
+        box-shadow: 
+          0 4px 16px rgba($primary-color, 0.4),
+          inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        
+        .version-info {
+          .version-name {
+            color: lighten($primary-color, 20%);
+          }
+          
+          .version-desc {
+            color: lighten($primary-color, 10%);
+          }
+        }
+      }
+      
+      .version-info {
+        .version-name {
+          color: $dark-text-primary;
+        }
+        
+        .version-desc {
+          color: $dark-text-secondary;
+        }
+      }
+    }
+    
+    .count-slider {
+      background: linear-gradient(to right, $dark-border 0%, lighten($dark-border, 10%) 50%, lighten($dark-border, 20%) 100%);
+      box-shadow: 
+        inset 0 1px 2px rgba(0, 0, 0, 0.4),
+        0 1px 0 rgba(255, 255, 255, 0.05);
+      
+      &:hover {
+        background: linear-gradient(to right, lighten($dark-border, 10%) 0%, lighten($dark-border, 20%) 50%, lighten($dark-border, 30%) 100%);
+        box-shadow: 
+          inset 0 1px 2px rgba(0, 0, 0, 0.5),
+          0 2px 6px rgba($primary-color, 0.2);
+      }
+      
+      &::-webkit-slider-thumb {
+        background: linear-gradient(135deg, lighten($primary-color, 5%), $primary-color);
+        box-shadow: 
+          0 2px 6px rgba($primary-color, 0.4),
+          0 1px 2px rgba(0, 0, 0, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+      
+      &::-moz-range-thumb {
+        background: linear-gradient(135deg, lighten($primary-color, 5%), $primary-color);
+        box-shadow: 
+          0 2px 6px rgba($primary-color, 0.4),
+          0 1px 2px rgba(0, 0, 0, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+    }
+    
+    .slider-labels {
+      color: $dark-text-secondary;
+      
+      span {
+        background: rgba($primary-color, 0.2);
+        border: 1px solid rgba($primary-color, 0.3);
+        color: $dark-text-primary;
+      }
+    }
+    
+    .preview-info {
+      background: $dark-bg-secondary;
+      border: 1px solid $dark-border;
+      
+      .info-item {
+        .info-label {
+          color: $dark-text-secondary;
+        }
+        
+        .info-value {
+          color: lighten($primary-color, 15%);
+          background: rgba($primary-color, 0.2);
+        }
+      }
+    }
+  }
+  .uuid-list {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    border: 2px solid #475569;
+    box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.3);
+    
+    // Enhanced scrollbar styling
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: rgba(30, 41, 59, 0.5);
+      border-radius: 4px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, #475569, #64748b);
+      border-radius: 4px;
+      
+      &:hover {
+        background: linear-gradient(135deg, #64748b, #94a3b8);
+      }
+    }
+  }
+
+  .uuid-item {
+    background: rgba(30, 41, 59, 0.6);
+    border: 2px solid #475569;
+    transition: all 0.3s ease;
+
+    &:hover {
+      border-color: #60a5fa;
+      background: linear-gradient(135deg, rgba(51, 65, 85, 0.8), rgba(71, 85, 105, 0.6));
+      box-shadow: 0 4px 8px rgba(96, 165, 250, 0.2);
+      transform: translateX(6px);
+    }
+
+    &:hover .uuid-text {
+      color: #f8fafc;
+    }
+  }
+
+  .uuid-text {
+    color: #e2e8f0;
+    font-weight: 500;
+    font-family: 'Source Code Pro', 'Monaco', 'Courier New', monospace;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    letter-spacing: 0.5px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    
+    &:hover {
+      color: #f8fafc;
+    }
+  }
+
+  .password-result {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    border: 2px solid #475569;
+    color: #e2e8f0;
+    font-family: 'Source Code Pro', monospace;
+    font-weight: 600;
+    font-size: 1.2rem;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: linear-gradient(135deg, #60a5fa, #3b82f6);
+      transform: scaleY(0);
+      transform-origin: top;
+      transition: transform 0.3s ease;
+    }
+
+    &:hover {
+      border-color: #60a5fa;
+      background: linear-gradient(135deg, #334155 0%, #475569 100%);
+      box-shadow: 0 4px 8px rgba(96, 165, 250, 0.3);
+      color: #f8fafc;
+      transform: translateY(-1px);
+
+      &::before {
+        transform: scaleY(1);
+      }
+    }
+
+    &:focus-within {
+      border-color: #60a5fa;
+      box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.15), 0 4px 8px rgba(96, 165, 250, 0.3);
+    }
+  }
+}
+
+// Password strength indicators (works for both light and dark themes)
+.password-strength {
+  margin-left: 0.5rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: inline-block;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  
+  &.strength-weak {
+    color: #fef2f2;
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  }
+  
+  &.strength-fair {
+    color: #fffbeb;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  }
+  
+  &.strength-good {
+    color: #eff6ff;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  }
+  
+  &.strength-strong {
+    color: #ecfdf5;
+    background: linear-gradient(135deg, #10b981, #059669);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  }
+
+  // Tab group styling for UUID version selection
+  .tab-group {
+    background: rgba(30, 41, 59, 0.8);
+    border: 2px solid #475569;
+    border-radius: 12px;
+    padding: 4px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+
+    .tab-btn {
+      background: transparent;
+      color: #94a3b8;
+      border: none;
+      border-radius: 8px;
+      padding: 0.75rem 1.5rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      position: relative;
+      cursor: pointer;
+
+      &:hover {
+        color: #e2e8f0;
+        background: rgba(51, 65, 85, 0.5);
+      }
+
+      &.active {
+        background: linear-gradient(135deg, #60a5fa, #3b82f6);
+        color: #ffffff;
+        font-weight: 600;
+        box-shadow: 0 2px 8px rgba(96, 165, 250, 0.4);
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+
+        &:hover {
+          background: linear-gradient(135deg, #3b82f6, #2563eb);
+          box-shadow: 0 4px 12px rgba(96, 165, 250, 0.5);
+        }
+      }
+    }
+  }
+
+  // Number input styling
+  .text-input {
+    &[type="number"] {
+      text-align: center;
+      font-weight: 600;
+      font-size: 1rem;
+      color: #f1f5f9;
+
+      &:focus {
+        color: #ffffff;
+      }
+    }
+  }
+
+  // Enhanced UUID list header styling  
+  .input-group {
+    .input-label {
+      color: #f1f5f9;
+      font-weight: 600;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+    }
+  }
+}

@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+<!-- Home Page -->
+<url>
+  <loc>https://one-toys.com/</loc>
+  <lastmod>2024-12-19</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>1.0</priority>
+</url>
+
+<!-- Main Category Pages -->
+<url>
+  <loc>https://one-toys.com/code</loc>
+  <lastmod>2024-12-19</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.9</priority>
+</url>
+
+<url>
+  <loc>https://one-toys.com/text</loc>
+  <lastmod>2024-12-19</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.9</priority>
+</url>
+
+<url>
+  <loc>https://one-toys.com/info</loc>
+  <lastmod>2024-12-19</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.9</priority>
+</url>
+
+<url>
+  <loc>https://one-toys.com/datetime</loc>
+  <lastmod>2024-12-19</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.9</priority>
+</url>
+
+<!-- Code Tools - High Priority -->
+<url>
+  <loc>https://one-toys.com/code/base64</loc>
+  <lastmod>2024-12-19</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.95</priority>
+</url>
+
+<url>
+  <loc>https://one-toys.com/code/json</loc>
+  <lastmod>2024-12-19</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.95</priority>
+</url>
+
+<url>
+  <loc>https://one-toys.com/code/url</loc>
+  <lastmod>2024-12-19</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.9</priority>
+</url>
+
+<url>
+  <loc>https://one-toys.com/code/html</loc>
+  <lastmod>2024-12-19</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.9</priority>
+</url>
+
+<url>
+  <loc>https://one-toys.com/code/xml</loc>
+  <lastmod>2024-12-19</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.85</priority>
+</url>
+
+<url>
+  <loc>https://one-toys.com/code/gzip</loc>
+  <lastmod>2024-12-19</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+</url>
+
+<url>
+  <loc>https://one-toys.com/code/hls</loc>
+  <lastmod>2024-12-19</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.85</priority>
+</url>
+
+<url>
+  <loc>https://one-toys.com/code/uuid</loc>
+  <lastmod>2024-12-19</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.85</priority>
+</url>
+
+<url>
+  <loc>https://one-toys.com/code/password</loc>
+  <lastmod>2024-12-19</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.9</priority>
+</url>
+
+<!-- Text Tools -->
+<url>
+  <loc>https://one-toys.com/text/case-converter</loc>
+  <lastmod>2024-12-19</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.85</priority>
+</url>
+
+<url>
+  <loc>https://one-toys.com/text/character-count</loc>
+  <lastmod>2024-12-19</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+</url>
+
+<url>
+  <loc>https://one-toys.com/text/lorem</loc>
+  <lastmod>2024-12-19</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.7</priority>
+</url>
+
+<!-- Info Tools -->
+<url>
+  <loc>https://one-toys.com/info/calling-codes</loc>
+  <lastmod>2024-12-19</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+</url>
+
+<url>
+  <loc>https://one-toys.com/info/public-services</loc>
+  <lastmod>2024-12-19</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.75</priority>
+</url>
+
+<url>
+  <loc>https://one-toys.com/info/postcodes</loc>
+  <lastmod>2024-12-19</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.75</priority>
+</url>
+
+<url>
+  <loc>https://one-toys.com/info/system</loc>
+  <lastmod>2024-12-19</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.6</priority>
+</url>
+
+<url>
+  <loc>https://one-toys.com/info/network</loc>
+  <lastmod>2024-12-19</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.6</priority>
+</url>
+
+<url>
+  <loc>https://one-toys.com/info/browser</loc>
+  <lastmod>2024-12-19</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.6</priority>
+</url>
+
+<!-- DateTime Tools -->
+<url>
+  <loc>https://one-toys.com/datetime/timestamp</loc>
+  <lastmod>2024-12-19</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+</url>
+
+<url>
+  <loc>https://one-toys.com/datetime/format</loc>
+  <lastmod>2024-12-19</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.75</priority>
+</url>
+
+<url>
+  <loc>https://one-toys.com/datetime/calculator</loc>
+  <lastmod>2024-12-19</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.7</priority>
+</url>
+
+<url>
+  <loc>https://one-toys.com/datetime/timezone</loc>
+  <lastmod>2024-12-19</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.75</priority>
+</url>
+
+<url>
+  <loc>https://one-toys.com/datetime/countdown</loc>
+  <lastmod>2024-12-19</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.7</priority>
+</url>
+
+<!-- Legacy Category Pages (redirects) -->
+<url>
+  <loc>https://one-toys.com/encoders</loc>
+  <lastmod>2024-12-19</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.6</priority>
+</url>
+
+<url>
+  <loc>https://one-toys.com/formatters</loc>
+  <lastmod>2024-12-19</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.6</priority>
+</url>
+
+<url>
+  <loc>https://one-toys.com/generators</loc>
+  <lastmod>2024-12-19</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.6</priority>
+</url>
+
+<url>
+  <loc>https://one-toys.com/office</loc>
+  <lastmod>2024-12-19</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.5</priority>
+</url>
+
+<!-- Legacy Tool URLs (redirects for SEO) -->
+<url>
+  <loc>https://one-toys.com/base64</loc>
+  <lastmod>2024-12-19</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.7</priority>
+</url>
+
+<url>
+  <loc>https://one-toys.com/json</loc>
+  <lastmod>2024-12-19</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.7</priority>
+</url>
+
+<url>
+  <loc>https://one-toys.com/url</loc>
+  <lastmod>2024-12-19</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.65</priority>
+</url>
+
+<url>
+  <loc>https://one-toys.com/html</loc>
+  <lastmod>2024-12-19</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.65</priority>
+</url>
+
+<url>
+  <loc>https://one-toys.com/xml</loc>
+  <lastmod>2024-12-19</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.6</priority>
+</url>
+
+<url>
+  <loc>https://one-toys.com/case</loc>
+  <lastmod>2024-12-19</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.6</priority>
+</url>
+
+</urlset>
