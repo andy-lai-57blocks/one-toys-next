@@ -33,7 +33,10 @@ const SimpleAdSSG = ({
       <div 
         className={`ad-placeholder ${className}`}
         style={{
-          ...style,
+          width: '300px',
+          height: '250px',
+          maxWidth: '100%',
+          margin: '0 auto',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -42,8 +45,7 @@ const SimpleAdSSG = ({
           borderRadius: '8px',
           color: '#6c757d',
           fontSize: '14px',
-          minHeight: '250px',
-          maxWidth: '300px'
+          ...style
         }}
       >
         🚫 AdSense (Development Mode)
@@ -52,14 +54,28 @@ const SimpleAdSSG = ({
   }
 
   return (
-    <div className={`ad-container ${className}`} style={style} ref={adRef}>
+    <div 
+      className={`ad-container ${className}`} 
+      style={{
+        width: '300px',
+        height: '250px',
+        maxWidth: '100%',
+        margin: '0 auto',
+        ...style
+      }} 
+      ref={adRef}
+    >
       <ins 
         className="adsbygoogle"
-        style={{ display: 'block', minHeight: '250px', maxWidth: '300px' }}
+        style={{ 
+          display: 'block', 
+          width: '300px', 
+          height: '250px',
+          maxWidth: '100%'
+        }}
         data-ad-client={adClient}
         data-ad-slot={adSlot}
-        data-ad-format="auto"
-        data-full-width-responsive="true"
+        data-ad-format="rectangle"
       />
     </div>
   );
