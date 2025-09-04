@@ -1,15 +1,26 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { searchTools } from '@/utils/toolsData';
 import SearchResults from '@/components/search/SearchResults';
 import AppLayout from '@/components/layout/AppLayout';
 
-const SearchPage = () => {
+// Type definition for tool objects
+type Tool = {
+  path: string;
+  title: string;
+  description: string;
+  icon: string;
+  category: string;
+  section: string;
+  keywords: string[];
+};
+
+const SearchPageContent = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [searchResults, setSearchResults] = useState([]);
+  const [searchResults, setSearchResults] = useState<Tool[]>([]);
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(true);
 
@@ -55,6 +66,23 @@ const SearchPage = () => {
         onClear={handleClear}
       />
     </AppLayout>
+  );
+};
+
+const SearchPage = () => {
+  return (
+    <Suspense 
+      fallback={
+        <AppLayout>
+          <div className="search-loading">
+            <div className="loading-spinner">🔍</div>
+            <p>Loading search...</p>
+          </div>
+        </AppLayout>
+      }
+    >
+      <SearchPageContent />
+    </Suspense>
   );
 };
 
