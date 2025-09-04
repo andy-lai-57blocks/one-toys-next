@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useMemo } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 const GoogleAd = ({ 
   adClient = process.env.REACT_APP_GOOGLE_ADSENSE_CLIENT || "ca-pub-8806399994474387",
@@ -14,9 +14,8 @@ const GoogleAd = ({
   const [adError, setAdError] = useState(false);
 
   // Create a stable unique key for this ad instance
-  const adKey = useMemo(() => 
-    `${adClient || 'default'}-${adSlot || 'default'}-${Math.random().toString(36).substr(2, 9)}`, 
-    [adClient, adSlot]
+  const [adKey] = useState(() => 
+    `${adClient || 'default'}-${adSlot || 'default'}-${Date.now().toString(36)}`
   );
 
   useEffect(() => {

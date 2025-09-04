@@ -11,24 +11,26 @@ const ThemeContext = createContext({
 
 // Theme Provider Component
 export const ThemeProvider = ({ children }) => {
-  const [isDarkTheme, setIsDarkTheme] = useState(() => {
-    // Only access localStorage in the browser
+  // Always start with false to prevent hydration mismatch
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
+
+  // Load theme preference after hydration
+  useEffect(() => {
     if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
       // Try to load theme preference from localStorage
       const savedTheme = localStorage.getItem('one-toys-theme');
       if (savedTheme !== null) {
-        return savedTheme === 'dark';
+        setIsDarkTheme(savedTheme === 'dark');
+        return;
       }
       
       // Fallback to system preference
       if (window.matchMedia) {
-        return window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        setIsDarkTheme(prefersDark);
       }
     }
-    
-    // Default to light theme for SSR
-    return false;
-  });
+  }, []);
 
   // Save theme preference to localStorage whenever it changes
   useEffect(() => {

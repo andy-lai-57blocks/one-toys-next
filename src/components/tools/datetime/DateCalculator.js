@@ -13,13 +13,16 @@ const DateCalculator = () => {
   const [results, setResults] = useState({});
 
   useEffect(() => {
-    const now = new Date();
-    const tomorrow = new Date(now);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    
-    setStartDate(now.toISOString().slice(0, includeTime ? 16 : 10));
-    setEndDate(tomorrow.toISOString().slice(0, includeTime ? 16 : 10));
-    setBaseDate(now.toISOString().slice(0, includeTime ? 16 : 10));
+    // Only set initial dates on client-side to prevent hydration mismatch
+    if (typeof window !== 'undefined') {
+      const now = new Date();
+      const tomorrow = new Date(now);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      
+      setStartDate(now.toISOString().slice(0, includeTime ? 16 : 10));
+      setEndDate(tomorrow.toISOString().slice(0, includeTime ? 16 : 10));
+      setBaseDate(now.toISOString().slice(0, includeTime ? 16 : 10));
+    }
   }, [includeTime]);
 
   useEffect(() => {

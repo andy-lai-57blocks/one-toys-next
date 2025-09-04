@@ -4,15 +4,20 @@ import React, { useState, useEffect } from 'react';
 
 const TimezoneConverter = () => {
   const [inputTime, setInputTime] = useState('');
-  const [inputTimezone, setInputTimezone] = useState(Intl.DateTimeFormat().resolvedOptions().timeZone);
+  const [inputTimezone, setInputTimezone] = useState('UTC'); // Start with UTC to prevent hydration mismatch
   const [targetTimezones, setTargetTimezones] = useState(['UTC', 'America/New_York', 'Europe/London', 'Asia/Tokyo']);
   const [results, setResults] = useState({});
   const [currentTimes, setCurrentTimes] = useState({});
 
   useEffect(() => {
-    // Set initial time to current time
-    const now = new Date();
-    setInputTime(now.toISOString().slice(0, 16));
+    // Set user's timezone and initial time after hydration
+    if (typeof window !== 'undefined') {
+      const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      setInputTimezone(userTimezone);
+      
+      const now = new Date();
+      setInputTime(now.toISOString().slice(0, 16));
+    }
     
     // Update current times every second
     const interval = setInterval(() => {

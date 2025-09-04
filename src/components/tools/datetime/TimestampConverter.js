@@ -5,21 +5,27 @@ import React, { useState, useEffect } from 'react';
 const TimestampConverter = () => {
   const [timestamp, setTimestamp] = useState('');
   const [dateTime, setDateTime] = useState('');
-  const [timezone, setTimezone] = useState(Intl.DateTimeFormat().resolvedOptions().timeZone);
+  const [timezone, setTimezone] = useState('UTC'); // Start with UTC to prevent hydration mismatch
   const [results, setResults] = useState({});
-  const [currentTime, setCurrentTime] = useState(new Date());
+  const [currentTime, setCurrentTime] = useState(() => new Date(0)); // Start with epoch to prevent hydration mismatch
   const [copied, setCopied] = useState('');
 
   useEffect(() => {
+    // Set user's timezone and initial values after hydration
+    if (typeof window !== 'undefined') {
+      const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      setTimezone(userTimezone);
+      
+      const now = Date.now();
+      setTimestamp(Math.floor(now / 1000).toString());
+      setDateTime(new Date(now).toISOString().slice(0, 16));
+      setCurrentTime(new Date());
+    }
+    
     // Update current time every second
     const interval = setInterval(() => {
       setCurrentTime(new Date());
     }, 1000);
-
-    // Set initial values
-    const now = Date.now();
-    setTimestamp(Math.floor(now / 1000).toString());
-    setDateTime(new Date(now).toISOString().slice(0, 16));
 
     return () => clearInterval(interval);
   }, []);

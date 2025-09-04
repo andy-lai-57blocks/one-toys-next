@@ -10,10 +10,15 @@ const CountdownTool = () => {
     category: 'personal',
     description: ''
   });
-  const [currentTime, setCurrentTime] = useState(new Date());
+  const [currentTime, setCurrentTime] = useState(() => new Date(0)); // Start with epoch to prevent hydration mismatch
   const [showAddForm, setShowAddForm] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
   const [refreshPresets, setRefreshPresets] = useState(0);
+
+  // Set actual current time after hydration
+  useEffect(() => {
+    setCurrentTime(new Date());
+  }, []);
 
   // Initialize countdowns on mount
   useEffect(() => {
@@ -156,7 +161,7 @@ const CountdownTool = () => {
     }
     
     const countdown = {
-      id: Date.now() + Math.random(), // Ensure unique ID
+      id: `countdown-${Date.now()}-${Math.floor(Math.random() * 1000)}`, // Use string ID to avoid hydration issues
       title: newCountdown.title.trim(),
       date: newCountdown.date,
       category: newCountdown.category,
@@ -195,7 +200,7 @@ const CountdownTool = () => {
     }
     
     const countdown = {
-      id: Date.now() + Math.random(), // Ensure unique ID
+      id: `preset-${Date.now()}-${Math.floor(Math.random() * 1000)}`, // Use string ID to avoid hydration issues
       ...preset,
       createdAt: Date.now()
     };
@@ -220,6 +225,11 @@ const CountdownTool = () => {
 
   // Generate dynamic preset countdowns based on current date
   const getDynamicPresets = () => {
+    // Only generate presets on client side to prevent hydration mismatch
+    if (typeof window === 'undefined') {
+      return [];
+    }
+    
     const now = new Date();
     const currentYear = now.getFullYear();
     const nextYear = currentYear + 1;
