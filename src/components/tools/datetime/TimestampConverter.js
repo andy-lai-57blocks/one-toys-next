@@ -3,44 +3,33 @@
 import React, { useState, useEffect } from 'react';
 
 const TimestampConverter = () => {
+  const [activeTab, setActiveTab] = useState('timestamp'); // 'timestamp' or 'datetime'
   const [timestamp, setTimestamp] = useState('');
   const [dateTime, setDateTime] = useState('');
-  const [timezone, setTimezone] = useState('UTC'); // Start with UTC to prevent hydration mismatch
+  const [useUtc, setUseUtc] = useState(false);
   const [results, setResults] = useState({});
-  const [currentTime, setCurrentTime] = useState(() => new Date(0)); // Start with epoch to prevent hydration mismatch
   const [copied, setCopied] = useState('');
 
   useEffect(() => {
-    // Set user's timezone and initial values after hydration
+    // Set initial values after hydration
     if (typeof window !== 'undefined') {
-      const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      setTimezone(userTimezone);
-      
       const now = Date.now();
       setTimestamp(Math.floor(now / 1000).toString());
       setDateTime(new Date(now).toISOString().slice(0, 16));
-      setCurrentTime(new Date());
     }
-    
-    // Update current time every second
-    const interval = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
-
-    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
-    if (timestamp) {
+    if (activeTab === 'timestamp' && timestamp) {
       convertFromTimestamp();
     }
-  }, [timestamp, timezone]);
+  }, [timestamp, useUtc, activeTab]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    if (dateTime) {
+    if (activeTab === 'datetime' && dateTime) {
       convertFromDateTime();
     }
-  }, [dateTime, timezone]);
+  }, [dateTime, useUtc, activeTab]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const convertFromTimestamp = () => {
     try {
@@ -59,39 +48,25 @@ const TimestampConverter = () => {
         return;
       }
 
+      const timezone = useUtc ? 'UTC' : Intl.DateTimeFormat().resolvedOptions().timeZone;
+      
       const results = {
-        iso: date.toISOString(),
-        local: date.toLocaleString('en-US', { timeZone: timezone }),
-        utc: date.toUTCString(),
         unix: Math.floor(date.getTime() / 1000),
-        unixMs: date.getTime(),
-        formats: {
-          'YYYY-MM-DD': date.toISOString().split('T')[0],
-          'MM/DD/YYYY': new Intl.DateTimeFormat('en-US', { timeZone: timezone }).format(date),
-          'DD/MM/YYYY': new Intl.DateTimeFormat('en-GB', { timeZone: timezone }).format(date),
-          'Month DD, YYYY': date.toLocaleDateString('en-US', { 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric',
-            timeZone: timezone
-          }),
-          'Full DateTime': date.toLocaleString('en-US', { 
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            timeZone: timezone
-          }),
-          'Time Only': date.toLocaleTimeString('en-US', { timeZone: timezone }),
-          'Relative': getRelativeTime(date)
-        }
+        iso: date.toISOString(),
+        readable: date.toLocaleString('en-US', { 
+          timeZone: timezone,
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit'
+        }),
+        relative: getRelativeTime(date)
       };
 
       setResults(results);
-    } catch (error) {
+    } catch {
       setResults({ error: 'Invalid timestamp format' });
     }
   };
@@ -105,40 +80,26 @@ const TimestampConverter = () => {
         return;
       }
 
+      const timezone = useUtc ? 'UTC' : Intl.DateTimeFormat().resolvedOptions().timeZone;
+      
       const results = {
-        iso: date.toISOString(),
-        local: date.toLocaleString('en-US', { timeZone: timezone }),
-        utc: date.toUTCString(),
         unix: Math.floor(date.getTime() / 1000),
-        unixMs: date.getTime(),
-        formats: {
-          'YYYY-MM-DD': date.toISOString().split('T')[0],
-          'MM/DD/YYYY': new Intl.DateTimeFormat('en-US', { timeZone: timezone }).format(date),
-          'DD/MM/YYYY': new Intl.DateTimeFormat('en-GB', { timeZone: timezone }).format(date),
-          'Month DD, YYYY': date.toLocaleDateString('en-US', { 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric',
-            timeZone: timezone
-          }),
-          'Full DateTime': date.toLocaleString('en-US', { 
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            timeZone: timezone
-          }),
-          'Time Only': date.toLocaleTimeString('en-US', { timeZone: timezone }),
-          'Relative': getRelativeTime(date)
-        }
+        iso: date.toISOString(),
+        readable: date.toLocaleString('en-US', { 
+          timeZone: timezone,
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit'
+        }),
+        relative: getRelativeTime(date)
       };
 
       setResults(results);
       setTimestamp(Math.floor(date.getTime() / 1000).toString());
-    } catch (error) {
+    } catch {
       setResults({ error: 'Invalid date format' });
     }
   };
@@ -178,12 +139,6 @@ const TimestampConverter = () => {
     }
   };
 
-  const setCurrentTimestamp = () => {
-    const now = Date.now();
-    setTimestamp(Math.floor(now / 1000).toString());
-    setDateTime(new Date(now).toISOString().slice(0, 16));
-  };
-
   const copyToClipboard = (value, label) => {
     navigator.clipboard.writeText(value.toString()).then(() => {
       setCopied(label);
@@ -191,178 +146,207 @@ const TimestampConverter = () => {
     });
   };
 
-  const commonTimestamps = [
-    { label: 'Current Time', value: Math.floor(Date.now() / 1000) },
-    { label: 'Unix Epoch (1970)', value: 0 },
-    { label: '2000-01-01', value: 946684800 },
-    { label: '2020-01-01', value: 1577836800 },
-    { label: 'Tomorrow', value: Math.floor((Date.now() + 24 * 60 * 60 * 1000) / 1000) },
-    { label: 'Next Week', value: Math.floor((Date.now() + 7 * 24 * 60 * 60 * 1000) / 1000) }
-  ];
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    setResults({}); // Clear results when switching tabs
+  };
+
+  const setQuickTimestamp = (type) => {
+    const now = new Date();
+    let targetDate = new Date(now);
+
+    switch (type) {
+      case 'now':
+        break;
+      case '1h-ago':
+        targetDate.setHours(now.getHours() - 1);
+        break;
+      case '1d-ago':
+        targetDate.setDate(now.getDate() - 1);
+        break;
+      case '1w-ago':
+        targetDate.setDate(now.getDate() - 7);
+        break;
+      case 'day-start':
+        targetDate.setHours(0, 0, 0, 0);
+        break;
+      case 'day-end':
+        targetDate.setHours(23, 59, 59, 999);
+        break;
+      default:
+        break;
+    }
+
+    const timestampValue = Math.floor(targetDate.getTime() / 1000).toString();
+    const datetimeValue = targetDate.toISOString().slice(0, 16);
+    
+    setTimestamp(timestampValue);
+    setDateTime(datetimeValue);
+    
+    // Set the active tab based on what makes most sense
+    if (activeTab === 'timestamp') {
+      setTimestamp(timestampValue);
+    } else {
+      setDateTime(datetimeValue);
+    }
+  };
 
   return (
     <div className="tool-container">
-        <div className="current-time-section">
-          <h3>🕐 Current Time</h3>
-          <div className="current-time-display">
-            <div className="time-item">
-              <span className="time-label">Current Timestamp:</span>
-              <span className="time-value">{Math.floor(currentTime.getTime() / 1000)}</span>
+      {/* 1. TIMEZONE PREFERENCE - FIRST */}
+      <div className="timezone-toggle">
+        <label className="toggle-label">🌍 Timezone:</label>
+        <div className="toggle-buttons">
+          <button
+            className={`toggle-btn ${!useUtc ? 'active' : ''}`}
+            onClick={() => setUseUtc(false)}
+          >
+            🏠 Local
+          </button>
+          <button
+            className={`toggle-btn ${useUtc ? 'active' : ''}`}
+            onClick={() => setUseUtc(true)}
+          >
+            🌐 UTC
+          </button>
+        </div>
+      </div>
+
+      {/* 2. TAB SELECTION - SECOND */}
+      <div className="tab-navigation">
+        <button 
+          className={`tab-button ${activeTab === 'timestamp' ? 'active' : ''}`}
+          onClick={() => handleTabChange('timestamp')}
+        >
+          🔢 Unix Timestamp
+        </button>
+        <button 
+          className={`tab-button ${activeTab === 'datetime' ? 'active' : ''}`}
+          onClick={() => handleTabChange('datetime')}
+        >
+          📅 Human Date
+        </button>
+      </div>
+
+      {/* 3. MANUAL INPUT AND QUICK SELECT - SIDE BY SIDE */}
+      <div className="input-options-row">
+        <div className="manual-input-section">
+          <h3>✏️ Manual Input</h3>
+          <p className="manual-input-hint">
+            Enter {activeTab === 'timestamp' ? 'a timestamp' : 'date & time'} manually
+          </p>
+          {activeTab === 'timestamp' ? (
+            <div className="input-group">
+              <label className="input-label">Enter Unix Timestamp (seconds or milliseconds)</label>
+              <input
+                type="text"
+                className="text-input"
+                value={timestamp}
+                onChange={(e) => setTimestamp(e.target.value)}
+                placeholder="1234567890"
+              />
+              <small className="input-hint">
+                Example: 1234567890 (seconds) or 1234567890123 (milliseconds)
+              </small>
             </div>
-            <div className="time-item">
-              <span className="time-label">Current Date:</span>
-              <span className="time-value">{currentTime.toLocaleString()}</span>
+          ) : (
+            <div className="input-group">
+              <label className="input-label">Select Date & Time</label>
+              <input
+                type="datetime-local"
+                className="text-input"
+                value={dateTime}
+                onChange={(e) => setDateTime(e.target.value)}
+              />
+              <small className="input-hint">
+                Choose a date and time to convert to timestamp
+              </small>
             </div>
-            <button className="btn btn-outline btn-small" onClick={setCurrentTimestamp}>
-              📍 Use Current Time
+          )}
+        </div>
+
+        <div className="quick-select-section">
+          <h3>⚡ Quick Select</h3>
+          <p className="quick-select-hint">
+            Or choose a common timestamp
+          </p>
+          <div className="button-group">
+            <button className="btn btn-outline btn-small" onClick={() => setQuickTimestamp('now')}>
+              Now
+            </button>
+            <button className="btn btn-outline btn-small" onClick={() => setQuickTimestamp('1h-ago')}>
+              1h ago
+            </button>
+            <button className="btn btn-outline btn-small" onClick={() => setQuickTimestamp('1d-ago')}>
+              Yesterday
+            </button>
+            <button className="btn btn-outline btn-small" onClick={() => setQuickTimestamp('1w-ago')}>
+              1 week ago
+            </button>
+            <button className="btn btn-outline btn-small" onClick={() => setQuickTimestamp('day-start')}>
+              Start of Day
+            </button>
+            <button className="btn btn-outline btn-small" onClick={() => setQuickTimestamp('day-end')}>
+              End of Day
             </button>
           </div>
         </div>
+      </div>
 
-        <div className="input-section">
+      {/* Results Section */}
+      {results.unix || results.error ? (
+        <div className="results-section">
           <div className="input-group">
-            <label className="input-label">Unix Timestamp (seconds or milliseconds)</label>
-            <input
-              type="text"
-              className="text-input"
-              value={timestamp}
-              onChange={(e) => setTimestamp(e.target.value)}
-              placeholder="1234567890"
-            />
-          </div>
-
-          <div className="input-group">
-            <label className="input-label">Date Time (ISO format)</label>
-            <input
-              type="datetime-local"
-              className="text-input"
-              value={dateTime}
-              onChange={(e) => setDateTime(e.target.value)}
-            />
-          </div>
-
-          <div className="input-group">
-            <label className="input-label">Timezone</label>
-            <select
-              className="text-input"
-              value={timezone}
-              onChange={(e) => setTimezone(e.target.value)}
-            >
-              <option value={Intl.DateTimeFormat().resolvedOptions().timeZone}>
-                Local ({Intl.DateTimeFormat().resolvedOptions().timeZone})
-              </option>
-              <option value="UTC">UTC</option>
-              <option value="America/New_York">Eastern Time</option>
-              <option value="America/Chicago">Central Time</option>
-              <option value="America/Denver">Mountain Time</option>
-              <option value="America/Los_Angeles">Pacific Time</option>
-              <option value="Europe/London">London</option>
-              <option value="Europe/Paris">Paris</option>
-              <option value="Asia/Tokyo">Tokyo</option>
-              <option value="Asia/Shanghai">Shanghai</option>
-              <option value="Asia/Kolkata">India</option>
-            </select>
-          </div>
-        </div>
-
-        <div className="common-timestamps">
-          <h3>⚡ Quick Select</h3>
-          <div className="button-group">
-            {commonTimestamps.map((item) => (
-              <button
-                key={item.label}
-                className="btn btn-outline btn-small"
-                onClick={() => setTimestamp(item.value.toString())}
-              >
-                {item.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {results.error ? (
-          <div className="error-section">
-            <p className="error-text">❌ {results.error}</p>
-          </div>
-        ) : results.iso ? (
-          <div className="results-section">
-            <h3>📊 Conversion Results</h3>
-            
-            <div className="result-group">
-              <h4>Standard Formats</h4>
-              <div className="result-grid">
-                <div className="result-item">
-                  <span className="result-label">ISO 8601:</span>
-                  <span className="result-value">{results.iso}</span>
-                  <button 
-                    className="btn btn-outline btn-small"
-                    onClick={() => copyToClipboard(results.iso, 'ISO')}
-                  >
-                    {copied === 'ISO' ? '✓' : '📋'}
-                  </button>
-                </div>
-                <div className="result-item">
-                  <span className="result-label">Local Time:</span>
-                  <span className="result-value">{results.local}</span>
-                  <button 
-                    className="btn btn-outline btn-small"
-                    onClick={() => copyToClipboard(results.local, 'Local')}
-                  >
-                    {copied === 'Local' ? '✓' : '📋'}
-                  </button>
-                </div>
-                <div className="result-item">
-                  <span className="result-label">UTC:</span>
-                  <span className="result-value">{results.utc}</span>
-                  <button 
-                    className="btn btn-outline btn-small"
-                    onClick={() => copyToClipboard(results.utc, 'UTC')}
-                  >
-                    {copied === 'UTC' ? '✓' : '📋'}
-                  </button>
-                </div>
-                <div className="result-item">
-                  <span className="result-label">Unix (seconds):</span>
-                  <span className="result-value">{results.unix}</span>
-                  <button 
-                    className="btn btn-outline btn-small"
-                    onClick={() => copyToClipboard(results.unix, 'Unix')}
-                  >
-                    {copied === 'Unix' ? '✓' : '📋'}
-                  </button>
-                </div>
-                <div className="result-item">
-                  <span className="result-label">Unix (milliseconds):</span>
-                  <span className="result-value">{results.unixMs}</span>
-                  <button 
-                    className="btn btn-outline btn-small"
-                    onClick={() => copyToClipboard(results.unixMs, 'UnixMs')}
-                  >
-                    {copied === 'UnixMs' ? '✓' : '📋'}
-                  </button>
-                </div>
+            <label className="input-label">
+              Results
+              {results.error && <span className="status-indicator invalid">❌ {results.error}</span>}
+              {results.unix && <span className="status-indicator valid">✅ Valid</span>}
+            </label>
+            <div className="result-grid">
+              <div className="result-item">
+                <span className="result-label">Unix Timestamp:</span>
+                <span className="result-value">{results.unix}</span>
+                <button 
+                  className="btn btn-outline btn-small"
+                  onClick={() => copyToClipboard(results.unix, 'unix')}
+                >
+                  {copied === 'unix' ? '✓' : '📋'}
+                </button>
               </div>
-            </div>
-
-            <div className="result-group">
-              <h4>Display Formats</h4>
-              <div className="result-grid">
-                {Object.entries(results.formats).map(([format, value]) => (
-                  <div key={format} className="result-item">
-                    <span className="result-label">{format}:</span>
-                    <span className="result-value">{value}</span>
-                    <button 
-                      className="btn btn-outline btn-small"
-                      onClick={() => copyToClipboard(value, format)}
-                    >
-                      {copied === format ? '✓' : '📋'}
-                    </button>
-                  </div>
-                ))}
+              <div className="result-item">
+                <span className="result-label">ISO Format:</span>
+                <span className="result-value">{results.iso}</span>
+                <button 
+                  className="btn btn-outline btn-small"
+                  onClick={() => copyToClipboard(results.iso, 'iso')}
+                >
+                  {copied === 'iso' ? '✓' : '📋'}
+                </button>
+              </div>
+              <div className="result-item">
+                <span className="result-label">Readable Format:</span>
+                <span className="result-value">{results.readable}</span>
+                <button 
+                  className="btn btn-outline btn-small"
+                  onClick={() => copyToClipboard(results.readable, 'readable')}
+                >
+                  {copied === 'readable' ? '✓' : '📋'}
+                </button>
+              </div>
+              <div className="result-item">
+                <span className="result-label">Relative Time:</span>
+                <span className="result-value">{results.relative}</span>
+                <button 
+                  className="btn btn-outline btn-small"
+                  onClick={() => copyToClipboard(results.relative, 'relative')}
+                >
+                  {copied === 'relative' ? '✓' : '📋'}
+                </button>
               </div>
             </div>
           </div>
-        ) : null}
+        </div>
+      ) : null}
     </div>
   );
 };

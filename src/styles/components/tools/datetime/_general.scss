@@ -1,6 +1,224 @@
 @import '../../../shared/variables';
 
 // DateTime Tools General Styling
+
+// Tab Navigation for Timestamp Converter (smaller, more compact)
+.tab-navigation {
+  display: flex;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  margin-bottom: $spacing-md;
+  gap: $spacing-sm;
+  justify-content: flex-start;
+}
+
+.tab-button {
+  padding: 0.5rem 1rem;
+  border: 2px solid #e2e8f0;
+  background: #fafafa;
+  color: $text-secondary;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: $border-radius-lg;
+  cursor: pointer;
+  transition: all $transition-fast;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-xs;
+  min-width: auto;
+  letter-spacing: 0.025em;
+
+  &:hover {
+    border-color: #cbd5e1;
+    background: #ffffff;
+    color: $text-primary;
+  }
+
+  &.active {
+    background: $primary-color;
+    color: white;
+    border-color: $primary-color;
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+  }
+
+  @media (max-width: 768px) {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.8125rem;
+  }
+}
+
+// Input hints for better UX
+.input-hint {
+  display: block;
+  margin-top: $spacing-xs;
+  font-size: $font-size-sm;
+  color: $text-muted;
+  font-style: italic;
+}
+
+// Timezone toggle section (now at the top)
+.timezone-toggle {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  margin-bottom: $spacing-lg;
+  padding: $spacing-md;
+  background: rgba(59, 130, 246, 0.05);
+  border: 1px solid rgba(59, 130, 246, 0.1);
+  border-radius: $border-radius-lg;
+
+  .toggle-label {
+    font-size: $font-size-sm;
+    font-weight: 600;
+    color: $text-primary;
+    margin: 0;
+  }
+
+  .toggle-buttons {
+    display: flex;
+    gap: 2px;
+    background: #e2e8f0;
+    border-radius: $border-radius-md;
+    padding: 2px;
+  }
+
+  .toggle-btn {
+    padding: 0.375rem 0.75rem;
+    border: none;
+    background: transparent;
+    color: $text-secondary;
+    font-size: $font-size-sm;
+    font-weight: 500;
+    border-radius: calc($border-radius-md - 2px);
+    cursor: pointer;
+    transition: all $transition-fast;
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.7);
+      color: $text-primary;
+    }
+
+    &.active {
+      background: white;
+      color: $primary-color;
+      font-weight: 600;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+  }
+}
+
+// Input Options Row - Side by Side Layout
+.input-options-row {
+  display: flex;
+  gap: $spacing-lg;
+  margin-bottom: $spacing-xl;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: $spacing-md;
+  }
+}
+
+// Quick Select Section (left side)
+.quick-select-section {
+  flex: 1;
+  background: linear-gradient(135deg, #fafafa 0%, $bg-card 100%);
+  border: 2px solid #f1f5f9;
+  border-radius: $border-radius-xl;
+  padding: $spacing-lg;
+
+  h3 {
+    font-size: $font-size-lg;
+    font-weight: 700;
+    color: $text-primary;
+    margin: 0 0 $spacing-sm 0;
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+  }
+
+  .quick-select-hint {
+    font-size: $font-size-sm;
+    color: $text-muted;
+    margin-bottom: $spacing-md;
+    font-style: italic;
+    line-height: 1.4;
+  }
+
+  .button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spacing-sm;
+  }
+}
+
+// Manual Input Section (right side)
+.manual-input-section {
+  flex: 1;
+  background: linear-gradient(135deg, #fafafa 0%, $bg-card 100%);
+  border: 2px solid #f1f5f9;
+  border-radius: $border-radius-xl;
+  padding: $spacing-lg;
+
+  h3 {
+    font-size: $font-size-lg;
+    font-weight: 700;
+    color: $text-primary;
+    margin: 0 0 $spacing-sm 0;
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+  }
+
+  .manual-input-hint {
+    font-size: $font-size-sm;
+    color: $text-muted;
+    margin-bottom: $spacing-md;
+    font-style: italic;
+    line-height: 1.4;
+  }
+
+  .input-group {
+    margin-bottom: 0;
+  }
+}
+
+// Section titles
+.section-title {
+  font-size: $font-size-lg;
+  font-weight: 700;
+  color: $text-primary;
+  margin: 0 0 $spacing-md 0;
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding-bottom: $spacing-sm;
+  border-bottom: 2px solid #f1f5f9;
+}
+
+// Status indicators for timestamp converter
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-xs;
+  margin-left: $spacing-sm;
+  font-size: $font-size-sm;
+  font-weight: 500;
+
+  &.valid {
+    color: #10b981;
+  }
+
+  &.invalid {
+    color: #ef4444;
+  }
+}
 .current-time-section,
 .world-clock-section {
   background: linear-gradient(135deg, #fafafa 0%, $bg-card 100%);
@@ -380,6 +598,128 @@
    ======================================== */
 
 body.dark-theme {
+  // Dark Theme Tab Navigation (compact style)
+  .tab-button {
+    background: #374151;
+    color: #d1d5db;
+    border-color: #4b5563;
+
+    &:hover {
+      background: #4b5563;
+      color: #f9fafb;
+      border-color: #6b7280;
+    }
+
+    &.active {
+      background: $primary-color;
+      color: white;
+      border-color: $primary-color;
+      box-shadow: 0 2px 4px rgba(59, 130, 246, 0.4);
+    }
+  }
+
+  .input-hint {
+    color: #9ca3af;
+  }
+
+  // Dark theme timezone toggle
+  .timezone-toggle {
+    background: rgba(96, 165, 250, 0.15);
+    border: 1px solid rgba(96, 165, 250, 0.3);
+
+    .toggle-label {
+      color: #f1f5f9;
+    }
+
+    .toggle-buttons {
+      background: rgba(30, 41, 59, 0.8);
+    }
+
+    .toggle-btn {
+      color: #94a3b8;
+
+      &:hover {
+        background: rgba(71, 85, 105, 0.8);
+        color: #f1f5f9;
+      }
+
+      &.active {
+        background: $primary-color;
+        color: white;
+        box-shadow: 0 1px 2px rgba(59, 130, 246, 0.3);
+      }
+    }
+  }
+
+  // Dark theme quick select section
+  .quick-select-section {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    border: 2px solid #475569;
+    box-shadow: 
+      0 4px 6px -1px rgba(0, 0, 0, 0.3), 
+      0 2px 4px -1px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+    &:hover {
+      border-color: #64748b;
+      box-shadow: 
+        0 8px 25px -8px rgba(0, 0, 0, 0.4), 
+        0 4px 6px -2px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    h3 {
+      color: #f1f5f9;
+    }
+
+    .quick-select-hint {
+      color: #9ca3af;
+    }
+  }
+
+  // Dark theme manual input section  
+  .manual-input-section {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    border: 2px solid #475569;
+    box-shadow: 
+      0 4px 6px -1px rgba(0, 0, 0, 0.3), 
+      0 2px 4px -1px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+    &:hover {
+      border-color: #64748b;
+      box-shadow: 
+        0 8px 25px -8px rgba(0, 0, 0, 0.4), 
+        0 4px 6px -2px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    h3 {
+      color: #f1f5f9;
+    }
+
+    .manual-input-hint {
+      color: #9ca3af;
+    }
+  }
+
+  // Dark theme section titles
+  .section-title {
+    color: #f1f5f9;
+    border-bottom-color: #475569;
+  }
+
+  // Dark theme status indicators
+  .status-indicator {
+    &.valid {
+      color: #34d399;
+    }
+
+    &.invalid {
+      color: #f87171;
+    }
+  }
+
   .current-time-section,
   .world-clock-section {
     background: linear-gradient(135deg, #1e293b 0%, #334155 100%);

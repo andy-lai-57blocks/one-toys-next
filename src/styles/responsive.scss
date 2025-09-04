@@ -193,6 +193,15 @@
     display: none;
   }
   
+  .hero-search-section {
+    margin-top: 2rem;
+    
+    .global-search-container {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+  }
+  
   .categories-section {
     padding: 3rem 1.5rem;
   }

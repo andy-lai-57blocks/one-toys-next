@@ -49,6 +49,16 @@ body {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   min-height: calc(100vh - 8rem); /* Adjust height based on viewport, accounting for navbar and padding */
+  padding: 0;
+}
+
+/* Global Search Section - Now positioned within content area */
+.global-search-section {
+  margin-bottom: 1.5rem;
+  
+  @media (max-width: 768px) {
+    margin-bottom: 1rem;
+  }
 }
 
 .content-area:hover {
@@ -120,6 +130,8 @@ body.dark-theme {
         radial-gradient(circle at 40% 80%, rgba(6, 182, 212, 0.08) 0%, transparent 50%);
     }
   }
+
+  // Dark theme global search section - inherits from content-area background
 }
 
 /* Common animations */

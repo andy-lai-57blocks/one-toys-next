@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import GlobalSearch from '@/components/search/GlobalSearch';
 
 const Home = () => {
   const categories = [
@@ -67,6 +68,10 @@ const Home = () => {
               <span className="stat-number">100%</span>
               <span className="stat-label">Free</span>
             </div>
+          </div>
+          
+          <div className="hero-search-section">
+            <GlobalSearch />
           </div>
         </div>
       </div>

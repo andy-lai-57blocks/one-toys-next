@@ -10,7 +10,6 @@
   padding: 4rem 0 6rem 0;
   background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
   position: relative;
-  overflow: hidden;
 }
 
 .hero-section::before {
@@ -121,6 +120,42 @@
   width: 1px;
   height: 3rem;
   background: linear-gradient(to bottom, transparent, #e2e8f0, transparent);
+}
+
+.hero-search-section {
+  margin-top: 3rem;
+  animation: fadeInUp 0.6s ease-out 0.8s both;
+  
+  .global-search-container {
+    max-width: 500px;
+    margin: 0 auto;
+    z-index: 1001; // Higher than hero content z-index
+  }
+  
+  .global-search-input {
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid rgba(59, 130, 246, 0.1);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    
+    &:focus {
+      background: rgba(255, 255, 255, 0.95);
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1), 0 8px 25px -8px rgba(59, 130, 246, 0.25);
+    }
+    
+    &::placeholder {
+      color: #64748b;
+    }
+  }
+  
+  .autocomplete-dropdown {
+    z-index: 9999; // Very high z-index to appear above everything
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(59, 130, 246, 0.2);
+    box-shadow: 0 8px 25px -8px rgba(0, 0, 0, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+  }
 }
 
 /* Categories Section */
@@ -423,6 +458,44 @@ body.dark-theme {
   
   .home-container .hero-stats .stat-label {
     color: #94a3b8;
+  }
+  
+  /* Hero Search Section Dark Mode */
+  .hero-search-section {
+    .global-search-input {
+      background: rgba(30, 41, 59, 0.8);
+      border: 2px solid rgba(96, 165, 250, 0.1);
+      color: #f1f5f9;
+      
+      &:focus {
+        background: rgba(30, 41, 59, 0.9);
+        border-color: #60a5fa;
+        box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1), 0 8px 25px -8px rgba(96, 165, 250, 0.25);
+      }
+      
+      &::placeholder {
+        color: #94a3b8;
+      }
+    }
+    
+    .search-input-icon {
+      color: #94a3b8;
+    }
+    
+    .search-clear-button {
+      color: #94a3b8;
+      
+      &:hover {
+        color: #f1f5f9;
+        background: rgba(148, 163, 184, 0.1);
+      }
+    }
+    
+    .autocomplete-dropdown {
+      background: rgba(30, 41, 59, 0.95);
+      border: 2px solid rgba(96, 165, 250, 0.2);
+      box-shadow: 0 8px 25px -8px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+    }
   }
   
   /* Category Cards */

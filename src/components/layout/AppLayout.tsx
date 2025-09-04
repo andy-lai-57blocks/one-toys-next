@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTheme } from '@/contexts/ThemeContext';
 import { Breadcrumbs } from '@/components/shared';
+import GlobalSearch from '@/components/search/GlobalSearch';
 
 // Sidebar Navigation Component
 const Sidebar = () => {
@@ -241,19 +242,29 @@ interface AppLayoutProps {
   children: React.ReactNode;
 }
 
-const AppLayout: React.FC<AppLayoutProps> = ({ children }) => (
-  <div className="app">
-    <Sidebar />
-    <main className="main-content">
-      <div className="content-container">
-        <div className="content-area">
-          <Breadcrumbs />
-          {children}
+const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
+  const pathname = usePathname();
+  const isHomePage = pathname === '/';
+
+  return (
+    <div className="app">
+      <Sidebar />
+      <main className="main-content">
+        <div className="content-container">
+          <div className="content-area">
+            <Breadcrumbs />
+            {!isHomePage && (
+              <div className="global-search-section">
+                <GlobalSearch />
+              </div>
+            )}
+            {children}
+          </div>
         </div>
-      </div>
-    </main>
-    <FloatingThemeToggle />
-  </div>
-);
+      </main>
+      <FloatingThemeToggle />
+    </div>
+  );
+};
 
 export default AppLayout;
