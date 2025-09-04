@@ -4,14 +4,19 @@ import React, { useState, useEffect } from 'react';
 
 const DateFormatter = () => {
   const [inputDate, setInputDate] = useState('');
-  const [selectedTimezone, setSelectedTimezone] = useState(Intl.DateTimeFormat().resolvedOptions().timeZone);
+  const [selectedTimezone, setSelectedTimezone] = useState('UTC'); // Start with UTC to prevent hydration mismatch
   const [customFormat, setCustomFormat] = useState('');
   const [results, setResults] = useState({});
 
   useEffect(() => {
-    // Set initial date to current time
-    const now = new Date();
-    setInputDate(now.toISOString().slice(0, 16));
+    // Set user's timezone and initial date after hydration
+    if (typeof window !== 'undefined') {
+      const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      setSelectedTimezone(userTimezone);
+      
+      const now = new Date();
+      setInputDate(now.toISOString().slice(0, 16));
+    }
   }, []);
 
   useEffect(() => {
