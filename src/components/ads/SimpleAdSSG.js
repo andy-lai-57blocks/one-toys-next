@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 const SimpleAdSSG = ({ 
   className = '',
@@ -9,8 +9,15 @@ const SimpleAdSSG = ({
   adClient = 'ca-pub-8806399994474387'
 }) => {
   const adRef = useRef(null);
-  const isLocalhost = typeof window !== 'undefined' && 
-    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+  const [isLocalhost, setIsLocalhost] = useState(false);
+
+  // Check localhost on client-side only to prevent hydration mismatch
+  useEffect(() => {
+    setIsLocalhost(
+      window.location.hostname === 'localhost' || 
+      window.location.hostname === '127.0.0.1'
+    );
+  }, []);
 
   useEffect(() => {
     // Skip ads on localhost
