@@ -161,3 +161,30 @@ body.dark-theme {
     }
   }
 }
+
+// Responsive overrides for mobile
+@media (max-width: 900px) {
+  .case-converter-tool {
+    .action-column {
+      width: 100% !important; // Override fixed width on mobile
+      max-width: 100% !important;
+      min-width: unset !important;
+    }
+    
+    .mode-selector {
+      max-width: 100%; // Allow full width on mobile
+    }
+  }
+  
+  body.dark-theme .case-converter-tool {
+    .action-column {
+      width: 100% !important; // Override fixed width on mobile
+      max-width: 100% !important; 
+      min-width: unset !important;
+    }
+    
+    .mode-selector {
+      max-width: 100%; // Allow full width on mobile
+    }
+  }
+}

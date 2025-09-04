@@ -577,6 +577,24 @@
       flex: 1 1 calc(50% - 0.25rem);
     }
   }
+
+  // Extra responsive styling for action-column on very small screens
+  .three-column-layout .action-column {
+    padding: $spacing-sm; // Reduce padding for very small screens
+    margin: $spacing-sm 0; // Reduce margins
+    
+    .btn {
+      font-size: 12px !important;
+      padding: $spacing-xs $spacing-sm !important;
+      min-width: 100px !important; // Smaller minimum width
+      max-width: 140px !important; // Smaller maximum width
+    }
+    
+    .primary-actions,
+    .secondary-actions {
+      gap: $spacing-xs; // Reduce gap between buttons
+    }
+  }
 }
 
 // HLS Player Styles
@@ -1532,21 +1550,24 @@
 
     .action-column {
       margin: $spacing-lg 0;
-      padding: $spacing-md 0; // Top/bottom padding only, no left/right padding
+      padding: $spacing-md; // All-around padding for mobile
       background: $bg-secondary;
       border-radius: $border-radius-lg;
       border: 1px solid $border-light;
-      min-width: 300px; // Content area is exactly 300px, padding is additional
-      max-width: 300px; // Ensure it doesn't exceed 300px
+      width: 100%; // Full width on mobile
+      max-width: 100%; // Allow full width
+      min-width: unset; // Remove fixed width constraint
 
       .primary-actions,
       .secondary-actions {
         flex-direction: row;
         flex-wrap: wrap;
+        justify-content: center; // Center buttons on mobile
 
         .btn {
           flex: 1;
           min-width: 120px;
+          max-width: 150px; // Prevent buttons from being too wide
         }
       }
     }
