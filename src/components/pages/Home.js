@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import GlobalSearch from '@/components/search/GlobalSearch';
+import SubdomainWrapper from '@/components/shared/SubdomainWrapper';
 
 const Home = () => {
   const categories = [
@@ -37,7 +38,8 @@ const Home = () => {
   ];
 
   return (
-    <div className="home-container">
+    <SubdomainWrapper>
+      <div className="home-container">
       {/* Enhanced Hero Section */}
       <div className="hero-section">
         <div className="hero-content">
@@ -133,7 +135,8 @@ const Home = () => {
         </div>
       </div>
 
-    </div>
+      </div>
+    </SubdomainWrapper>
   );
 };
 

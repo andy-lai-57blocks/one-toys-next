@@ -330,4 +330,93 @@ export const getAutocompleteSuggestions = (query) => {
   return Array.from(suggestions).slice(0, 8); // Limit to 8 suggestions
 };
 
+// Subdomain to route mapping for client-side routing
+export const subdomainRoutes = {
+  // Code Tools - Formatting
+  'json': '/code/json',
+  'xml': '/code/xml',
+  'vast': '/code/vast',
+  
+  // Code Tools - Encoding  
+  'base64': '/code/base64',
+  'url': '/code/url',
+  'html': '/code/html',
+  'gzip': '/code/gzip',
+  
+  // Code Tools - Generators
+  'password': '/code/password',
+  'uuid': '/code/uuid',
+  'hls': '/code/hls',
+  
+  // DateTime Tools
+  'timestamp': '/datetime/timestamp',
+  'timezone': '/datetime/timezone',
+  'countdown': '/datetime/countdown',
+  'calculator': '/datetime/calculator',
+  'format': '/datetime/format',
+  'date': '/datetime/format',
+  'time': '/datetime/timestamp',
+  
+  // Text Tools
+  'case': '/text/case-converter',
+  'converter': '/text/case-converter',
+  'count': '/text/character-count',
+  'counter': '/text/character-count',
+  'lorem': '/text/lorem',
+  'space': '/text/space-remover',
+  'text': '/text/case-converter',
+  
+  // Info Tools
+  'browser': '/info/browser',
+  'system': '/info/system',
+  'network': '/info/network',
+  'codes': '/info/calling-codes',
+  'calling': '/info/calling-codes',
+  'services': '/info/public-services',
+  'postcodes': '/info/postcodes',
+  'zip': '/info/postcodes',
+  'info': '/info/browser',
+  
+  // Popular aliases
+  'encode': '/code/base64',
+  'decode': '/code/base64',
+  'compress': '/code/gzip',
+  'decompress': '/code/gzip'
+};
+
+// Get route from subdomain
+export const getRouteFromSubdomain = (subdomain) => {
+  if (!subdomain || subdomain === 'www') {
+    return null;
+  }
+  
+  // Direct mapping
+  if (subdomainRoutes[subdomain.toLowerCase()]) {
+    return subdomainRoutes[subdomain.toLowerCase()];
+  }
+  
+  // Try to find partial matches for compound subdomains
+  const lowerSubdomain = subdomain.toLowerCase();
+  for (const [key, route] of Object.entries(subdomainRoutes)) {
+    if (lowerSubdomain.includes(key) || key.includes(lowerSubdomain)) {
+      return route;
+    }
+  }
+  
+  return null;
+};
+
+// Generate subdomain URL for a tool
+export const generateSubdomainUrl = (path, baseDomain = 'one-top.com') => {
+  const subdomain = Object.keys(subdomainRoutes).find(key => 
+    subdomainRoutes[key] === path
+  );
+  
+  if (subdomain) {
+    return `https://${subdomain}.${baseDomain}`;
+  }
+  
+  return `https://${baseDomain}${path}`;
+};
+
 export default allTools;

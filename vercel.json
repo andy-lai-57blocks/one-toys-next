@@ -1,7 +1,13 @@
 {
+  "version": 2,
   "buildCommand": "yarn build",
   "outputDirectory": "out",
   "installCommand": "yarn install",
+  "functions": {
+    "middleware.js": {
+      "runtime": "nodejs18.x"
+    }
+  },
   "rewrites": [
     {
       "source": "/sitemap.xml",
