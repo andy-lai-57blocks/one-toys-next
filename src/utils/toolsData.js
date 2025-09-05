@@ -407,7 +407,7 @@ export const getRouteFromSubdomain = (subdomain) => {
 };
 
 // Generate subdomain URL for a tool
-export const generateSubdomainUrl = (path, baseDomain = 'one-top.com') => {
+export const generateSubdomainUrl = (path, baseDomain = 'one-toys.com') => {
   const subdomain = Object.keys(subdomainRoutes).find(key => 
     subdomainRoutes[key] === path
   );
