@@ -1,7 +1,7 @@
 # DNS Setup Guide for Subdomain Routing
 
 ## Overview
-This guide helps you configure DNS records to enable subdomain routing (e.g., json.one-top.com → /code/json).
+This guide helps you configure DNS records to enable subdomain routing (e.g., json.one-toys.com → /code/json).
 
 ## Required DNS Records
 
@@ -79,8 +79,8 @@ TTL: 300
 2. Select your project
 3. Click "Settings" → "Domains"
 4. Add these domains:
-   - `one-top.com` (main domain)
-   - `*.one-top.com` (wildcard)
+   - `one-toys.com` (main domain)
+   - `*.one-toys.com` (wildcard)
 5. Vercel will verify DNS automatically
 
 ### Domain Verification
@@ -97,9 +97,9 @@ Use online tools:
 
 ### 2. Test Subdomains
 After DNS propagates (24-48 hours):
-- Visit `json.one-top.com` → should redirect to JSON formatter
-- Visit `base64.one-top.com` → should redirect to Base64 tool
-- Visit `unknown.one-top.com` → should redirect to search
+- Visit `json.one-toys.com` → should redirect to JSON formatter
+- Visit `base64.one-toys.com` → should redirect to Base64 tool
+- Visit `unknown.one-toys.com` → should redirect to search
 
 ### 3. Verify in Browser DevTools
 1. Open browser DevTools (F12)
@@ -123,24 +123,24 @@ After DNS propagates (24-48 hours):
 # Check if wildcard domain is added to Vercel
 # Go to: Vercel Dashboard > Project > Settings > Domains
 # Should show:
-# - one-top.com ✅ Valid
-# - *.one-top.com ✅ Valid (this is crucial!)
+# - one-toys.com ✅ Valid
+# - *.one-toys.com ✅ Valid (this is crucial!)
 ```
 
 #### 2. Force SSL Certificate Regeneration
 1. Go to Vercel Dashboard > Project > Settings > Domains
-2. Remove `*.one-top.com` domain
+2. Remove `*.one-toys.com` domain
 3. Wait 5 minutes
-4. Re-add `*.one-top.com` domain
+4. Re-add `*.one-toys.com` domain
 5. Wait 30-60 minutes for SSL generation
 
 #### 3. Alternative: Manual SSL Verification
 ```bash
 # Test SSL certificate
-echo | openssl s_client -servername json.one-top.com -connect json.one-top.com:443 2>/dev/null | openssl x509 -noout -subject -dates
+echo | openssl s_client -servername json.one-toys.com -connect json.one-toys.com:443 2>/dev/null | openssl x509 -noout -subject -dates
 
 # Check if wildcard cert is present
-echo | openssl s_client -servername json.one-top.com -connect json.one-top.com:443 2>/dev/null | openssl x509 -noout -text | grep -A1 "Subject Alternative Name"
+echo | openssl s_client -servername json.one-toys.com -connect json.one-toys.com:443 2>/dev/null | openssl x509 -noout -text | grep -A1 "Subject Alternative Name"
 ```
 
 #### 4. DNS Provider Specific SSL Issues
@@ -178,16 +178,16 @@ echo | openssl s_client -servername json.one-top.com -connect json.one-top.com:4
 
 ```bash
 # Check A record
-dig one-top.com A
+dig one-toys.com A
 
 # Check CNAME record  
-dig json.one-top.com CNAME
+dig json.one-toys.com CNAME
 
 # Check from specific DNS server
-dig @8.8.8.8 one-top.com A
+dig @8.8.8.8 one-toys.com A
 
 # Check all subdomains
-dig *.one-top.com CNAME
+dig *.one-toys.com CNAME
 ```
 
 ## DNS Propagation Timeline

@@ -11,7 +11,7 @@ This implementation provides subdomain routing for the static-exported Next.js a
 - `src/utils/toolsData.js` - Contains subdomain-to-route mappings
 
 ### Flow
-1. User visits `json.one-top.com`
+1. User visits `json.one-toys.com`
 2. Client-side hook detects `json` subdomain
 3. Hook redirects to `/code/json` route
 4. User sees JSON formatter tool
@@ -19,51 +19,51 @@ This implementation provides subdomain routing for the static-exported Next.js a
 ## Supported Subdomains
 
 ### Code Tools
-- `json.one-top.com` → `/code/json`
-- `xml.one-top.com` → `/code/xml`
-- `base64.one-top.com` → `/code/base64`
-- `url.one-top.com` → `/code/url`
-- `html.one-top.com` → `/code/html`
-- `gzip.one-top.com` → `/code/gzip`
-- `password.one-top.com` → `/code/password`
-- `uuid.one-top.com` → `/code/uuid`
-- `hls.one-top.com` → `/code/hls`
-- `vast.one-top.com` → `/code/vast`
+- `json.one-toys.com` → `/code/json`
+- `xml.one-toys.com` → `/code/xml`
+- `base64.one-toys.com` → `/code/base64`
+- `url.one-toys.com` → `/code/url`
+- `html.one-toys.com` → `/code/html`
+- `gzip.one-toys.com` → `/code/gzip`
+- `password.one-toys.com` → `/code/password`
+- `uuid.one-toys.com` → `/code/uuid`
+- `hls.one-toys.com` → `/code/hls`
+- `vast.one-toys.com` → `/code/vast`
 
 ### DateTime Tools
-- `timestamp.one-top.com` → `/datetime/timestamp`
-- `timezone.one-top.com` → `/datetime/timezone`
-- `countdown.one-top.com` → `/datetime/countdown`
-- `calculator.one-top.com` → `/datetime/calculator`
-- `format.one-top.com` → `/datetime/format`
-- `date.one-top.com` → `/datetime/format` (alias)
-- `time.one-top.com` → `/datetime/timestamp` (alias)
+- `timestamp.one-toys.com` → `/datetime/timestamp`
+- `timezone.one-toys.com` → `/datetime/timezone`
+- `countdown.one-toys.com` → `/datetime/countdown`
+- `calculator.one-toys.com` → `/datetime/calculator`
+- `format.one-toys.com` → `/datetime/format`
+- `date.one-toys.com` → `/datetime/format` (alias)
+- `time.one-toys.com` → `/datetime/timestamp` (alias)
 
 ### Text Tools
-- `case.one-top.com` → `/text/case-converter`
-- `converter.one-top.com` → `/text/case-converter`
-- `count.one-top.com` → `/text/character-count`
-- `counter.one-top.com` → `/text/character-count`
-- `lorem.one-top.com` → `/text/lorem`
-- `space.one-top.com` → `/text/space-remover`
-- `text.one-top.com` → `/text/case-converter` (alias)
+- `case.one-toys.com` → `/text/case-converter`
+- `converter.one-toys.com` → `/text/case-converter`
+- `count.one-toys.com` → `/text/character-count`
+- `counter.one-toys.com` → `/text/character-count`
+- `lorem.one-toys.com` → `/text/lorem`
+- `space.one-toys.com` → `/text/space-remover`
+- `text.one-toys.com` → `/text/case-converter` (alias)
 
 ### Info Tools
-- `browser.one-top.com` → `/info/browser`
-- `system.one-top.com` → `/info/system`
-- `network.one-top.com` → `/info/network`
-- `codes.one-top.com` → `/info/calling-codes`
-- `calling.one-top.com` → `/info/calling-codes`
-- `services.one-top.com` → `/info/public-services`
-- `postcodes.one-top.com` → `/info/postcodes`
-- `zip.one-top.com` → `/info/postcodes`
-- `info.one-top.com` → `/info/browser` (alias)
+- `browser.one-toys.com` → `/info/browser`
+- `system.one-toys.com` → `/info/system`
+- `network.one-toys.com` → `/info/network`
+- `codes.one-toys.com` → `/info/calling-codes`
+- `calling.one-toys.com` → `/info/calling-codes`
+- `services.one-toys.com` → `/info/public-services`
+- `postcodes.one-toys.com` → `/info/postcodes`
+- `zip.one-toys.com` → `/info/postcodes`
+- `info.one-toys.com` → `/info/browser` (alias)
 
 ### Popular Aliases
-- `encode.one-top.com` → `/code/base64`
-- `decode.one-top.com` → `/code/base64`
-- `compress.one-top.com` → `/code/gzip`
-- `decompress.one-top.com` → `/code/gzip`
+- `encode.one-toys.com` → `/code/base64`
+- `decode.one-toys.com` → `/code/base64`
+- `compress.one-toys.com` → `/code/gzip`
+- `decompress.one-toys.com` → `/code/gzip`
 
 ## DNS Configuration Required
 
@@ -86,8 +86,8 @@ Value: 76.76.19.61
 ## Vercel Configuration
 
 Add these domains in your Vercel project:
-1. `one-top.com` (main domain)
-2. `*.one-top.com` (wildcard for subdomains)
+1. `one-toys.com` (main domain)
+2. `*.one-toys.com` (wildcard for subdomains)
 
 ## Limitations
 
