@@ -232,7 +232,7 @@ const CaseConverter = () => {
               value={currentOutput}
               onChange={() => {}} // Read-only
               language="text"
-              readOnly={true}
+              readOnly={false}
               name="case-converter-output-editor"
               height="calc(100vh - 16rem)"
               showLineNumbers={true}

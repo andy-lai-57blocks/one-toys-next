@@ -332,7 +332,7 @@ const GzipTool = () => {
               value={output}
               onChange={() => {}} // Read-only
               language={mode === 'decompress' ? detectLanguage(output) : 'text'}
-              readOnly={true}
+              readOnly={false}
               name="gzip-output-editor"
               height="calc(100vh - 16rem)"
               showLineNumbers={true}

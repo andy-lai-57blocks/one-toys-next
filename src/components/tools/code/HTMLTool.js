@@ -224,7 +224,7 @@ const HTMLTool = () => {
               value={output}
               onChange={() => {}} // Read-only
               language={mode === 'decode' ? 'html' : 'text'}
-              readOnly={true}
+              readOnly={false}
               name="html-output-editor"
               height="calc(100vh - 16rem)"
 

@@ -367,7 +367,7 @@ const XMLFormatter = () => {
               value={output}
               onChange={() => {}} // Read-only
               language="xml"
-              readOnly={true}
+              readOnly={false}
               name="xml-output-editor"
               height="calc(100vh - 16rem)"
 

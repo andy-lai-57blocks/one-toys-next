@@ -324,7 +324,7 @@ Generated on: ${new Date().toLocaleString()}`;
               value={fullReport}
               onChange={() => {}} // Read-only
               language="text"
-              readOnly={true}
+              readOnly={false}
               name="password-generator-output-editor"
               height="calc(100vh - 16rem)"
               showLineNumbers={false}

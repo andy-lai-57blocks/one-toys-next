@@ -227,7 +227,7 @@ const JSONFormatter = () => {
               value={output}
               onChange={() => {}} // Read-only
               language="json"
-              readOnly={true}
+              readOnly={false}
               name="json-output-editor"
               height="calc(100vh - 16rem)"
 

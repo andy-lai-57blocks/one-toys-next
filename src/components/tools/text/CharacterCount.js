@@ -227,7 +227,7 @@ console.log(stats);`
               value={formattedStats}
               onChange={() => {}} // Read-only
               language="text"
-              readOnly={true}
+              readOnly={false}
               name="character-count-output-editor"
               height="calc(100vh - 16rem)"
               showLineNumbers={false}

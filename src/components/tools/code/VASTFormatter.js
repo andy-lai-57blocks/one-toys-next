@@ -493,7 +493,7 @@ const VASTFormatter = () => {
               value={output}
               onChange={() => {}} // Read-only
               language={output.startsWith('📊') || output.startsWith('📹') || output.startsWith('✅') || output.startsWith('⚠️') ? 'text' : 'xml'}
-              readOnly={true}
+              readOnly={false}
               name="vast-output-editor"
               height="calc(100vh - 16rem)"
 

@@ -380,7 +380,7 @@ const Base64Tool = () => {
               value={output}
               onChange={() => {}} // Read-only
               language={mode === 'decode' ? detectLanguage(output) : 'text'}
-              readOnly={true}
+              readOnly={false}
               name="base64-output-editor"
               height="calc(100vh - 16rem)"
               showLineNumbers={true}

@@ -225,7 +225,7 @@ const SpaceRemover = () => {
               value={currentOutput}
               onChange={() => {}} // Read-only
               language="text"
-              readOnly={true}
+              readOnly={false}
               name="space-remover-output-editor"
               height="calc(100vh - 16rem)"
               showLineNumbers={true}
