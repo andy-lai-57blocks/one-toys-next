@@ -33,7 +33,7 @@ const SearchResults = ({ results, query, onClear }) => {
         
         {/* Ad placement at bottom of search results */}
         <div className="search-results-ad">
-          <SimpleAdSSG adSlot="6476193569" />
+          <SimpleAdSSG adSlot="6476193569" style={{ width: '100%' }} />
         </div>
       </div>
     );
@@ -63,7 +63,7 @@ const SearchResults = ({ results, query, onClear }) => {
       
       {/* Ad placement at bottom of search results */}
       <div className="search-results-ad">
-        <SimpleAdSSG adSlot="6476193569" />
+        <SimpleAdSSG adSlot="6476193569" style={{ width: '100%' }} />
       </div>
     </div>
   );
