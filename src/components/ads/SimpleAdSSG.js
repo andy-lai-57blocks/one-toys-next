@@ -8,6 +8,8 @@ const SimpleAdSSG = ({
   adSlot = '1681486325',
   adClient = 'ca-pub-8806399994474387'
 }) => {
+  // Extract width from style prop, default to '300px'
+  const containerWidth = style.width || '300px';
   const adRef = useRef(null);
   const [isLocalhost, setIsLocalhost] = useState(false);
 
@@ -40,7 +42,7 @@ const SimpleAdSSG = ({
       <div 
         className={`ad-placeholder ${className}`}
         style={{
-          width: '300px',
+          width: containerWidth,
           height: '250px',
           maxWidth: '100%',
           margin: '0 auto',
@@ -64,7 +66,7 @@ const SimpleAdSSG = ({
     <div 
       className={`ad-container ${className}`} 
       style={{
-        width: '300px',
+        width: containerWidth,
         maxWidth: '100%',
         margin: '0 auto',
         ...style
@@ -75,7 +77,7 @@ const SimpleAdSSG = ({
         className="adsbygoogle"
         style={{ 
           display: 'block', 
-          width: '300px', 
+          width: containerWidth, 
           maxWidth: '100%'
         }}
         data-ad-client={adClient}
