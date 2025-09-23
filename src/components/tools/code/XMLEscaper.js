@@ -9,7 +9,7 @@ import { downloadAsFile } from '../../../utils/downloadUtils';
 const XMLEscaper = () => {
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
-  const [mode, setMode] = useState('unescape');
+  const [mode, setMode] = useState('unescape'); // Test deployment - 2025-01-21
   const { isDarkTheme } = useTheme();
 
   // XML escape function
