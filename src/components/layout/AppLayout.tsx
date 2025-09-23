@@ -32,6 +32,8 @@ const Sidebar = () => {
         { path: '/code/base64', title: 'Base64 Encoder/Decoder', icon: '🔐' },
         { path: '/code/url', title: 'URL Encoder/Decoder', icon: '🌐' },
         { path: '/code/html', title: 'HTML Encoder/Decoder', icon: '🏷️' },
+        { path: '/code/xml-escaper', title: 'XML Escaper/Unescaper', icon: '📝' },
+        { path: '/code/json-escaper', title: 'JSON Escaper/Unescaper', icon: '🔤' },
         { path: '/code/gzip', title: 'Gzip Compression', icon: '🗜️' },
         { path: '/code/uuid', title: 'UUID Generator', icon: '🆔' },
         { path: '/code/password', title: 'Password Generator', icon: '🔑' },

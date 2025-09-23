@@ -3,6 +3,8 @@
 import React, { useState } from 'react';
 import SimpleAd from '../../ads/SimpleAdSSG';
 import CodeEditor from '../../common/CodeEditor';
+import { downloadAsFile } from '../../../utils/downloadUtils';
+import { unescapeForVAST } from '../../../utils/unescapeUtils';
 
 
 // Removed fallback themes - now using Ace Editor built-in themes
@@ -14,80 +16,13 @@ const VASTFormatter = () => {
 
   const [autoUnescape, setAutoUnescape] = useState(true);
 
-  // Helper function to detect if input appears to be escaped VAST XML
-  const isEscapedVAST = (str) => {
-    if (!str || str.length < 2) return false;
-    const trimmed = str.trim();
-    
-    // Check for common XML/JSON escape patterns
-    const hasEscapedSlashes = trimmed.includes('\\/');
-    const hasEscapedQuotes = trimmed.includes('\\"');
-    const hasEscapedNewlines = trimmed.includes('\\n') || trimmed.includes('\\r');
-    const hasHTMLEntities = trimmed.includes('&lt;') || trimmed.includes('&gt;') || 
-                           trimmed.includes('&amp;') || trimmed.includes('&quot;');
-    
-    // If wrapped in quotes, check for escape patterns
-    if ((trimmed.startsWith('"') && trimmed.endsWith('"')) || 
-        (trimmed.startsWith("'") && trimmed.endsWith("'"))) {
-      return hasEscapedSlashes || hasEscapedQuotes || hasEscapedNewlines || hasHTMLEntities;
-    }
-    
-    // Check if content looks like escaped VAST XML
-    if (trimmed.includes('<VAST') || trimmed.includes('<\\/VAST') || trimmed.includes('&lt;VAST')) {
-      return hasEscapedSlashes || hasEscapedQuotes || hasEscapedNewlines || hasHTMLEntities;
-    }
-    
-    return false;
-  };
-
-  // Helper function to unescape VAST XML string
-  const unescapeVAST = (str) => {
-    try {
-      let content = str.trim();
-      
-      // If wrapped in quotes, remove them first
-      if ((content.startsWith('"') && content.endsWith('"')) ||
-          (content.startsWith("'") && content.endsWith("'"))) {
-        content = content.slice(1, -1);
-      }
-      
-      // Handle JSON-style escaping (most common)
-      content = content
-        .replace(/\\"/g, '"')        // Escaped quotes
-        .replace(/\\'/g, "'")        // Escaped single quotes
-        // eslint-disable-next-line no-useless-escape
-        .replace(/\\\//g, '/')       // Escaped forward slashes
-        .replace(/\\\\/g, '\\')      // Escaped backslashes
-        .replace(/\\n/g, '\n')       // Escaped newlines
-        .replace(/\\r/g, '\r')       // Escaped carriage returns
-        .replace(/\\t/g, '\t')       // Escaped tabs
-        .replace(/\\f/g, '\f')       // Escaped form feeds
-        .replace(/\\b/g, '\b');      // Escaped backspaces
-      
-      // Handle HTML/XML entity escaping
-      content = content
-        .replace(/&lt;/g, '<')
-        .replace(/&gt;/g, '>')
-        .replace(/&amp;/g, '&')
-        .replace(/&quot;/g, '"')
-        .replace(/&apos;/g, "'");
-      
-      return content;
-    } catch (error) {
-      // If unescaping fails, return original string
-      return str;
-    }
-  };
-
-  // Helper function to prepare input for processing
+  // Helper function to prepare input for processing with enhanced unescaping
   const prepareInput = (rawInput) => {
     if (!autoUnescape || !rawInput) return rawInput;
     
-    if (isEscapedVAST(rawInput)) {
-      return unescapeVAST(rawInput);
-    }
-    return rawInput;
+    return unescapeForVAST(rawInput);
   };
+
 
   const formatVAST = (xml) => {
     try {
@@ -162,7 +97,7 @@ const VASTFormatter = () => {
       // Start formatting from root element
       return formatNode(xmlDoc.documentElement);
       
-    } catch (error) {
+    } catch {
       // Fallback to original XML if formatting fails
       return xml.trim();
     }
@@ -222,29 +157,35 @@ const VASTFormatter = () => {
       const parseError = xmlDoc.getElementsByTagName("parsererror");
       
       if (parseError.length > 0) {
-        throw new Error("Invalid VAST XML structure");
-      }
-      
-      // Additional VAST-specific validation
-      const vastElements = xmlDoc.getElementsByTagName("VAST");
-      if (vastElements.length === 0) {
-        throw new Error("Not a valid VAST document - missing <VAST> root element");
-      }
-      
-      const version = vastElements[0].getAttribute("version");
-      if (!version) {
-        setOutput('⚠️ Valid XML but missing VAST version attribute');
-        setIsValid(true);
+        const errorText = parseError[0].textContent || parseError[0].innerText || "Unknown parsing error";
+        setOutput(`❌ Invalid VAST XML: ${errorText}`);
+        setIsValid(false);
         return;
       }
       
-      setOutput(`✅ Valid VAST ${version} XML`);
+      const vastElements = xmlDoc.getElementsByTagName("VAST");
+      if (vastElements.length === 0) {
+        setOutput("❌ Not a valid VAST document - missing <VAST> root element");
+        setIsValid(false);
+        return;
+      }
+      
+      const version = vastElements[0].getAttribute("version") || "Unknown";
+      const ads = xmlDoc.getElementsByTagName("Ad");
+      const creatives = xmlDoc.getElementsByTagName("Creative");
+      
+      let details = `✅ Valid VAST ${version} XML`;
+      details += `\n📊 Structure: ${ads.length} Ad(s), ${creatives.length} Creative(s)`;
+      
+      setOutput(details);
       setIsValid(true);
+      
     } catch (error) {
-      setOutput(`❌ Invalid VAST XML: ${error.message}`);
+      setOutput(`❌ Validation Error: ${error.message}`);
       setIsValid(false);
     }
   };
+
 
   const analyzeVAST = () => {
     try {
@@ -254,7 +195,8 @@ const VASTFormatter = () => {
       const parseError = xmlDoc.getElementsByTagName("parsererror");
       
       if (parseError.length > 0) {
-        throw new Error("Invalid VAST XML structure");
+        const errorText = parseError[0].textContent || parseError[0].innerText || "Unknown parsing error";
+        throw new Error(`XML parsing failed: ${errorText}`);
       }
 
       // Extract VAST information
@@ -353,17 +295,22 @@ const VASTFormatter = () => {
     setIsValid(null);
   };
 
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(output);
-    } catch (error) {
-      const textArea = document.createElement('textarea');
-      textArea.value = output;
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textArea);
+  const handleDownload = () => {
+    if (!output) return;
+    
+    // Generate filename based on operation and content type
+    let filename = 'formatted-vast';
+    let extension = 'xml';
+    
+    if (output.includes('✅ Valid VAST') || output.includes('❌ Invalid VAST')) {
+      filename = 'vast-validation';
+      extension = 'txt';
+    } else if (output.includes('📊 VAST Analysis')) {
+      filename = 'vast-analysis';
+      extension = 'txt';
     }
+    
+    downloadAsFile(output, `${filename}-${new Date().toISOString().slice(0, 10)}.${extension}`);
   };
 
   const loadSampleVAST = () => {
@@ -426,12 +373,14 @@ const VASTFormatter = () => {
         {/* Input Column */}
         <div className="input-column">
           <div className="input-group">
-            <label className="input-label">VAST XML Input</label>
+            <label className="input-label">
+              VAST XML Input
+            </label>
             <CodeEditor
               value={input}
               onChange={setInput}
               language="xml"
-              placeholder="Paste your VAST XML here..."
+              placeholder="Paste your VAST XML here (supports JSON escapes, HTML entities, URL encoding, Unicode, etc.)..."
               name="vast-input-editor"
               height="calc(100vh - 16rem)"
               isDarkTheme={false}
@@ -463,17 +412,17 @@ const VASTFormatter = () => {
             <button 
               className="btn btn-outline" 
               onClick={() => setAutoUnescape(!autoUnescape)}
-              title={autoUnescape ? 'Disable auto-unescape' : 'Enable auto-unescape'}
+              title={autoUnescape ? 'Disable auto-unescape (JSON, HTML, URL, Unicode)' : 'Enable auto-unescape (JSON, HTML, URL, Unicode)'}
             >
-              {autoUnescape ? '🔓 Auto-Unescape' : '🔒 Manual'}
+              {autoUnescape ? '🔓 Smart Unescape' : '🔒 Manual'}
             </button>
 
             <button className="btn btn-outline" onClick={handleClear}>
               🗑️ Clear
             </button>
             {output && (
-              <button className="btn btn-outline" onClick={handleCopy}>
-                📋 Copy Result
+              <button className="btn btn-outline" onClick={handleDownload}>
+                💾 Download
               </button>
             )}
           </div>

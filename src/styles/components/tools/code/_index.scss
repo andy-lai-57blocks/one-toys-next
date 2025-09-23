@@ -1,3 +1,36 @@
 // Code Tools Styles
 @import 'generators';
 @import 'editor';
+
+// Enhanced unescaping styles
+.escape-info {
+  display: inline-block;
+  margin-left: 8px;
+  font-size: 0.75em;
+  color: var(--text-secondary, #6b7280);
+  background: var(--bg-secondary, rgba(59, 130, 246, 0.1));
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid var(--border-accent, rgba(59, 130, 246, 0.3));
+  cursor: help;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: var(--bg-accent-hover, rgba(59, 130, 246, 0.2));
+    border-color: var(--border-accent-hover, rgba(59, 130, 246, 0.5));
+    color: var(--text-primary, #1f2937);
+  }
+  
+  // Dark mode support
+  .dark-mode & {
+    color: var(--text-secondary-dark, #9ca3af);
+    background: var(--bg-secondary-dark, rgba(59, 130, 246, 0.15));
+    border-color: var(--border-accent-dark, rgba(59, 130, 246, 0.4));
+    
+    &:hover {
+      background: var(--bg-accent-hover-dark, rgba(59, 130, 246, 0.25));
+      border-color: var(--border-accent-hover-dark, rgba(59, 130, 246, 0.6));
+      color: var(--text-primary-dark, #f9fafb);
+    }
+  }
+}

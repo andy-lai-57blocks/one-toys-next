@@ -11,7 +11,9 @@ export {
   UUIDGenerator,
   PasswordGenerator,
   GzipTool,
-  HLSTool
+  HLSTool,
+  XMLEscaper,
+  JSONEscaper
 } from './code';
 
 // Text Tools

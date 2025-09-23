@@ -5,6 +5,8 @@ import React, { useState } from 'react';
 import SimpleAd from '../../ads/SimpleAdSSG';
 import CodeEditor from '../../common/CodeEditor';
 import { useTheme } from '../../../contexts/ThemeContext';
+import { downloadAsFile } from '../../../utils/downloadUtils';
+import { unescapeForJSON } from '../../../utils/unescapeUtils';
 
 // Removed fallback themes - now using Ace Editor built-in themes
 
@@ -15,74 +17,13 @@ const JSONFormatter = () => {
   const [autoUnescape, setAutoUnescape] = useState(true);
   const { isDarkTheme } = useTheme();
 
-  // Helper function to detect if input appears to be escaped JSON
-  const isEscapedJSON = (str) => {
-    if (!str || str.length < 2) return false;
-    const trimmed = str.trim();
-    
-    // Check for common JSON escape patterns
-    const hasEscapedQuotes = trimmed.includes('\\"');
-    const hasEscapedSlashes = trimmed.includes('\\/');
-    const hasEscapedNewlines = trimmed.includes('\\n') || trimmed.includes('\\r') || trimmed.includes('\\t');
-    const hasEscapedBackslashes = trimmed.includes('\\\\');
-    
-    // If wrapped in quotes, check for escape patterns
-    if ((trimmed.startsWith('"') && trimmed.endsWith('"')) || 
-        (trimmed.startsWith("'") && trimmed.endsWith("'"))) {
-      return hasEscapedQuotes || hasEscapedSlashes || hasEscapedNewlines || hasEscapedBackslashes;
-    }
-    
-    // Even without outer quotes, check if content has escaped JSON patterns and looks like JSON
-    if ((trimmed.startsWith('{\\"') || trimmed.startsWith('[\\"')) && 
-        (hasEscapedQuotes || hasEscapedSlashes || hasEscapedNewlines)) {
-      return true;
-    }
-    
-    return false;
-  };
-
-  // Helper function to unescape JSON string
-  const unescapeJSON = (str) => {
-    try {
-      let content = str.trim();
-      
-      // If wrapped in quotes, remove them first
-      if ((content.startsWith('"') && content.endsWith('"')) ||
-          (content.startsWith("'") && content.endsWith("'"))) {
-        content = content.slice(1, -1);
-      }
-      
-      // Use JSON.parse with a wrapper to handle most escape sequences properly
-      try {
-        return JSON.parse(`"${content}"`);
-      } catch (e) {
-        // If JSON.parse fails, do manual unescaping
-        return content
-          .replace(/\\"/g, '"')        // Escaped quotes
-          .replace(/\\'/g, "'")        // Escaped single quotes
-          .replace(/\\\//g, '/')       // Escaped forward slashes
-          .replace(/\\\\/g, '\\')      // Escaped backslashes
-          .replace(/\\n/g, '\n')       // Escaped newlines
-          .replace(/\\r/g, '\r')       // Escaped carriage returns
-          .replace(/\\t/g, '\t')       // Escaped tabs
-          .replace(/\\f/g, '\f')       // Escaped form feeds
-          .replace(/\\b/g, '\b');      // Escaped backspaces
-      }
-    } catch (error) {
-      // If unescaping fails, return original string
-      return str;
-    }
-  };
-
-  // Helper function to prepare input for processing
+  // Helper function to prepare input for processing with enhanced unescaping
   const prepareInput = (rawInput) => {
     if (!autoUnescape || !rawInput) return rawInput;
     
-    if (isEscapedJSON(rawInput)) {
-      return unescapeJSON(rawInput);
-    }
-    return rawInput;
+    return unescapeForJSON(rawInput);
   };
+
 
 
   const formatJSON = () => {
@@ -129,17 +70,16 @@ const JSONFormatter = () => {
     setIsValid(null);
   };
 
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(output);
-    } catch (error) {
-      const textArea = document.createElement('textarea');
-      textArea.value = output;
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textArea);
+  const handleDownload = () => {
+    if (!output) return;
+    
+    // Generate filename based on operation
+    let filename = 'formatted-json';
+    if (output.includes('✅ Valid JSON') || output.includes('❌ Invalid JSON')) {
+      filename = 'json-validation';
     }
+    
+    downloadAsFile(output, `${filename}-${new Date().toISOString().slice(0, 10)}.json`);
   };
 
   const loadSampleJSON = () => {
@@ -163,12 +103,14 @@ const JSONFormatter = () => {
         {/* Input Column */}
         <div className="input-column">
           <div className="input-group">
-            <label className="input-label">JSON Input</label>
+            <label className="input-label">
+              JSON Input
+            </label>
             <CodeEditor
               value={input}
               onChange={setInput}
               language="json"
-              placeholder="Paste your JSON here..."
+              placeholder="Paste your JSON here (supports JSON escapes, HTML entities, URL encoding, Unicode, etc.)..."
               name="json-input-editor"
               height="calc(100vh - 16rem)"
               isDarkTheme={false}
@@ -197,17 +139,17 @@ const JSONFormatter = () => {
             <button 
               className="btn btn-outline" 
               onClick={() => setAutoUnescape(!autoUnescape)}
-              title={autoUnescape ? 'Disable auto-unescape' : 'Enable auto-unescape'}
+              title={autoUnescape ? 'Disable auto-unescape (JSON, HTML, URL, Unicode)' : 'Enable auto-unescape (JSON, HTML, URL, Unicode)'}
             >
-              {autoUnescape ? '🔓 Auto-Unescape' : '🔒 Manual'}
+              {autoUnescape ? '🔓 Smart Unescape' : '🔒 Manual'}
             </button>
 
             <button className="btn btn-outline" onClick={handleClear}>
               🗑️ Clear
             </button>
             {output && (
-              <button className="btn btn-outline" onClick={handleCopy}>
-                📋 Copy Result
+              <button className="btn btn-outline" onClick={handleDownload}>
+                💾 Download
               </button>
             )}
           </div>

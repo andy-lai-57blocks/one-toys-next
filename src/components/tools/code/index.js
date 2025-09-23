@@ -10,3 +10,5 @@ export { default as UUIDGenerator } from './UUIDGenerator';
 export { default as PasswordGenerator } from './PasswordGenerator';
 export { default as GzipTool } from './GzipTool';
 export { default as HLSTool } from './HLSTool';
+export { default as XMLEscaper } from './XMLEscaper';
+export { default as JSONEscaper } from './JSONEscaper';

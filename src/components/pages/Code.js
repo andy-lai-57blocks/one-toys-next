@@ -27,6 +27,20 @@ const Code = () => {
       icon: '🏷️',
       category: 'Encoding'
     },
+    {
+      path: '/code/xml-escaper',
+      title: 'XML Escaper/Unescaper',
+      description: 'Escape and unescape XML special characters',
+      icon: '📝',
+      category: 'Encoding'
+    },
+    {
+      path: '/code/json-escaper',
+      title: 'JSON Escaper/Unescaper',
+      description: 'Escape and unescape JSON special characters',
+      icon: '🔤',
+      category: 'Encoding'
+    },
             {
           path: '/code/gzip',
           title: 'Gzip Compression',

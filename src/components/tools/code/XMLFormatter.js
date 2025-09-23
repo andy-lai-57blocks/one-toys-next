@@ -5,6 +5,8 @@ import React, { useState } from 'react';
 import SimpleAd from '../../ads/SimpleAdSSG';
 import CodeEditor from '../../common/CodeEditor';
 import { useTheme } from '../../../contexts/ThemeContext';
+import { downloadAsFile } from '../../../utils/downloadUtils';
+import { unescapeForXML } from '../../../utils/unescapeUtils';
 
 // Removed fallback themes - now using Ace Editor built-in themes
 
@@ -15,80 +17,13 @@ const XMLFormatter = () => {
   const [autoUnescape, setAutoUnescape] = useState(true);
   const { isDarkTheme } = useTheme();
 
-  // Helper function to detect if input appears to be escaped XML
-  const isEscapedXML = (str) => {
-    if (!str || str.length < 2) return false;
-    const trimmed = str.trim();
-    
-    // Check for common XML/JSON escape patterns in the content
-    const hasEscapedSlashes = trimmed.includes('\\/');
-    const hasEscapedQuotes = trimmed.includes('\\"');
-    const hasEscapedNewlines = trimmed.includes('\\n') || trimmed.includes('\\r');
-    const hasHTMLEntities = trimmed.includes('&lt;') || trimmed.includes('&gt;') || 
-                           trimmed.includes('&amp;') || trimmed.includes('&quot;');
-    
-    // If wrapped in quotes, check for escape patterns
-    if ((trimmed.startsWith('"') && trimmed.endsWith('"')) || 
-        (trimmed.startsWith("'") && trimmed.endsWith("'"))) {
-      return hasEscapedSlashes || hasEscapedQuotes || hasEscapedNewlines || hasHTMLEntities;
-    }
-    
-    // Even without outer quotes, check if content has escaped XML patterns
-    // This handles cases where XML is escaped but not wrapped in quotes
-    if (trimmed.startsWith('<?xml') || trimmed.includes('<\\/')) {
-      return hasEscapedSlashes || hasEscapedQuotes || hasEscapedNewlines;
-    }
-    
-    return false;
-  };
-
-  // Helper function to unescape XML string
-  const unescapeXML = (str) => {
-    try {
-      let content = str.trim();
-      
-      // If wrapped in quotes, remove them first
-      if ((content.startsWith('"') && content.endsWith('"')) ||
-          (content.startsWith("'") && content.endsWith("'"))) {
-        content = content.slice(1, -1);
-      }
-      
-      // Handle JSON-style escaping (most common)
-      content = content
-        .replace(/\\"/g, '"')        // Escaped quotes
-        .replace(/\\'/g, "'")        // Escaped single quotes
-        .replace(/\\\//g, '/')       // Escaped forward slashes
-        .replace(/\\\\/g, '\\')      // Escaped backslashes
-        .replace(/\\n/g, '\n')       // Escaped newlines
-        .replace(/\\r/g, '\r')       // Escaped carriage returns
-        .replace(/\\t/g, '\t')       // Escaped tabs
-        .replace(/\\f/g, '\f')       // Escaped form feeds
-        .replace(/\\b/g, '\b');      // Escaped backspaces
-      
-      // Handle HTML/XML entity escaping
-      content = content
-        .replace(/&lt;/g, '<')
-        .replace(/&gt;/g, '>')
-        .replace(/&amp;/g, '&')
-        .replace(/&quot;/g, '"')
-        .replace(/&apos;/g, "'");
-      
-      return content;
-    } catch (error) {
-      // If unescaping fails, return original string
-      return str;
-    }
-  };
-
-  // Helper function to prepare input for processing
+  // Helper function to prepare input for processing with enhanced unescaping
   const prepareInput = (rawInput) => {
     if (!autoUnescape || !rawInput) return rawInput;
     
-    if (isEscapedXML(rawInput)) {
-      return unescapeXML(rawInput);
-    }
-    return rawInput;
+    return unescapeForXML(rawInput);
   };
+
 
   const formatXML = (xml) => {
     try {
@@ -263,17 +198,16 @@ const XMLFormatter = () => {
     setIsValid(null);
   };
 
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(output);
-    } catch (error) {
-      const textArea = document.createElement('textarea');
-      textArea.value = output;
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textArea);
+  const handleDownload = () => {
+    if (!output) return;
+    
+    // Generate filename based on operation
+    let filename = 'formatted-xml';
+    if (output.includes('✅ Valid XML') || output.includes('❌ Invalid XML')) {
+      filename = 'xml-validation';
     }
+    
+    downloadAsFile(output, `${filename}-${new Date().toISOString().slice(0, 10)}.xml`);
   };
 
   const loadSampleXML = () => {
@@ -303,12 +237,14 @@ const XMLFormatter = () => {
         {/* Input Column */}
         <div className="input-column">
           <div className="input-group">
-            <label className="input-label">XML Input</label>
+            <label className="input-label">
+              XML Input
+            </label>
             <CodeEditor
               value={input}
               onChange={setInput}
               language="xml"
-              placeholder="Paste your XML here..."
+              placeholder="Paste your XML here (supports HTML entities, JSON escapes, URL encoding, Unicode, etc.)..."
               name="xml-input-editor"
               height="calc(100vh - 16rem)"
               isDarkTheme={false}
@@ -337,17 +273,17 @@ const XMLFormatter = () => {
             <button 
               className="btn btn-outline" 
               onClick={() => setAutoUnescape(!autoUnescape)}
-              title={autoUnescape ? 'Disable auto-unescape' : 'Enable auto-unescape'}
+              title={autoUnescape ? 'Disable auto-unescape (HTML entities, JSON, URL, Unicode)' : 'Enable auto-unescape (HTML entities, JSON, URL, Unicode)'}
             >
-              {autoUnescape ? '🔓 Auto-Unescape' : '🔒 Manual'}
+              {autoUnescape ? '🔓 Smart Unescape' : '🔒 Manual'}
             </button>
 
             <button className="btn btn-outline" onClick={handleClear}>
               🗑️ Clear
             </button>
             {output && (
-              <button className="btn btn-outline" onClick={handleCopy}>
-                📋 Copy Result
+              <button className="btn btn-outline" onClick={handleDownload}>
+                💾 Download
               </button>
             )}
           </div>

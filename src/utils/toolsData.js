@@ -60,6 +60,24 @@ export const allTools = [
     keywords: ['html', 'encode', 'decode', 'encoder', 'decoder', 'entities', 'escape', 'unescape']
   },
   {
+    path: '/code/xml-escaper',
+    title: 'XML Escaper/Unescaper',
+    description: 'Escape and unescape XML special characters',
+    icon: '📝',
+    category: 'Encoding',
+    section: 'Code',
+    keywords: ['xml', 'escape', 'unescape', 'entities', 'special', 'characters', 'escaper', 'unescaper']
+  },
+  {
+    path: '/code/json-escaper',
+    title: 'JSON Escaper/Unescaper',
+    description: 'Escape and unescape JSON special characters',
+    icon: '🔤',
+    category: 'Encoding',
+    section: 'Code',
+    keywords: ['json', 'escape', 'unescape', 'special', 'characters', 'escaper', 'unescaper', 'string']
+  },
+  {
     path: '/code/gzip',
     title: 'Gzip Compression',
     description: 'Simple text compression and decompression with gzip',
@@ -341,6 +359,8 @@ export const subdomainRoutes = {
   'base64': '/code/base64',
   'url': '/code/url',
   'html': '/code/html',
+  'xml-escaper': '/code/xml-escaper',
+  'json-escaper': '/code/json-escaper',
   'gzip': '/code/gzip',
   
   // Code Tools - Generators
