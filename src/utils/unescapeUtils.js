@@ -283,13 +283,18 @@ export const fixMalformedJSON = (str) => {
 export const unescapeForJSON = (str) => {
   if (!str) return str;
   
-  // First fix malformed JSON escape sequences
-  let result = fixMalformedJSON(str);
+  // FIRST: Check if it's already valid JSON - if so, don't touch it!
+  try {
+    JSON.parse(str);
+    return str; // Already valid, return as-is
+  } catch (e) {
+    // Only if invalid, try to fix it
+  }
   
-  // Then apply normal JSON unescaping
+  // Apply fixes only to invalid JSON
+  let result = fixMalformedJSON(str);
   result = unescapeJSON(result);
   
-  // Finally handle any HTML entities
   if (hasHTMLEntities(result)) {
     result = unescapeHTML(result);
   }
