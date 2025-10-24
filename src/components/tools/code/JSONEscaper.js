@@ -16,16 +16,7 @@ const JSONEscaper = () => {
   const escapeJSON = (str) => {
     if (!str) return '';
     
-    return str
-      .replace(/\\/g, '\\\\')  // Backslash must be first
-      .replace(/"/g, '\\"')
-      .replace(/\n/g, '\\n')
-      .replace(/\r/g, '\\r')
-      .replace(/\t/g, '\\t')
-      .replace(/\b/g, '\\b')
-      .replace(/\f/g, '\\f')
-      .replace(/\v/g, '\\v')
-      .replace(/\0/g, '\\0');
+    return JSON.stringify(str).slice(1, -1); // Use native JSON.stringify and remove surrounding quotes
   };
 
   // JSON unescape function
@@ -33,36 +24,27 @@ const JSONEscaper = () => {
     if (!str) return '';
     
     try {
-      // Try to parse as JSON string first
+      // Try to parse as a JSON string (with quotes)
       if (str.startsWith('"') && str.endsWith('"')) {
         return JSON.parse(str);
       }
       
-      // Otherwise, manually unescape common sequences
-      return str
-        .replace(/\\n/g, '\n')
-        .replace(/\\r/g, '\r')
-        .replace(/\\t/g, '\t')
-        .replace(/\\b/g, '\b')
-        .replace(/\\f/g, '\f')
-        .replace(/\\v/g, '\v')
-        .replace(/\\0/g, '\0')
-        .replace(/\\"/g, '"')
-        .replace(/\\\\/g, '\\')  // Backslash must be last
-        .replace(/\\u([0-9a-fA-F]{4})/g, (match, hex) => String.fromCharCode(parseInt(hex, 16)));
+      // Otherwise, wrap in quotes and parse
+      return JSON.parse('"' + str + '"');
     } catch (error) {
-      // If JSON.parse fails, return manual unescaping
+      // If JSON.parse fails, do manual unescaping
+      // Unescape in the correct order: unicode first, then specific escapes, then backslash last
       return str
+        .replace(/\\u([0-9a-fA-F]{4})/g, (match, hex) => String.fromCharCode(parseInt(hex, 16)))
         .replace(/\\n/g, '\n')
         .replace(/\\r/g, '\r')
         .replace(/\\t/g, '\t')
         .replace(/\\b/g, '\b')
         .replace(/\\f/g, '\f')
-        .replace(/\\v/g, '\v')
-        .replace(/\\0/g, '\0')
         .replace(/\\"/g, '"')
-        .replace(/\\\\/g, '\\')
-        .replace(/\\u([0-9a-fA-F]{4})/g, (match, hex) => String.fromCharCode(parseInt(hex, 16)));
+        .replace(/\\'/g, "'")
+        .replace(/\\\//g, '/')
+        .replace(/\\\\/g, '\\');  // Backslash must be last
     }
   };
 
