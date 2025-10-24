@@ -130,6 +130,20 @@ export const seoData = {
     type: 'tool'
   },
 
+  '/text/markdown': {
+    title: 'Markdown Preview - Live MD to HTML Converter | One Toys',
+    description: 'Free online Markdown preview and converter. Live rendering with GitHub Flavored Markdown support. Convert Markdown to HTML instantly with syntax highlighting.',
+    keywords: 'markdown preview, markdown to html, md preview, markdown converter, github flavored markdown, gfm, markdown editor, live preview, markdown renderer',
+    type: 'tool'
+  },
+
+  '/text/space-remover': {
+    title: 'Space Remover - Remove Extra Spaces from Text | One Toys',
+    description: 'Remove, replace, or normalize spaces and whitespace in text. Clean up extra spaces, tabs, and line breaks efficiently.',
+    keywords: 'space remover, remove spaces, whitespace remover, trim spaces, normalize spaces, clean text, text processing',
+    type: 'tool'
+  },
+
   // Info Tools
   '/info/calling-codes': {
     title: 'International Calling Codes Lookup | One Toys',

@@ -162,6 +162,17 @@ export const allTools = [
     keywords: ['lorem', 'ipsum', 'generate', 'generator', 'placeholder', 'text', 'dummy', 'content']
   },
   
+  // Text Tools - Preview
+  {
+    path: '/text/markdown',
+    title: 'Markdown Preview',
+    description: 'Preview and convert Markdown to HTML with live rendering',
+    icon: '📝',
+    category: 'Preview',
+    section: 'Text',
+    keywords: ['markdown', 'preview', 'md', 'html', 'convert', 'render', 'github', 'gfm', 'flavored']
+  },
+  
   // DateTime Tools - Conversion
   {
     path: '/datetime/timestamp',
@@ -384,6 +395,8 @@ export const subdomainRoutes = {
   'counter': '/text/character-count',
   'lorem': '/text/lorem',
   'space': '/text/space-remover',
+  'markdown': '/text/markdown',
+  'md': '/text/markdown',
   'text': '/text/case-converter',
   
   // Info Tools
