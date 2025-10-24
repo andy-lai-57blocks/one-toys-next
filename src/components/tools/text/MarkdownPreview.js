@@ -200,17 +200,7 @@ function hello() {
             </div>
             <div 
               className="markdown-preview-output"
-              style={{
-                height: 'calc(100vh - 16rem)',
-                overflow: 'auto',
-                padding: '1rem',
-                backgroundColor: '#fff',
-                border: '1px solid #e0e0e0',
-                borderRadius: '4px',
-                fontSize: '14px',
-                lineHeight: '1.6'
-              }}
-              dangerouslySetInnerHTML={{ __html: htmlOutput || '<p style="color: #999;">Preview will appear here...</p>' }}
+              dangerouslySetInnerHTML={{ __html: htmlOutput || '<p class="preview-placeholder">Preview will appear here...</p>' }}
             />
           </div>
         </div>
