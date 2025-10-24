@@ -4,11 +4,13 @@ import React, { useState, useEffect } from 'react';
 import { marked } from 'marked';
 import SimpleAd from '../../ads/SimpleAdSSG';
 import CodeEditor from '../../common/CodeEditor';
+import { useTheme } from '../../../contexts/ThemeContext';
 import { downloadAsFile } from '../../../utils/downloadUtils';
 
 const MarkdownPreview = () => {
   const [input, setInput] = useState('');
   const [htmlOutput, setHtmlOutput] = useState('');
+  const { isDarkTheme } = useTheme();
 
   // Configure marked options
   useEffect(() => {
@@ -112,7 +114,7 @@ function hello() {
   };
 
   return (
-    <div className="tool-container markdown-preview-tool">
+    <div className={`tool-container markdown-preview-tool ${isDarkTheme ? 'dark-mode' : ''}`}>
       <div className="three-column-layout">
         {/* Input Column */}
         <div className="input-column">

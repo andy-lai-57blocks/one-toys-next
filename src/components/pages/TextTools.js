@@ -32,6 +32,13 @@ const TextTools = () => {
       description: 'Generate placeholder text for designs and layouts',
       icon: '📝',
       category: 'Generation'
+    },
+    {
+      path: '/text/markdown',
+      title: 'Markdown Preview',
+      description: 'Preview and convert Markdown to HTML with live rendering',
+      icon: '📝',
+      category: 'Preview'
     }
   ];
 

@@ -48,7 +48,8 @@ const Sidebar = () => {
         { path: '/text/space-remover', title: 'Space Remover', icon: '🚫' },
         { path: '/text/case-converter', title: 'Case Converter', icon: '🔤' },
         { path: '/text/character-count', title: 'Character Count Tool', icon: '📊' },
-        { path: '/text/lorem', title: 'Lorem Ipsum Generator', icon: '📝' }
+        { path: '/text/lorem', title: 'Lorem Ipsum Generator', icon: '📝' },
+        { path: '/text/markdown', title: 'Markdown Preview', icon: '📝' }
       ]
     },
     { 
