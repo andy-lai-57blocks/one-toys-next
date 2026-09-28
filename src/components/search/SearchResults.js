@@ -2,7 +2,6 @@
 
 import React from 'react';
 import Link from 'next/link';
-import SimpleAdSSG from '../ads/SimpleAdSSG';
 
 const SearchResults = ({ results, query, onClear }) => {
   if (!results || results.length === 0) {
@@ -30,11 +29,6 @@ const SearchResults = ({ results, query, onClear }) => {
             </div>
           </div>
         </div>
-        
-        {/* Ad placement at bottom of search results */}
-        <div className="search-results-ad">
-          <SimpleAdSSG adSlot="6476193569" style={{ width: '100%' }} />
-        </div>
       </div>
     );
   }
@@ -59,11 +53,6 @@ const SearchResults = ({ results, query, onClear }) => {
             query={query}
           />
         ))}
-      </div>
-      
-      {/* Ad placement at bottom of search results */}
-      <div className="search-results-ad">
-        <SimpleAdSSG adSlot="6476193569" style={{ width: '100%' }} />
       </div>
     </div>
   );
