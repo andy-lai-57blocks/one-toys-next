@@ -4,6 +4,19 @@ import React from 'react';
 import Link from 'next/link';
 import GlobalSearch from '@/components/search/GlobalSearch';
 import SubdomainWrapper from '@/components/shared/SubdomainWrapper';
+import { allTools } from '@/utils/toolsData';
+
+// Counts are derived from the single source of truth (toolsData.js) so the
+// homepage can never drift from the tools that actually exist again.
+const SECTION_BY_PATH = {
+  '/code': 'Code',
+  '/text': 'Text',
+  '/info': 'Info',
+  '/datetime': 'DateTime'
+};
+
+const countTools = (path) =>
+  allTools.filter((tool) => tool.section === SECTION_BY_PATH[path]).length;
 
 const Home = () => {
   const categories = [
@@ -12,30 +25,33 @@ const Home = () => {
       title: 'Code',
       description: 'Comprehensive encoding, decoding, and formatting functions for data processing',
       icon: '🖥️',
-      toolCount: 7
+      toolCount: countTools('/code')
     },
     {
       path: '/text',
       title: 'Text',
       description: 'Advanced text processing and manipulation functions',
       icon: '🔤',
-      toolCount: 4
+      toolCount: countTools('/text')
     },
     {
       path: '/info',
       title: 'Info',
       description: 'System analysis and information retrieval functions',
       icon: 'ℹ️',
-      toolCount: 6
+      toolCount: countTools('/info')
     },
     {
       path: '/datetime',
       title: 'DateTime',
       description: 'Comprehensive date, time, and timezone processing functions',
       icon: '🕐',
-      toolCount: 5
+      toolCount: countTools('/datetime')
     }
   ];
+
+  // Scale bars against the largest category so the progress can't exceed 100%.
+  const maxToolCount = Math.max(...categories.map((category) => category.toolCount));
 
   return (
     <SubdomainWrapper>
@@ -106,7 +122,7 @@ const Home = () => {
                   {category.toolCount} tool{category.toolCount > 1 ? 's' : ''}
                 </span>
                 <div className="category-progress-bar">
-                  <div className="category-progress" style={{ '--progress': `${(category.toolCount / 5) * 100}%` }}></div>
+                  <div className="category-progress" style={{ '--progress': `${(category.toolCount / maxToolCount) * 100}%` }}></div>
                 </div>
               </div>
             </Link>
