@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: seoData.title,
     description: seoData.description,
-    url: 'https://one-toys.com/code',
+    url: 'https://one-toys.com/code/',
     siteName: 'One Toys',
     images: [{
       url: 'https://one-toys.com/og-image.png',
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   robots: 'index, follow',
   authors: [{ name: 'One Toys' }],
   alternates: {
-    canonical: 'https://one-toys.com/code',
+    canonical: 'https://one-toys.com/code/',
   },
 };
 

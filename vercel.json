@@ -3,6 +3,20 @@
   "buildCommand": "yarn build",
   "outputDirectory": "out",
   "installCommand": "yarn install",
+  "trailingSlash": true,
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.one-toys.com"
+        }
+      ],
+      "destination": "https://one-toys.com/$1",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/sitemap.xml",

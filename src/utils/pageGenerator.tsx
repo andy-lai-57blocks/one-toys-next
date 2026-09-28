@@ -1,9 +1,15 @@
 import { Metadata } from 'next';
 import { getSEOData } from './seoData';
 
+// Build the canonical URL for a route. The project uses trailingSlash: true,
+// so every canonical must carry a trailing slash to match the served URL.
+function canonicalUrl(path: string): string {
+  return path.endsWith('/') ? `https://one-toys.com${path}` : `https://one-toys.com${path}/`;
+}
+
 export function generateToolMetadata(path: string): Metadata {
   const seoData = getSEOData(path);
-  const fullUrl = `https://one-toys.com${path}`;
+  const fullUrl = canonicalUrl(path);
   
   return {
     title: seoData.title,
@@ -40,7 +46,7 @@ export function generateToolMetadata(path: string): Metadata {
 // Schema.org structured data for tools
 export function generateToolJsonLd(path: string) {
   const seoData = getSEOData(path);
-  const fullUrl = `https://one-toys.com${path}`;
+  const fullUrl = canonicalUrl(path);
   
   if (seoData.type === 'tool') {
     return {
