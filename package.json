@@ -16,7 +16,7 @@
     "ace-builds": "^1.43.3",
     "hls.js": "^1.6.11",
     "marked": "^16.4.1",
-    "next": "15.5.2",
+    "next": "15.5.26",
     "pako": "^2.1.0",
     "react": "19.1.0",
     "react-ace": "^14.0.1",
@@ -32,9 +32,8 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "15.5.2",
+    "eslint-config-next": "15.5.26",
     "tailwindcss": "^4",
     "typescript": "^5"
-  },
-  "packageManager": "yarn@4.9.1"
+  }
 }
