@@ -38,6 +38,13 @@ export const seoData = {
   },
 
   // Code Tools
+  '/code/jwt-decoder': {
+    title: 'JWT Decoder — Decode & Verify JSON Web Tokens | One Toys',
+    description: 'Decode JSON Web Tokens locally and see the header, payload, claims and expiry in plain English. Get security warnings (alg=none, missing exp, long lifetimes) and verify HS256/RS256 signatures in your browser. Your token is never uploaded.',
+    keywords: 'jwt decoder, decode jwt, jwt parser, jwt viewer, json web token decoder, verify jwt signature, jwt expiration checker, check jwt online, jwt claims, jwks, hs256, rs256',
+    type: 'tool'
+  },
+
   '/code/base64': {
     title: 'Base64 Encoder/Decoder Online - Free Tool | One Toys',
     description: 'Free online Base64 encoder and decoder. Convert text to Base64 and decode Base64 strings instantly. Supports file download, syntax highlighting. No registration required.',

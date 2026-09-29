@@ -26,6 +26,7 @@ const Sidebar = () => {
       label: 'Code', 
       icon: '🖥️',
       submenu: [
+        { path: '/code/jwt-decoder', title: 'JWT Decoder', icon: '🎫' },
         { path: '/code/json', title: 'JSON Formatter', icon: '📋' },
         { path: '/code/xml', title: 'XML Formatter', icon: '📄' },
         { path: '/code/vast', title: 'VAST Formatter', icon: '📺' },

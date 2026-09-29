@@ -1,0 +1,325 @@
+/* Shared content blocks for tool pages (PRD section 5.1 content template) */
+.tool-content-section {
+  margin-top: 2.25rem;
+}
+
+.tool-content-title {
+  margin: 0 0 0.85rem;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-primary, #111827);
+  letter-spacing: -0.01em;
+}
+
+.tool-content-body {
+  font-size: 0.975rem;
+  line-height: 1.75;
+  color: var(--text-secondary, #374151);
+
+  p {
+    margin: 0 0 1rem;
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+
+  h3 {
+    margin: 1.5rem 0 0.6rem;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text-primary, #1f2937);
+  }
+
+  ul,
+  ol {
+    margin: 0 0 1rem 1.25rem;
+    padding: 0;
+  }
+
+  li {
+    margin-bottom: 0.4rem;
+  }
+
+  code {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 0.875em;
+    background: rgba(59, 130, 246, 0.08);
+    padding: 0.1rem 0.35rem;
+    border-radius: 4px;
+  }
+
+  a {
+    color: #2563eb;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+}
+
+/* Examples ------------------------------------------------------------- */
+.tool-examples {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.tool-example {
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  padding: 1rem 1.15rem;
+  background: #fafafa;
+}
+
+.tool-example-title {
+  margin: 0 0 0.4rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary, #1f2937);
+}
+
+.tool-example-desc {
+  margin: 0 0 0.75rem;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--text-secondary, #4b5563);
+}
+
+.tool-example-block {
+  margin-bottom: 0.7rem;
+}
+
+.tool-example-label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary, #6b7280);
+  margin-bottom: 0.25rem;
+}
+
+.tool-example-code {
+  margin: 0;
+  padding: 0.7rem 0.85rem;
+  background: #f1f5f9;
+  border-radius: 0.5rem;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 0.8rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: #0f172a;
+  overflow-x: auto;
+}
+
+.tool-example-note {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--text-secondary, #6b7280);
+}
+
+/* FAQ ------------------------------------------------------------------ */
+.tool-faq {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.tool-faq-item {
+  border: 1px solid #e2e8f0;
+  border-radius: 0.65rem;
+  background: #fafafa;
+  padding: 0.15rem 1rem;
+}
+
+.tool-faq-question {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.975rem;
+  color: var(--text-primary, #1f2937);
+  padding: 0.85rem 0;
+  list-style: none;
+  position: relative;
+  padding-right: 1.5rem;
+
+  &::-webkit-details-marker {
+    display: none;
+  }
+
+  &::after {
+    content: '+';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.15rem;
+    color: #3b82f6;
+    font-weight: 400;
+  }
+}
+
+.tool-faq-item[open] .tool-faq-question::after {
+  content: '−';
+}
+
+.tool-faq-answer {
+  padding-bottom: 0.9rem;
+  font-size: 0.925rem;
+  line-height: 1.7;
+  color: var(--text-secondary, #4b5563);
+
+  p {
+    margin: 0 0 0.7rem;
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+
+  code {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 0.875em;
+    background: rgba(59, 130, 246, 0.08);
+    padding: 0.1rem 0.35rem;
+    border-radius: 4px;
+  }
+}
+
+/* Privacy notice ------------------------------------------------------- */
+.tool-privacy {
+  display: flex;
+  gap: 0.9rem;
+  align-items: flex-start;
+  margin-top: 2rem;
+  padding: 1.15rem 1.25rem;
+  border-radius: 0.85rem;
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-left: 4px solid #10b981;
+}
+
+.tool-privacy-icon {
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.tool-privacy-title {
+  margin: 0 0 0.4rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary, #065f46);
+}
+
+.tool-privacy-body {
+  font-size: 0.925rem;
+  line-height: 1.7;
+  color: var(--text-secondary, #374151);
+
+  p {
+    margin: 0 0 0.6rem;
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+
+  code {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 0.875em;
+  }
+}
+
+/* Limits --------------------------------------------------------------- */
+.tool-limits-list {
+  margin: 0;
+  padding: 0 0 0 1.25rem;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--text-secondary, #374151);
+
+  li {
+    margin-bottom: 0.45rem;
+  }
+}
+
+/* Related tools -------------------------------------------------------- */
+.tool-related-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.tool-related-item {
+  color: var(--text-secondary, #4b5563);
+}
+
+.tool-related-link {
+  color: #2563eb;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.tool-related-desc {
+  color: var(--text-secondary, #6b7280);
+}
+
+/* Dark mode ------------------------------------------------------------ */
+.dark-mode {
+  .tool-content-body,
+  .tool-privacy-body,
+  .tool-limits-list,
+  .tool-faq-answer,
+  .tool-related-item,
+  .tool-related-desc,
+  .tool-example-desc,
+  .tool-example-note {
+    color: #cbd5e1;
+  }
+
+  .tool-example,
+  .tool-faq-item {
+    background: #1e293b;
+    border-color: #334155;
+  }
+
+  .tool-example-code {
+    background: #0f172a;
+    color: #e2e8f0;
+  }
+
+  .tool-privacy {
+    background: rgba(16, 185, 129, 0.14);
+    border-color: rgba(16, 185, 129, 0.4);
+  }
+
+  .tool-privacy-title {
+    color: #6ee7b7;
+  }
+
+  .tool-related-link {
+    color: #60a5fa;
+  }
+
+  .tool-content-body code,
+  .tool-faq-answer code {
+    background: rgba(96, 165, 250, 0.15);
+    color: #bfdbfe;
+  }
+}
+
+@media (max-width: 600px) {
+  .tool-content-title {
+    font-size: 1.2rem;
+  }
+
+  .tool-example-code {
+    font-size: 0.75rem;
+  }
+}

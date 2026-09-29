@@ -74,3 +74,21 @@ export function generateToolJsonLd(path: string) {
   return null;
 }
 
+// FAQPage structured data, shared by all tool pages that publish an FAQ.
+export function generateFaqJsonLd(items: { question: string; answer: string }[]) {
+  if (!items || items.length === 0) return null;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": items.map((item) => ({
+      "@type": "Question",
+      "name": item.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": item.answer
+      }
+    }))
+  };
+}
+

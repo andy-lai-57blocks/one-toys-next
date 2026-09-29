@@ -2,6 +2,17 @@
 // Consolidates all tools from all categories
 
 export const allTools = [
+  // Code Tools - Security
+  {
+    path: '/code/jwt-decoder',
+    title: 'JWT Decoder',
+    description: 'Decode and verify JSON Web Tokens locally, with security checks',
+    icon: '🎫',
+    category: 'Security',
+    section: 'Code',
+    keywords: ['jwt', 'json web token', 'decode', 'decoder', 'verify', 'signature', 'token', 'exp', 'expiration', 'claims', 'auth', 'hs256', 'rs256', 'bearer']
+  },
+
   // Code Tools - Formatting
   {
     path: '/code/json',
