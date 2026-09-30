@@ -184,6 +184,17 @@ export const allTools = [
     keywords: ['markdown', 'preview', 'md', 'html', 'convert', 'render', 'github', 'gfm', 'flavored']
   },
   
+  // DateTime Tools - Scheduling
+  {
+    path: '/datetime/cron-parser',
+    title: 'Cron Expression Parser',
+    description: 'Explain a cron schedule in plain English and preview the next runs',
+    icon: '⏲️',
+    category: 'Scheduling',
+    section: 'DateTime',
+    keywords: ['cron', 'crontab', 'schedule', 'cron parser', 'cron expression', 'cron generator', 'next run', 'scheduler', 'timezone', 'dst']
+  },
+  
   // DateTime Tools - Conversion
   {
     path: '/datetime/timestamp',

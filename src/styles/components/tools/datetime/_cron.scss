@@ -1,0 +1,280 @@
+// Cron Parser tool styles
+.cron-tool {
+  .cron-input {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 1.05rem;
+    letter-spacing: 0.06em;
+  }
+
+  .cron-select {
+    cursor: pointer;
+  }
+
+  .cron-hint {
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    line-height: 1.55;
+    color: var(--text-secondary, #6b7280);
+  }
+
+  /* Presets ------------------------------------------------------------- */
+  .cron-presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0.75rem 0 1.5rem;
+  }
+
+  .cron-preset {
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+    color: var(--text-secondary, #475569);
+    border-radius: 999px;
+    padding: 0.3rem 0.75rem;
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+
+    &:hover {
+      border-color: #93c5fd;
+      color: #1d4ed8;
+      background: #eff6ff;
+    }
+
+    &.active {
+      background: #3b82f6;
+      border-color: #3b82f6;
+      color: #ffffff;
+      font-weight: 600;
+    }
+  }
+
+  /* Errors -------------------------------------------------------------- */
+  .cron-error {
+    margin: 1rem 0;
+    padding: 1rem 1.25rem;
+    border-radius: 0.75rem;
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.35);
+    border-left: 4px solid #ef4444;
+  }
+
+  .cron-error-title {
+    margin: 0;
+    font-weight: 600;
+    color: #b91c1c;
+  }
+
+  .cron-error-hint {
+    margin: 0.5rem 0 0;
+    font-size: 0.875rem;
+    line-height: 1.55;
+    color: var(--text-secondary, #4b5563);
+  }
+
+  .cron-error-list {
+    margin: 0.6rem 0 0 1.1rem;
+    padding: 0;
+    font-size: 0.85rem;
+    color: #92400e;
+  }
+
+  /* Sections ------------------------------------------------------------ */
+  .cron-section {
+    margin-top: 1.75rem;
+  }
+
+  .cron-section-head {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.75rem;
+  }
+
+  .cron-section-title {
+    margin: 0 0 0.6rem;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text-primary, #1f2937);
+  }
+
+  .cron-section-head .cron-section-title {
+    margin: 0;
+  }
+
+  .cron-summary {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding: 1rem 1.15rem;
+    border-radius: 0.75rem;
+    background: rgba(59, 130, 246, 0.07);
+    border: 1px solid rgba(59, 130, 246, 0.25);
+    border-left: 4px solid #3b82f6;
+  }
+
+  .cron-description {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary, #1e3a8a);
+    flex: 1 1 260px;
+  }
+
+  .cron-notes {
+    margin: 0.75rem 0 0 1.1rem;
+    padding: 0;
+    font-size: 0.85rem;
+    line-height: 1.55;
+    color: var(--text-secondary, #4b5563);
+  }
+
+  .cron-offset {
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    background: rgba(59, 130, 246, 0.12);
+    color: #1d4ed8;
+  }
+
+  /* Table --------------------------------------------------------------- */
+  .cron-table-wrap {
+    overflow-x: auto;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+  }
+
+  .cron-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+
+    th {
+      text-align: left;
+      padding: 0.6rem 0.85rem;
+      background: #f8fafc;
+      font-weight: 600;
+      color: var(--text-secondary, #475569);
+      border-bottom: 1px solid #e2e8f0;
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 0.55rem 0.85rem;
+      border-bottom: 1px solid #eef2f7;
+      color: var(--text-primary, #1f2937);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+  }
+
+  .cron-mono {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 0.82rem;
+  }
+
+  /* Natural language input --------------------------------------------- */
+  .cron-ask {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: 0.6rem;
+    flex-wrap: wrap;
+
+    .text-input {
+      flex: 1 1 260px;
+    }
+  }
+
+  .cron-nl-ok {
+    margin: 0.6rem 0 0;
+    font-size: 0.875rem;
+    color: #047857;
+  }
+
+  .cron-nl-fail {
+    margin: 0.6rem 0 0;
+    font-size: 0.875rem;
+    color: #b45309;
+  }
+
+  /* Dark mode ----------------------------------------------------------- */
+  .dark-mode & {
+    .cron-preset {
+      background: #1e293b;
+      border-color: #334155;
+      color: #cbd5e1;
+
+      &:hover {
+        background: #1e3a5f;
+        color: #93c5fd;
+      }
+
+      &.active {
+        background: #2563eb;
+        border-color: #2563eb;
+        color: #ffffff;
+      }
+    }
+
+    .cron-summary {
+      background: rgba(59, 130, 246, 0.14);
+      border-color: rgba(59, 130, 246, 0.4);
+    }
+
+    .cron-description {
+      color: #bfdbfe;
+    }
+
+    .cron-offset {
+      background: rgba(59, 130, 246, 0.2);
+      color: #93c5fd;
+    }
+
+    .cron-table th {
+      background: #1e293b;
+      color: #94a3b8;
+      border-bottom-color: #334155;
+    }
+
+    .cron-table td {
+      border-bottom-color: #334155;
+    }
+
+    .cron-table-wrap {
+      border-color: #334155;
+    }
+
+    .cron-error {
+      background: rgba(239, 68, 68, 0.14);
+      border-color: rgba(239, 68, 68, 0.45);
+    }
+
+    .cron-error-title {
+      color: #fca5a5;
+    }
+
+    .cron-nl-ok {
+      color: #6ee7b7;
+    }
+
+    .cron-nl-fail {
+      color: #fcd34d;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .cron-table {
+      font-size: 0.78rem;
+    }
+
+    .cron-description {
+      font-size: 1rem;
+    }
+  }
+}

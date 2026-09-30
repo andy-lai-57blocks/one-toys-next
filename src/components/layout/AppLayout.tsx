@@ -71,6 +71,7 @@ const Sidebar = () => {
       label: 'DateTime', 
       icon: '🕐',
       submenu: [
+        { path: '/datetime/cron-parser', title: 'Cron Expression Parser', icon: '⏲️' },
         { path: '/datetime/timestamp', title: 'Timestamp Converter', icon: '⏰' },
         { path: '/datetime/format', title: 'Date Formatter', icon: '📅' },
         { path: '/datetime/calculator', title: 'Date Calculator', icon: '🧮' },
