@@ -1,48 +1,53 @@
 'use client';
 
 import React, { useMemo, useState } from 'react';
-import {
-  parseJwt,
-  verifySignature,
-  CLAIM_DESCRIPTIONS,
-  ALERT_HIGH,
-  ALERT_WARNING,
-  ALERT_INFO
-} from '../../../utils/jwt';
+import { useTheme } from '../../../contexts/ThemeContext';
+import { parseJwt, verifySignature } from '../../../utils/jwt';
 
-// A real HS256 token signed with "one-toys-demo-secret", so users can try the
-// tool (including verification) without pasting a real credential.
+// A real HS256 token signed with "one-toys-demo-secret", so the tool can be
+// tried (including verification) without pasting a real credential.
 const SAMPLE_TOKEN =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyXzEwMjQiLCJuYW1lIjoiQWRhIExvdmVsYWNlIiwiZW1haWwiOiJhZGFAZXhhbXBsZS5jb20iLCJpc3MiOiJodHRwczovL2F1dGguZXhhbXBsZS5jb20iLCJhdWQiOiJhcGkub25lLXRveXMuY29tIiwic2NvcGUiOiJyZWFkOnRvb2xzIHdyaXRlOnRvb2xzIiwiaWF0IjoxNzYwMDAwMDAwLCJleHAiOjIwNTAwMDAwMDAsImp0aSI6IjhmMTRlNDVmLWVhNmItNGMwZC05ZjIxLTc3YTFiMmMzZDRlNSJ9.fpNZtafD2lve7SgQnjWqpwRXClMP-SDfIHGSTZ__iI4';
 const SAMPLE_SECRET = 'one-toys-demo-secret';
 
-const ALERT_LABELS = {
-  [ALERT_HIGH]: 'High risk',
-  [ALERT_WARNING]: 'Warning',
-  [ALERT_INFO]: 'Note'
-};
-
-function renderValue(value) {
-  if (value === null) return 'null';
-  if (typeof value === 'object') return JSON.stringify(value);
-  return String(value);
-}
+const LEVEL_ICON = { high: '🔴', warning: '🟠', info: '🔵' };
 
 const JWTDecoder = () => {
+  const { isDarkTheme } = useTheme();
   const [token, setToken] = useState('');
   const [secret, setSecret] = useState('');
-  const [publicKey, setPublicKey] = useState('');
   const [verification, setVerification] = useState(null);
   const [verifying, setVerifying] = useState(false);
   const [copied, setCopied] = useState(false);
 
   const parsed = useMemo(() => parseJwt(token), [token]);
+  const alg = parsed.header?.alg;
+  const isHmac = typeof alg === 'string' && alg.startsWith('HS');
+  const hasToken = token.trim().length > 0;
 
-  const handleTokenChange = (event) => {
-    setToken(event.target.value);
-    setVerification(null);
-    setCopied(false);
-  };
+  const output = useMemo(() => {
+    if (!hasToken) return '';
+    if (!parsed.ok) return [parsed.error, parsed.hint].filter(Boolean).join('\n\n');
+    return parsed.payloadJson || parsed.error || '';
+  }, [hasToken, parsed]);
+
+  const status = useMemo(() => {
+    if (!hasToken) return null;
+    if (!parsed.ok) return { kind: 'invalid', label: '❌ Not decodable' };
+    const issues = parsed.alerts.length;
+    if (issues === 0) return { kind: 'valid', label: '✅ Decoded' };
+    return { kind: 'warn', label: `⚠️ ${issues} issue${issues > 1 ? 's' : ''}` };
+  }, [hasToken, parsed]);
+
+  const summary = useMemo(() => {
+    if (!parsed.ok) return '';
+    const bits = [];
+    if (alg) bits.push(`alg ${alg}`);
+    if (parsed.payload) bits.push(`${Object.keys(parsed.payload).length} claims`);
+    const exp = parsed.times.find((row) => row.key === 'exp');
+    if (exp) bits.push(exp.isPast ? `expired ${exp.relative.replace(' ago', '')} ago` : `expires ${exp.relative}`);
+    return bits.join(' · ');
+  }, [parsed, alg]);
 
   const loadSample = () => {
     setToken(SAMPLE_TOKEN);
@@ -53,17 +58,16 @@ const JWTDecoder = () => {
   const clearAll = () => {
     setToken('');
     setSecret('');
-    setPublicKey('');
     setVerification(null);
     setCopied(false);
   };
 
   const copyPayload = async () => {
-    if (!parsed.payloadJson) return;
+    if (!output) return;
     try {
-      await navigator.clipboard.writeText(parsed.payloadJson);
+      await navigator.clipboard.writeText(output);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      setTimeout(() => setCopied(false), 1800);
     } catch {
       setCopied(false);
     }
@@ -72,252 +76,156 @@ const JWTDecoder = () => {
   const runVerification = async () => {
     setVerifying(true);
     setVerification(null);
-    const result = await verifySignature({
-      parts: parsed.parts,
-      header: parsed.header,
-      secret,
-      publicKeyPem: publicKey
-    });
+    const result = await verifySignature({ parts: parsed.parts, header: parsed.header, secret });
     setVerification(result);
     setVerifying(false);
   };
 
-  const alg = parsed.header?.alg;
-  const needsSecret = typeof alg === 'string' && alg.startsWith('HS');
-  const needsPublicKey = typeof alg === 'string' && /^(RS|PS|ES)/.test(alg);
-  const claims = parsed.payload && typeof parsed.payload === 'object' ? Object.entries(parsed.payload) : [];
-
   return (
-    <div className="tool-container jwt-tool">
-      <div className="input-group">
-        <label className="input-label" htmlFor="jwt-token-input">
-          Paste a JWT
-        </label>
-        <textarea
-          id="jwt-token-input"
-          className="text-area jwt-input"
-          value={token}
-          onChange={handleTokenChange}
-          placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... (a leading &quot;Bearer &quot; is fine)"
-          spellCheck="false"
-          autoComplete="off"
-        />
-        <p className="jwt-hint">
-          Decoding and signature verification run entirely in your browser. The token and any key you
-          enter are never sent to a server.
-        </p>
-      </div>
-
-      <div className="button-group">
-        <button type="button" className="btn btn-outline btn-small" onClick={loadSample}>
-          Load sample token
-        </button>
-        <button type="button" className="btn btn-outline btn-small" onClick={clearAll} disabled={!token}>
-          Clear
-        </button>
-        {parsed.ok && (
-          <button type="button" className="btn btn-primary btn-small" onClick={copyPayload}>
-            {copied ? 'Copied!' : 'Copy payload'}
-          </button>
-        )}
-      </div>
-
-      {token && !parsed.ok && (
-        <div className="jwt-error" role="alert">
-          <p className="jwt-error-title">{parsed.error}</p>
-          {parsed.hint && <p className="jwt-error-hint">{parsed.hint}</p>}
-          {parsed.kind === 'jwe' && (
-            <p className="jwt-error-hint">
-              Encrypted tokens (JWE) can only be read by the party holding the decryption key — which
-              is exactly why they are used for sensitive payloads.
-            </p>
-          )}
+    <div className={`tool-container ${isDarkTheme ? 'dark-mode' : ''}`}>
+      <div className="three-column-layout">
+        {/* Input Column */}
+        <div className="input-column">
+          <div className="input-group">
+            <label className="input-label" htmlFor="jwt-token-input">
+              JWT token
+            </label>
+            <textarea
+              id="jwt-token-input"
+              className="text-area code-input"
+              value={token}
+              onChange={(event) => {
+                setToken(event.target.value);
+                setVerification(null);
+              }}
+              placeholder={'Paste a JWT here... (a leading "Bearer " is fine)'}
+              spellCheck="false"
+              autoComplete="off"
+            />
+          </div>
         </div>
-      )}
 
-      {parsed.ok && (
-        <>
-          {parsed.alerts.length > 0 && (
-            <section className="jwt-section" aria-label="Security findings">
-              <h3 className="jwt-section-title">Security findings</h3>
-              <ul className="jwt-alerts">
-                {parsed.alerts.map((alert) => (
-                  <li key={alert.id} className={`jwt-alert jwt-alert-${alert.level}`}>
-                    <span className="jwt-alert-badge">{ALERT_LABELS[alert.level]}</span>
-                    <div>
-                      <p className="jwt-alert-title">{alert.title}</p>
-                      <p className="jwt-alert-detail">{alert.detail}</p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </section>
+        {/* Action Column */}
+        <div className="action-column">
+          <div className="primary-actions">
+            <button className="btn btn-primary" onClick={copyPayload} disabled={!output}>
+              {copied ? '✅ Copied' : '📋 Copy payload'}
+            </button>
+          </div>
+
+          <div className="secondary-actions">
+            <button className="btn btn-outline" onClick={loadSample}>
+              📄 Sample
+            </button>
+            <button className="btn btn-outline" onClick={clearAll}>
+              🗑️ Clear
+            </button>
+          </div>
+        </div>
+
+        {/* Output Column */}
+        <div className="output-column">
+          <div className="input-group">
+            <label className="input-label">
+              Decoded payload
+              {status && <span className={`status-indicator ${status.kind}`}>{status.label}</span>}
+            </label>
+            <textarea
+              className="text-area code-output"
+              value={output}
+              readOnly
+              spellCheck="false"
+              placeholder="The decoded payload will appear here..."
+            />
+          </div>
+
+          {summary && <p className="jwt-summary">{summary}</p>}
+
+          {parsed.ok && parsed.alerts.length > 0 && (
+            <ul className="jwt-alerts">
+              {parsed.alerts.map((alert) => (
+                <li key={alert.id} className={`jwt-alert jwt-alert-${alert.level}`}>
+                  <span aria-hidden="true">{LEVEL_ICON[alert.level]}</span>
+                  <span>
+                    <strong>{alert.title}</strong> — {alert.detail}
+                  </span>
+                </li>
+              ))}
+            </ul>
           )}
 
-          <section className="jwt-section" aria-label="Decoded token">
-            <h3 className="jwt-section-title">Decoded token</h3>
-            <div className="jwt-parts">
-              <div className="jwt-part">
-                <h4 className="jwt-part-title">Header</h4>
+          {parsed.ok && (
+            <details className="tool-faq-item jwt-advanced">
+              <summary className="tool-faq-question">Header, timestamps &amp; signature</summary>
+              <div className="tool-faq-answer">
+                <p className="jwt-advanced-label">Header</p>
                 <pre className="jwt-json">{parsed.headerJson}</pre>
-              </div>
-              <div className="jwt-part">
-                <h4 className="jwt-part-title">Payload</h4>
-                {parsed.payload ? (
-                  <pre className="jwt-json">{parsed.payloadJson}</pre>
+
+                {parsed.times.length > 0 && (
+                  <>
+                    <p className="jwt-advanced-label">Timestamps (your local time)</p>
+                    <ul className="jwt-times">
+                      {parsed.times.map((row) => (
+                        <li key={row.key}>
+                          <code>{row.key}</code> {row.local} <span className="jwt-time-rel">{row.relative}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+
+                <p className="jwt-advanced-label">Signature</p>
+                <pre className="jwt-json jwt-signature">
+                  {parsed.signature || '(empty — unsigned token)'}
+                </pre>
+
+                {isHmac ? (
+                  <>
+                    <p className="jwt-advanced-hint">
+                      Verification runs locally with the Web Crypto API; the secret never leaves this page.
+                    </p>
+                    <div className="jwt-verify-row">
+                      <input
+                        type="password"
+                        className="text-input"
+                        value={secret}
+                        onChange={(event) => setSecret(event.target.value)}
+                        placeholder="HMAC secret"
+                        autoComplete="off"
+                      />
+                      <button
+                        className="btn btn-outline"
+                        onClick={runVerification}
+                        disabled={verifying || !secret}
+                      >
+                        {verifying ? 'Verifying…' : 'Verify'}
+                      </button>
+                    </div>
+                  </>
                 ) : (
-                  <p className="jwt-part-error">{parsed.error}</p>
+                  <p className="jwt-advanced-hint">
+                    Local verification is available for HS256/384/512 tokens. This token uses{' '}
+                    <code>{alg || 'an unknown algorithm'}</code>.
+                  </p>
+                )}
+
+                {verification && (
+                  <p className={`jwt-verification jwt-verification-${verification.status}`} role="status">
+                    <strong>
+                      {verification.status === 'valid'
+                        ? 'Valid'
+                        : verification.status === 'invalid'
+                          ? 'Invalid'
+                          : 'Not verified'}
+                    </strong>{' '}
+                    — {verification.message}
+                  </p>
                 )}
               </div>
-              <div className="jwt-part">
-                <h4 className="jwt-part-title">Signature</h4>
-                <pre className="jwt-json jwt-signature">{parsed.signature || '(empty — unsigned token)'}</pre>
-                <p className="jwt-part-note">
-                  The signature is not readable data — it can only be verified with the key.
-                </p>
-              </div>
-            </div>
-          </section>
-
-          {parsed.times.length > 0 && (
-            <section className="jwt-section" aria-label="Timestamps">
-              <h3 className="jwt-section-title">Timestamps</h3>
-              <div className="jwt-table-wrap">
-                <table className="jwt-table">
-                  <thead>
-                    <tr>
-                      <th>Claim</th>
-                      <th>Local time</th>
-                      <th>Unix</th>
-                      <th>Relative to now</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {parsed.times.map((row) => (
-                      <tr key={row.key}>
-                        <td>
-                          <code>{row.key}</code>
-                          <span className="jwt-time-label">{row.label}</span>
-                        </td>
-                        <td>{row.local}</td>
-                        <td className="jwt-mono">{Math.floor(new Date(row.iso).getTime() / 1000)}</td>
-                        <td>
-                          <span className={row.isPast ? 'jwt-chip jwt-chip-past' : 'jwt-chip jwt-chip-valid'}>
-                            {row.isPast ? 'in the past' : 'still valid'}
-                          </span>{' '}
-                          {row.relative}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </section>
+            </details>
           )}
-
-          {claims.length > 0 && (
-            <section className="jwt-section" aria-label="Claims">
-              <h3 className="jwt-section-title">Claims explained</h3>
-              <div className="jwt-table-wrap">
-                <table className="jwt-table">
-                  <thead>
-                    <tr>
-                      <th>Claim</th>
-                      <th>Value</th>
-                      <th>Meaning</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {claims.map(([key, value]) => (
-                      <tr key={key}>
-                        <td>
-                          <code>{key}</code>
-                        </td>
-                        <td className="jwt-mono jwt-value">{renderValue(value)}</td>
-                        <td>{CLAIM_DESCRIPTIONS[key] || 'Custom claim — defined by the issuer'}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </section>
-          )}
-
-          <section className="jwt-section" aria-label="Local signature verification">
-            <h3 className="jwt-section-title">Verify the signature (optional)</h3>
-            <p className="jwt-part-note">
-              Verification happens locally with the Web Crypto API. For HS* algorithms the secret stays
-              in this page&apos;s memory; for RS*/ES* paste the public key — never a private key.
-            </p>
-
-            {needsSecret && (
-              <div className="input-group">
-                <label className="input-label" htmlFor="jwt-secret">
-                  HMAC secret ({alg})
-                </label>
-                <input
-                  id="jwt-secret"
-                  type="password"
-                  className="text-input"
-                  value={secret}
-                  onChange={(event) => setSecret(event.target.value)}
-                  placeholder="The secret used to sign this token"
-                  autoComplete="off"
-                />
-              </div>
-            )}
-
-            {needsPublicKey && (
-              <div className="input-group">
-                <label className="input-label" htmlFor="jwt-public-key">
-                  Public key (PEM, {alg})
-                </label>
-                <textarea
-                  id="jwt-public-key"
-                  className="text-area jwt-key-input"
-                  value={publicKey}
-                  onChange={(event) => setPublicKey(event.target.value)}
-                  placeholder="-----BEGIN PUBLIC KEY-----"
-                  spellCheck="false"
-                />
-              </div>
-            )}
-
-            {!needsSecret && !needsPublicKey && (
-              <p className="jwt-part-note">
-                Local verification is implemented for HS256/384/512, RS256 and ES256. This token uses{' '}
-                <code>{alg || 'an unknown algorithm'}</code>.
-              </p>
-            )}
-
-            {(needsSecret || needsPublicKey) && (
-              <div className="button-group">
-                <button
-                  type="button"
-                  className="btn btn-primary btn-small"
-                  onClick={runVerification}
-                  disabled={verifying || (needsSecret ? !secret : !publicKey)}
-                >
-                  {verifying ? 'Verifying…' : 'Verify locally'}
-                </button>
-              </div>
-            )}
-
-            {verification && (
-              <p className={`jwt-verification jwt-verification-${verification.status}`} role="status">
-                <strong>
-                  {verification.status === 'valid'
-                    ? 'Valid'
-                    : verification.status === 'invalid'
-                      ? 'Invalid'
-                      : 'Not verified'}
-                </strong>{' '}
-                — {verification.message}
-              </p>
-            )}
-          </section>
-        </>
-      )}
+        </div>
+      </div>
     </div>
   );
 };
