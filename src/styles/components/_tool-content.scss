@@ -1,12 +1,31 @@
 /* Shared content blocks for tool pages (PRD section 5.1 content template) */
 
 /* Wrapper for everything below the tool: same width and card treatment as
-   .tool-container so the page reads as one column instead of a card followed
-   by raw text. */
+   .tool-container (padding + gradient, no radius/border - matching the house
+   card) so the page reads as one column instead of a card followed by raw
+   text out on the page background. */
 .tool-page-content {
   margin-top: 1.5rem;
   padding: 1.5rem;
   background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
+}
+
+/* One reading column for every text-bearing block, so all of them start at the
+   same left edge and end at the same right edge. Without this the copy spans
+   the full container (~106 characters per line at 1440px).
+   Capped in rem rather than ch: the body font's "0" glyph is much wider than an
+   average character (1ch measures about 1.36 real characters here), so a
+   ch-based cap comes out far wider than intended. 38rem = 608px, which is
+   roughly 85 characters per line at the 15.6px body size. */
+$content-column: 38rem;
+
+.tool-content-body,
+.tool-examples,
+.tool-faq,
+.tool-privacy,
+.tool-limits-list,
+.tool-related-list {
+  max-width: $content-column;
 }
 
 .tool-content-section {
@@ -30,14 +49,6 @@
   font-size: 0.975rem;
   line-height: 1.7;
   color: var(--text-secondary, #374151);
-
-  p,
-  ul,
-  ol {
-    /* Keep the measure readable - without this the copy spans the full
-       container width (~140 characters per line). */
-    max-width: 78ch;
-  }
 
   p {
     margin: 0 0 0.9rem;
@@ -193,7 +204,6 @@
 
   p {
     margin: 0 0 0.7rem;
-    max-width: 78ch;
   }
 
   p:last-child {
@@ -220,10 +230,6 @@
   background: rgba(16, 185, 129, 0.08);
   border: 1px solid rgba(16, 185, 129, 0.3);
   border-left: 4px solid #10b981;
-}
-
-.tool-privacy-body p {
-  max-width: 78ch;
 }
 
 .tool-privacy-icon {
