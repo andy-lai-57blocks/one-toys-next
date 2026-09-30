@@ -6,7 +6,7 @@
 | 日期 | 2026-09-30 |
 | 覆盖功能 | JWT Decoder · Cron Parser · Data Masker · JSON Fixer · JSON Schema 校验器 + 生成器 · PDF 合并 / 拆分 · 图片压缩 |
 | 技术栈 | Next.js 15.5.26 (App Router) · `output: 'export'` 纯静态 · Vercel |
-| 变更记录 | v1.0 仅含 JSON Fixer → v1.1 新增 JWT / Cron / Data Masker → v1.2 新增「移除清单」 → v1.3 新增功能 E：JSON Schema → v1.4 新增功能 F：PDF 合并 / 拆分 → v1.5 新增功能 G：图片压缩 → v1.6 修复站点级 soft-404（未知路径现返回真实 404） → v1.7 5.1 改为「工具页不放说明区」，与 JSON Formatter 一致 |
+| 变更记录 | v1.0 仅含 JSON Fixer → v1.1 新增 JWT / Cron / Data Masker → v1.2 新增「移除清单」 → v1.3 新增功能 E：JSON Schema → v1.4 新增功能 F：PDF 合并 / 拆分 → v1.5 新增功能 G：图片压缩 → v1.6 修复站点级 soft-404（未知路径现返回真实 404） → v1.7 5.1 改为「工具页不放说明区」+ 强制每页一个广告位 |
 
 ---
 
@@ -91,6 +91,8 @@
 **工具页只有工具本身。工具卡片以下不放任何说明区。**
 
 页面 = `AppLayout`（面包屑 / 搜索 / 侧边栏）+ `WebApplication` JSON-LD + 工具组件。就这么简单。
+
+**每个工具页必须有一个广告位**：工具组件里渲染 `<SimpleAd />`（`src/components/ads/SimpleAdSSG`）。三栏布局的页面放在 `.action-column` 内（与 JSON Formatter 一致）；堆叠式布局的页面放在工具容器末尾。根布局已全局加载 `adsbygoogle.js`，组件本身无需再引脚本。
 
 **不写**（已明确被否，不要重犯）：说明区、多段式长介绍、示例集、能力边界清单（"本工具不做什么"）、语法/平台对照表、隐私说明模块、FAQ、Related tools 内链列表。
 

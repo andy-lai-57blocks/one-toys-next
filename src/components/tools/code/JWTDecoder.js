@@ -3,6 +3,7 @@
 import React, { useMemo, useState } from 'react';
 import { useTheme } from '../../../contexts/ThemeContext';
 import { parseJwt, verifySignature } from '../../../utils/jwt';
+import SimpleAd from '../../ads/SimpleAdSSG';
 
 // A real HS256 token signed with "one-toys-demo-secret", so the tool can be
 // tried (including verification) without pasting a real credential.
@@ -121,6 +122,8 @@ const JWTDecoder = () => {
               🗑️ Clear
             </button>
           </div>
+
+          <SimpleAd />
         </div>
 
         {/* Output Column */}

@@ -11,6 +11,7 @@ import {
   COMMON_TIME_ZONES,
   PRESETS
 } from '../../../utils/cron';
+import SimpleAd from '../../ads/SimpleAdSSG';
 
 const DEFAULT_EXPRESSION = '0 9 * * 1-5';
 
@@ -216,6 +217,8 @@ const CronParser = () => {
           </p>
         )}
       </section>
+
+      <SimpleAd />
     </div>
   );
 };
