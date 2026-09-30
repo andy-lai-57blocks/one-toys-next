@@ -110,7 +110,8 @@ export default function CronParserPage() {
 
       <CronParser />
 
-      <ToolPrivacyNotice>
+      <div className="tool-page-content">
+        <ToolPrivacyNotice>
         <p>
           Your expressions, time zone and calculated schedules are processed locally in this browser tab.
           Nothing is uploaded and no API is called — you can verify that in DevTools by watching the
@@ -334,7 +335,8 @@ export default function CronParserPage() {
         ]}
       />
 
-      <ToolRelated items={relatedTools} />
+        <ToolRelated items={relatedTools} />
+      </div>
     </AppLayout>
   );
 }

@@ -99,7 +99,8 @@ export default function JwtDecoderPage() {
 
       <JWTDecoder />
 
-      <ToolPrivacyNotice>
+      <div className="tool-page-content">
+        <ToolPrivacyNotice>
         <p>
           Decoding is local: the token is never uploaded, never sent to an API and never logged. That
           matters because a JWT is a live credential carrying an identity, its roles and its permissions.
@@ -176,7 +177,8 @@ export default function JwtDecoderPage() {
         ]}
       />
 
-      <ToolRelated items={relatedTools} />
+        <ToolRelated items={relatedTools} />
+      </div>
     </AppLayout>
   );
 }
