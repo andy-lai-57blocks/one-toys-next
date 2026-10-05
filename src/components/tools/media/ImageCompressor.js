@@ -500,8 +500,11 @@ const ImageCompressor = () => {
       {/* width 100% so data-full-width-responsive can actually fill: the
           component defaults to a 300px box, which forces AdSense to pick a
           size that fits 300px instead of the horizontal banner this slot is
-          configured as. */}
-      <SimpleAd adSlot="8095900796" style={{ width: '100%' }} />
+          configured as.
+          The spacing has to ride along inline too. SimpleAdSSG writes
+          `margin: 0 auto` as an inline style, which outranks any stylesheet
+          rule, so a .image-compressor .ad-* margin-top never applies. */}
+      <SimpleAd adSlot="8095900796" style={{ width: '100%', marginTop: '1.5rem' }} />
     </div>
   );
 };
