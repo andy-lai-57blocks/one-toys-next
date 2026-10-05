@@ -946,3 +946,56 @@ body.dark-theme {
     min-width: 76px;
   }
 }
+
+/* Age result --------------------------------------------------------------
+   DateCalculator's "Current Age" block renders .age-number / .age-unit pairs
+   inside .age-display > .age-main, but none of those four classes was defined
+   anywhere. The whole block therefore collapsed to a single 19px line of body
+   text with no separation between the figures ("30years5months2days"), and the
+   numbers - which are meant to be the headline of that block - were the same
+   size and weight as the surrounding copy.
+
+   The JSX puts no whitespace between the spans (they are on separate lines, so
+   JSX trims it), which is why the gaps below have to come from CSS: the small
+   right margin binds each number to its unit, the larger one separates the
+   pairs. */
+.age-display {
+  margin-top: $spacing-sm;
+}
+
+.age-main {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  row-gap: $spacing-xs;
+}
+
+.age-number {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: $primary-color;
+  margin-right: 0.25em;
+}
+
+.age-unit {
+  font-size: $font-size-sm;
+  font-weight: 500;
+  color: $text-secondary;
+  margin-right: $spacing-md;
+
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+body.dark-theme {
+  .age-number {
+    color: #60a5fa;
+  }
+
+  .age-unit {
+    color: #94a3b8;
+  }
+}
