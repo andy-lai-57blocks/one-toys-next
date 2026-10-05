@@ -54,7 +54,7 @@
   .cron-error {
     margin: 1rem 0;
     padding: 1rem 1.25rem;
-    border-radius: 0.75rem;
+    border-radius: $border-radius-xl;
     background: rgba(239, 68, 68, 0.08);
     border: 1px solid rgba(239, 68, 68, 0.35);
     border-left: 4px solid #ef4444;
@@ -110,7 +110,7 @@
     gap: 1rem;
     flex-wrap: wrap;
     padding: $spacing-md;
-    border-radius: 0.75rem;
+    border-radius: $border-radius-xl;
     background: rgba(59, 130, 246, 0.07);
     border: 1px solid rgba(59, 130, 246, 0.25);
     border-left: 4px solid #3b82f6;
@@ -145,7 +145,7 @@
   .cron-table-wrap {
     overflow-x: auto;
     border: 1px solid #e2e8f0;
-    border-radius: 0.75rem;
+    border-radius: $border-radius-xl;
   }
 
   .cron-table {
