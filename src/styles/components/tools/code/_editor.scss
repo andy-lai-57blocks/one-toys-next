@@ -682,7 +682,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: $spacing-md;
+  gap: $spacing-sm;
+  padding: $spacing-sm $spacing-md;
   background: $bg-secondary;
   border: 1px solid $border-light;
   border-radius: $border-radius-md;
@@ -865,10 +866,17 @@
 
 // Responsive design for HLS player
 @media (max-width: 768px) {
+  // Keep the row here. Stacking the text above a full-width Load button made
+  // each card 138px tall to convey one name and one sentence, and three of them
+  // came to 460px - 41% of the entire page.
   .sample-stream-item {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: $spacing-sm;
+    padding: $spacing-xs $spacing-sm;
+  }
+  
+  // The name is what identifies a stream; the sentence is supporting detail,
+  // and at this width it wraps to four lines and sets the height of the card.
+  .sample-stream-info p {
+    display: none;
   }
   
   .quality-levels-grid {
