@@ -378,6 +378,12 @@
   flex: 1;
   color: $text-primary;
   font-family: $font-family-mono;
+  // break-all, not overflow-wrap: anywhere. Measured before changing it: the
+  // "nicer" line breaking that breaks at spaces instead of mid-word costs
+  // +1.8% / +2.4% on /datetime/format (420 / 1200) and +12.5% / +10% on
+  // /datetime/timestamp, because break-all packs each line completely. Most of
+  // the values here are machine strings that break identically either way, so
+  // the gain did not justify making the pages longer.
   word-break: break-all;
   text-align: right;
 
