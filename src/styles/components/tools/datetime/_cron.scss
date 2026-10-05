@@ -21,7 +21,7 @@
   .cron-presets {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.4rem;
+    gap: $spacing-sm;
     margin: 0.75rem 0 1.5rem;
   }
 
@@ -30,7 +30,7 @@
     background: #f8fafc;
     color: var(--text-secondary, #475569);
     border-radius: 999px;
-    padding: 0.3rem 0.75rem;
+    padding: $spacing-xs 0.75rem;
     font-size: 0.78rem;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -74,7 +74,7 @@
   }
 
   .cron-error-list {
-    margin: 0.6rem 0 0 1.1rem;
+    margin: $spacing-sm 0 0 $spacing-md;
     padding: 0;
     font-size: 0.85rem;
     color: #92400e;
@@ -94,7 +94,7 @@
   }
 
   .cron-section-title {
-    margin: 0 0 0.6rem;
+    margin: 0 0 $spacing-sm;
     font-size: 1.05rem;
     font-weight: 600;
     color: var(--text-primary, #1f2937);
@@ -109,7 +109,7 @@
     align-items: center;
     gap: 1rem;
     flex-wrap: wrap;
-    padding: 1rem 1.15rem;
+    padding: $spacing-md;
     border-radius: 0.75rem;
     background: rgba(59, 130, 246, 0.07);
     border: 1px solid rgba(59, 130, 246, 0.25);
@@ -125,7 +125,7 @@
   }
 
   .cron-notes {
-    margin: 0.75rem 0 0 1.1rem;
+    margin: 0.75rem 0 0 $spacing-md;
     padding: 0;
     font-size: 0.85rem;
     line-height: 1.55;
@@ -135,7 +135,7 @@
   .cron-offset {
     font-size: 0.78rem;
     font-weight: 600;
-    padding: 0.15rem 0.5rem;
+    padding: $spacing-xs $spacing-sm;
     border-radius: 999px;
     background: rgba(59, 130, 246, 0.12);
     color: #1d4ed8;
@@ -155,7 +155,7 @@
 
     th {
       text-align: left;
-      padding: 0.6rem 0.85rem;
+      padding: $spacing-sm 0.75rem;
       background: #f8fafc;
       font-weight: 600;
       color: var(--text-secondary, #475569);
@@ -164,7 +164,7 @@
     }
 
     td {
-      padding: 0.55rem 0.85rem;
+      padding: $spacing-sm 0.75rem;
       border-bottom: 1px solid #eef2f7;
       color: var(--text-primary, #1f2937);
       // .cron-table-wrap already scrolls horizontally, so letting a cell break
