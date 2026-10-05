@@ -545,58 +545,6 @@ body.dark-theme {
       box-shadow: $shadow-lg;
     }
   }
-  
-  /* Category Cards */
-  .categories-grid {
-    .card {
-      background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-      border: 1px solid #475569;
-      box-shadow: 
-        0 4px 6px -1px rgba(0, 0, 0, 0.3), 
-        0 2px 4px -1px rgba(0, 0, 0, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.05);
-      
-      &:hover {
-        border-color: #64748b;
-        box-shadow: 
-          0 8px 25px -8px rgba(0, 0, 0, 0.4), 
-          0 4px 6px -2px rgba(0, 0, 0, 0.3),
-          inset 0 1px 0 rgba(255, 255, 255, 0.1);
-        transform: translateY(-4px);
-        
-        .card-icon {
-          transform: scale(1.1) rotate(-5deg);
-        }
-      }
-    }
-    
-    .card-header {
-      border-bottom-color: rgba(71, 85, 105, 0.5);
-    }
-    
-    .card-title {
-      color: #f1f5f9;
-    }
-    
-    .card-description {
-      color: #cbd5e1;
-    }
-    
-    .card-meta {
-      color: #94a3b8;
-      
-      .tool-count {
-        background: rgba(59, 130, 246, 0.2);
-        color: #93c5fd;
-        border: 1px solid rgba(59, 130, 246, 0.3);
-      }
-    }
-    
-    .card-icon {
-      filter: brightness(1.2) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-    }
-  }
-  
   /* Section Styling */
   .section-title {
     color: #f1f5f9;
