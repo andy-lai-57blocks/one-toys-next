@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   parseCron,
   describeCron,
@@ -21,6 +21,38 @@ const CronParser = () => {
   const [question, setQuestion] = useState('');
   const [nlMessage, setNlMessage] = useState(null);
   const [copied, setCopied] = useState(null);
+
+  // seoData promises "the next 10 run times in your own time zone", but the
+  // server-rendered HTML cannot know it: this is a static export, so deriving
+  // it while rendering would emit HTML for UTC and different HTML on the
+  // client, which is a hydration mismatch. Start on UTC and switch in an
+  // effect, the same way SimpleAdSSG handles localhost.
+  //
+  // This was the real reason the control read as meaningless. The page answered
+  // in UTC for everyone, so changing the zone left the visible column on 09:00
+  // and only the UTC column moved - which looks like nothing happened.
+  const [zones, setZones] = useState(COMMON_TIME_ZONES);
+  useEffect(() => {
+    let local = null;
+    try {
+      local = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    } catch {
+      /* no Intl - stay on UTC */
+    }
+    if (!local) return;
+    // A visitor outside the curated list still gets their own zone rather than
+    // being silently shown UTC.
+    setZones(COMMON_TIME_ZONES.includes(local) ? COMMON_TIME_ZONES : [local, ...COMMON_TIME_ZONES]);
+    setTimeZone(local);
+  }, []);
+
+  // Option labels carry the current offset, so the list says something to
+  // someone who does not know IANA names. Computed once; a DST flip during the
+  // session is not worth re-rendering for.
+  const zoneLabels = useMemo(
+    () => new Map(zones.map((zone) => [zone, utcOffsetLabel(new Date(), zone)])),
+    [zones]
+  );
 
   const parsed = useMemo(() => parseCron(expression), [expression]);
   const description = useMemo(() => (parsed.ok ? describeCron(parsed) : ''), [parsed]);
@@ -94,7 +126,7 @@ const CronParser = () => {
 
       <div className="input-group">
         <label className="input-label" htmlFor="cron-timezone">
-          Time zone used to calculate the next runs
+          Times shown in
         </label>
         <select
           id="cron-timezone"
@@ -102,12 +134,16 @@ const CronParser = () => {
           value={timeZone}
           onChange={(event) => setTimeZone(event.target.value)}
         >
-          {COMMON_TIME_ZONES.map((zone) => (
+          {zones.map((zone) => (
             <option key={zone} value={zone}>
-              {zone}
+              {zone} ({zoneLabels.get(zone)})
             </option>
           ))}
         </select>
+        <p className="cron-hint">
+          Pick the time zone the job really runs in - a server is usually UTC. The runs
+          below are recalculated for it.
+        </p>
       </div>
 
       {!parsed.ok && expression.trim() !== '' && (
@@ -170,7 +206,7 @@ const CronParser = () => {
                   <thead>
                     <tr>
                       <th>#</th>
-                      <th>Local time ({timeZone})</th>
+                      <th>{timeZone}</th>
                       <th>UTC</th>
                     </tr>
                   </thead>
