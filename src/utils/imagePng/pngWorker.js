@@ -10,9 +10,9 @@
 import { rgbaToIndexedPng } from './index';
 
 self.onmessage = (event) => {
-  const { id, width, height, maxColors, rgba } = event.data;
+  const { id, width, height, maxColors, dither, rgba } = event.data;
   try {
-    const result = rgbaToIndexedPng(new Uint8Array(rgba), width, height, maxColors);
+    const result = rgbaToIndexedPng(new Uint8Array(rgba), width, height, maxColors, { dither });
     self.postMessage({ id, ok: true, colors: result.colors, bytes: result.bytes }, [result.bytes.buffer]);
   } catch (error) {
     self.postMessage({ id, ok: false, error: (error && error.message) || String(error) });

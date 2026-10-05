@@ -10,9 +10,10 @@ import { encodeIndexedPng } from './encodePng';
  * @param {number} width
  * @param {number} height
  * @param {number} [maxColors]
+ * @param {{dither?: boolean}} [options]
  * @returns {{bytes: Uint8Array, colors: number}}
  */
-export function rgbaToIndexedPng(rgba, width, height, maxColors = 256) {
-  const { palette, indices, colors } = quantize(rgba, width, height, maxColors);
+export function rgbaToIndexedPng(rgba, width, height, maxColors = 256, options = {}) {
+  const { palette, indices, colors } = quantize(rgba, width, height, maxColors, options);
   return { bytes: encodeIndexedPng({ width, height, palette, indices }), colors };
 }

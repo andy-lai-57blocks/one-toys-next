@@ -51,16 +51,43 @@ const formatBytes = (bytes) => {
 
 const baseName = (name) => name.replace(/\.[^.]+$/, '') || 'image';
 
-const loadBitmap = async (file) => {
+/**
+ * Reads the intrinsic size WITHOUT decoding the frame into an RGBA buffer.
+ * An <img> keeps the compressed data and only needs the header for naturalWidth,
+ * which is exactly the cheap probe the pixel cap needs.
+ */
+const probeSize = (file) => new Promise((resolve) => {
+  const url = URL.createObjectURL(file);
+  const img = new Image();
+  const done = (result) => {
+    URL.revokeObjectURL(url);
+    resolve(result);
+  };
+  img.onload = () => done({ width: img.naturalWidth, height: img.naturalHeight });
+  img.onerror = () => done(null);
+  img.src = url;
+});
+
+/**
+ * @param {File} file
+ * @param {{width: number, height: number}|null} cap decode straight to this size
+ */
+const loadBitmap = async (file, cap = null) => {
+  // Resizing DURING the decode is the whole point: decoding a 32 MP photo at
+  // full size first would allocate ~130 MB of RGBA before we get to shrink it.
+  const resize = cap
+    ? { resizeWidth: cap.width, resizeHeight: cap.height, resizeQuality: 'high' }
+    : {};
+
   if (typeof createImageBitmap === 'function') {
     try {
       // `from-image` applies the EXIF orientation. Without it, most phone photos
       // come out rotated, which is the classic bug in hand-rolled client-side
       // image tools.
-      return await createImageBitmap(file, { imageOrientation: 'from-image' });
+      return await createImageBitmap(file, { imageOrientation: 'from-image', ...resize });
     } catch {
       try {
-        return await createImageBitmap(file);
+        return await createImageBitmap(file, resize);
       } catch {
         /* fall through to the <img> path */
       }
@@ -81,7 +108,7 @@ const loadBitmap = async (file) => {
   }
 };
 
-const encode = async (source, { quality, maxWidth, format }) => {
+const encode = async (source, { quality, maxWidth, format, dither }) => {
   const srcW = source.width;
   const srcH = source.height;
   const scale = maxWidth > 0 && srcW > maxWidth ? maxWidth / srcW : 1;
@@ -107,7 +134,7 @@ const encode = async (source, { quality, maxWidth, format }) => {
   if (format === PNG_FORMAT.value) {
     try {
       const pixels = ctx.getImageData(0, 0, width, height);
-      const { bytes, colors } = await encodePngAsync(pixels);
+      const { bytes, colors } = await encodePngAsync(pixels, 256, { dither });
       return { blob: new Blob([bytes], { type: 'image/png' }), width, height, colors };
     } finally {
       // Release the canvas backing store now rather than waiting for GC.
@@ -138,11 +165,13 @@ const ImageCompressor = () => {
   const [source, setSource] = useState(null); // decoded bitmap / img
   const [dims, setDims] = useState(null);
   const [quality, setQuality] = useState(0.75);
+  const [dither, setDither] = useState(false);
   const [maxWidth, setMaxWidth] = useState(0);
   const [format, setFormat] = useState('image/webp');
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+  const [preScale, setPreScale] = useState(null);
   const [dragging, setDragging] = useState(false);
   const decodedRef = useRef(null);
 
@@ -164,6 +193,7 @@ const ImageCompressor = () => {
     setSource(null);
     setDims(null);
     setResult(null);
+    setPreScale(null);
     setError('');
   }, []);
 
@@ -184,18 +214,51 @@ const ImageCompressor = () => {
 
     setBusy(true);
     try {
-      const decoded = await loadBitmap(picked);
+      // Work out the target size BEFORE decoding. A 48 MP phone photo is ~190 MB
+      // of RGBA, and iOS Safari kills the tab well before that, so decoding it
+      // at full size and shrinking afterwards is exactly what we must not do.
+      let cap = null;
+      const probed = await probeSize(picked);
+      if (probed && probed.width * probed.height > MAX_PIXELS) {
+        // FLOOR, not round. Rounding both axes can push the product back over
+        // the limit (4629 x 6481 = 30.01 MP > 30 MP), which then trips the
+        // guard below and rejects an image we could have handled. Flooring
+        // makes floor(w*s) * floor(h*s) <= w*h*s^2 == MAX_PIXELS by
+        // construction; the 0.999 keeps a little headroom on top.
+        const scale = Math.sqrt(MAX_PIXELS / (probed.width * probed.height)) * 0.999;
+        cap = {
+          width: Math.max(1, Math.floor(probed.width * scale)),
+          height: Math.max(1, Math.floor(probed.height * scale)),
+        };
+      }
+
+      const decoded = await loadBitmap(picked, cap);
+
+      // The browser may still hand back something larger than asked for (an
+      // ignored resize hint, or the <img> fallback), so keep a final guard.
       if (decoded.width * decoded.height > MAX_PIXELS) {
         const mp = (decoded.width * decoded.height) / 1e6;
         if (typeof decoded.close === 'function') decoded.close();
         setFile(null);
         setSource(null);
         setDims(null);
+        setPreScale(null);
         setError(
-          `This image is ${mp.toFixed(1)} megapixels. The in-browser encoder stops at ` +
-          `${MAX_PIXELS / 1e6} MP so that phones do not run out of memory. Resize it first.`,
+          `This image is ${mp.toFixed(1)} megapixels and the browser would not decode it at a ` +
+          `smaller size. The in-browser encoder stops at ${MAX_PIXELS / 1e6} MP so that phones ` +
+          'do not run out of memory. Resize it first.',
         );
         return;
+      }
+
+      if (probed) {
+        const fromMp = (probed.width * probed.height) / 1e6;
+        const toMp = (decoded.width * decoded.height) / 1e6;
+        setPreScale(fromMp > MAX_PIXELS / 1e6
+          ? { from: fromMp.toFixed(1), to: toMp.toFixed(1), w: probed.width, h: probed.height }
+          : null);
+      } else {
+        setPreScale(null);
       }
 
       decodedRef.current = decoded;
@@ -223,7 +286,7 @@ const ImageCompressor = () => {
     const timer = setTimeout(async () => {
       setBusy(true);
       try {
-        const { blob, width, height, colors } = await encode(source, { quality, maxWidth, format });
+        const { blob, width, height, colors } = await encode(source, { quality, maxWidth, format, dither });
         if (cancelled) return;
         setResult((prev) => {
           if (prev?.url) URL.revokeObjectURL(prev.url);
@@ -241,7 +304,7 @@ const ImageCompressor = () => {
       cancelled = true;
       clearTimeout(timer);
     };
-  }, [source, file, quality, maxWidth, format]);
+  }, [source, file, quality, maxWidth, format, dither]);
 
   const saved = useMemo(() => {
     if (!file || !result) return null;
@@ -339,14 +402,37 @@ const ImageCompressor = () => {
                 <option value={800}>800px</option>
               </select>
             </label>
+
+            {isPngOutput && (
+              <div className="image-control">
+                <span className="image-control-label">Gradients</span>
+                <label className="image-toggle">
+                  <input
+                    type="checkbox"
+                    checked={dither}
+                    onChange={(event) => setDither(event.target.checked)}
+                  />
+                  <span>Dither (smoother, larger)</span>
+                </label>
+              </div>
+            )}
           </div>
+
+          {preScale && (
+            <p className="image-note">
+              This image is {preScale.from} MP ({preScale.w} × {preScale.h}), above the{' '}
+              {MAX_PIXELS / 1e6} MP a browser can hold, so it was decoded at {preScale.to} MP.
+              Nothing was uploaded — the decode happens at the reduced size rather than
+              afterwards, which is what keeps it from running out of memory.
+            </p>
+          )}
 
           {isPngInput && isPngOutput && (
             <p className="image-note">
               The output stays a PNG, reduced to {paletteLabel} — that reduction is what makes it
-              smaller. Colours are matched, not dithered, so screenshots and flat graphics come out
-              clean while smooth gradients will band. If you do not need to keep the PNG format,
-              WebP is smaller still.
+              smaller. If smooth areas look banded, turn on <strong>Dither</strong> above: it trades
+              clean flat colour for fine grain and a larger file. If you do not need to keep the PNG
+              format, WebP is smaller and has no such limit.
             </p>
           )}
 

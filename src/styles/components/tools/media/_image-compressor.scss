@@ -120,6 +120,23 @@
     }
   }
 
+  /* Checkbox, unlike the range/select controls it must not stretch. */
+  .image-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+    font-size: $font-size-sm;
+    color: $text-primary;
+    cursor: pointer;
+
+    input {
+      width: auto;
+      margin: 0;
+      cursor: pointer;
+    }
+  }
+
   select,
   input[type='range'] {
     width: 100%;

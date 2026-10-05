@@ -62,10 +62,12 @@ function ensureWorker() {
 /**
  * @param {ImageData} imageData
  * @param {number} [maxColors]
+ * @param {{dither?: boolean}} [options]
  * @returns {Promise<{bytes: Uint8Array, colors: number}>}
  */
-export async function encodePngAsync(imageData, maxColors = 256) {
+export async function encodePngAsync(imageData, maxColors = 256, options = {}) {
   const { width, height, data } = imageData;
+  const { dither } = options;
 
   const instance = ensureWorker();
   if (instance) {
@@ -77,7 +79,7 @@ export async function encodePngAsync(imageData, maxColors = 256) {
         const id = nextId++;
         pending.set(id, { resolve, reject });
         try {
-          instance.postMessage({ id, width, height, maxColors, rgba: buffer }, [buffer]);
+          instance.postMessage({ id, width, height, maxColors, dither, rgba: buffer }, [buffer]);
         } catch (error) {
           pending.delete(id);
           reject(error);
@@ -89,5 +91,5 @@ export async function encodePngAsync(imageData, maxColors = 256) {
   }
 
   const { rgbaToIndexedPng } = await import('./index');
-  return rgbaToIndexedPng(data, width, height, maxColors);
+  return rgbaToIndexedPng(data, width, height, maxColors, options);
 }
