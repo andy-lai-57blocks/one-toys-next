@@ -218,7 +218,11 @@ const CronParser = () => {
         )}
       </section>
 
-      <SimpleAd />
+      {/* Same unit as the Image Compressor. The width and the top margin ride
+          inline because SimpleAdSSG writes `margin: 0 auto` as an inline style,
+          which outranks any stylesheet rule; the preceding .cron-section only
+          has a margin-top, so without it the ad sits flush against it. */}
+      <SimpleAd adSlot="8095900796" style={{ width: '100%', marginTop: '1.5rem' }} />
     </div>
   );
 };

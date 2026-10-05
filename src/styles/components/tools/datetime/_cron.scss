@@ -167,6 +167,10 @@
       padding: 0.55rem 0.85rem;
       border-bottom: 1px solid #eef2f7;
       color: var(--text-primary, #1f2937);
+      // .cron-table-wrap already scrolls horizontally, so letting a cell break
+      // onto a second line buys no width and cost height: all 10 rows wrapped
+      // and measured ~57px each, 570px of table for 10 short rows.
+      white-space: nowrap;
     }
 
     tr:last-child td {
