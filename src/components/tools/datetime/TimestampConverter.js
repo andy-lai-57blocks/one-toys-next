@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import SimpleAd from '../../ads/SimpleAdSSG';
 
 const TimestampConverter = () => {
   const [activeTab, setActiveTab] = useState('timestamp'); // 'timestamp' or 'datetime'
@@ -347,6 +348,8 @@ const TimestampConverter = () => {
           </div>
         </div>
       ) : null}
+
+      <SimpleAd adSlot="8095900796" style={{ width: '100%', marginTop: '1.5rem' }} />
     </div>
   );
 };

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import SimpleAd from '../../ads/SimpleAdSSG';
 
 const TimezoneConverter = () => {
   const [inputTime, setInputTime] = useState('');
@@ -385,6 +386,7 @@ const TimezoneConverter = () => {
             </div>
           </div>
         </div>
+      <SimpleAd adSlot="8095900796" style={{ width: '100%', marginTop: '1.5rem' }} />
     </div>
   );
 
