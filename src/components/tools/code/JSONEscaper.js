@@ -167,8 +167,8 @@ This text contains:
 
         {/* Output Column */}
         <div className="output-column">
-          <div className="output-group">
-            <label className="output-label">
+          <div className="input-group">
+            <label className="input-label">
               Result
             </label>
             <CodeEditor
