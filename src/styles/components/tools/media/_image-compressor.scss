@@ -137,7 +137,6 @@
     }
   }
 
-  select,
   input[type='range'] {
     width: 100%;
   }
@@ -146,15 +145,6 @@
   input[type='range']:disabled {
     opacity: 0.45;
     cursor: not-allowed;
-  }
-
-  select {
-    padding: 0.5rem 0.625rem;
-    border: 1px solid $border-light;
-    border-radius: $border-radius-md;
-    background: $bg-card;
-    color: $text-primary;
-    font-size: $font-size-sm;
   }
 
   /* Original vs compressed */
@@ -264,12 +254,6 @@ body.dark-theme {
       strong {
         color: $dark-text-primary;
       }
-    }
-
-    select {
-      background: $dark-bg-primary;
-      border-color: $dark-border;
-      color: $dark-text-primary;
     }
 
     .image-panel {

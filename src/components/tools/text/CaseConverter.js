@@ -172,7 +172,7 @@ const CaseConverter = () => {
           <div className="mode-selector">
             <label className="input-label">🔤 Case Conversion Type</label>
             <select 
-              className="mode-select"
+              className="text-input"
               value={selectedCase}
               onChange={(e) => setSelectedCase(e.target.value)}
             >

@@ -368,7 +368,7 @@ const ImageCompressor = () => {
           <div className="image-controls">
             <label className="image-control">
               <span className="image-control-label">Format</span>
-              <select value={format} onChange={(event) => setFormat(event.target.value)}>
+              <select className="text-input" value={format} onChange={(event) => setFormat(event.target.value)}>
                 {formats.map((f) => (
                   <option key={f.value} value={f.value}>{f.label}</option>
                 ))}
@@ -393,7 +393,7 @@ const ImageCompressor = () => {
 
             <label className="image-control">
               <span className="image-control-label">Max width</span>
-              <select value={maxWidth} onChange={(event) => setMaxWidth(Number(event.target.value))}>
+              <select className="text-input" value={maxWidth} onChange={(event) => setMaxWidth(Number(event.target.value))}>
                 <option value={0}>Keep original ({dims.width}px)</option>
                 <option value={3840}>3840px</option>
                 <option value={2560}>2560px</option>

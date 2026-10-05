@@ -167,6 +167,13 @@ body.dark-theme {
       background: #334155;
       box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.15), 0 4px 6px -1px rgba(0, 0, 0, 0.3);
     }
+
+    /* A native <select> popup is painted by the OS, not by our stylesheet, so it
+       needs an explicit dark treatment or every dropdown flashes white. */
+    option {
+      background: #1e293b;
+      color: #e2e8f0;
+    }
   }
   
   .btn-primary {

@@ -1245,30 +1245,6 @@
         display: block;
       }
       
-      .language-select {
-        width: 100%;
-        padding: $spacing-sm $spacing-md;
-        border: 2px solid $border-light;
-        border-radius: $border-radius-md;
-        background: $bg-card;
-        color: $text-primary;
-        font-size: $font-size-sm;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all $transition-fast;
-        
-        &:focus {
-          outline: none;
-          border-color: $primary-color;
-          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
-        
-        &:hover {
-          border-color: #cbd5e1;
-          background: #f8fafc;
-        }
-      }
-      
       .language-hint {
         font-size: $font-size-xs;
         color: $text-muted;

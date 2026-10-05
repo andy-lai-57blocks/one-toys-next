@@ -174,7 +174,7 @@ const SpaceRemover = () => {
           <div className="mode-selector">
             <label className="input-label">🚫 Space Removal Mode</label>
             <select 
-              className="mode-select"
+              className="text-input"
               value={selectedMode}
               onChange={(e) => setSelectedMode(e.target.value)}
             >
