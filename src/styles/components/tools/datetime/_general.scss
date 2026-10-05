@@ -921,3 +921,22 @@ body.dark-theme {
     }
   }
 }
+
+// Narrow widths. A .result-item is [label][value][copy button], and inside a
+// single grid column of about 318px the label's fixed 120px min-width plus the
+// gap and the button left the value roughly 100px wide. With
+// word-break: break-all a long format string was then sliced over four or five
+// lines: measured on /datetime/format, rows in one group ranged from 52px to
+// 156px. Tightening the label, gap and padding gives the value about half again
+// as much width, so only the rows that were actually wrapping get shorter -
+// rows that already fitted on one line are unaffected.
+@media (max-width: 768px) {
+  .result-item {
+    gap: 0.5rem;
+    padding: 0.5rem 0.6rem;
+  }
+
+  .result-label {
+    min-width: 76px;
+  }
+}
