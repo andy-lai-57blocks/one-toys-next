@@ -30,37 +30,6 @@
     
   }
 
-  .current-mode-info {
-    margin-top: $spacing-md;
-    padding: $spacing-md;
-    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-    border: 2px solid #e2e8f0;
-    border-radius: $border-radius-xl;
-    text-align: center;
-    box-shadow: $shadow-sm;
-    width: 100%;
-    box-sizing: border-box;
-    
-    .mode-name {
-      font-size: $font-size-lg;
-      font-weight: 700;
-      color: $primary-color;
-      margin-bottom: $spacing-xs;
-      font-family: $font-family-mono;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-      line-height: 1.3;
-    }
-    
-    .mode-category {
-      font-size: $font-size-sm;
-      color: $text-secondary;
-      font-weight: 500;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-      line-height: 1.4;
-    }
-  }
 }
 
 body.dark-theme {
@@ -88,31 +57,6 @@ body.dark-theme {
       
     }
 
-    .current-mode-info {
-      background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-      border: 2px solid #475569;
-      box-shadow: 
-        0 4px 6px -1px rgba(0, 0, 0, 0.3), 
-        0 2px 4px -1px rgba(0, 0, 0, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.05);
-      width: 100%;
-      box-sizing: border-box;
-      
-      .mode-name {
-        color: #60a5fa;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-        word-wrap: break-word;
-        overflow-wrap: break-word;
-        line-height: 1.3;
-      }
-      
-      .mode-category {
-        color: #94a3b8;
-        word-wrap: break-word;
-        overflow-wrap: break-word;
-        line-height: 1.4;
-      }
-    }
   }
 }
 

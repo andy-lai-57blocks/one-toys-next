@@ -18,27 +18,6 @@
   }
 
   // Current mode info display
-  .current-mode-info {
-    text-align: center;
-    padding: $spacing-md;
-    background: linear-gradient(135deg, #f8fafc 0%, $bg-card 100%);
-    border: 2px solid #f1f5f9;
-    border-radius: $border-radius-xl;
-    margin-bottom: $spacing-md;
-    
-    .mode-name {
-      font-size: $font-size-lg;
-      font-weight: 600;
-      color: $primary-color;
-      margin-bottom: $spacing-xs;
-    }
-    
-    .mode-category {
-      font-size: $font-size-sm;
-      color: $text-secondary;
-      font-weight: 500;
-    }
-  }
 }
 
 // Dark theme support
@@ -51,31 +30,6 @@ body.dark-theme {
       
     }
 
-    .current-mode-info {
-      background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-      border: 2px solid #475569;
-      box-shadow: 
-        0 4px 6px -1px rgba(0, 0, 0, 0.3), 
-        0 2px 4px -1px rgba(0, 0, 0, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.05);
-      
-      &:hover {
-        border-color: #64748b;
-        box-shadow: 
-          0 8px 25px -8px rgba(0, 0, 0, 0.4), 
-          0 4px 6px -2px rgba(0, 0, 0, 0.3),
-          inset 0 1px 0 rgba(255, 255, 255, 0.1);
-      }
-      
-      .mode-name {
-        color: #60a5fa;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-      }
-      
-      .mode-category {
-        color: #94a3b8;
-      }
-    }
   }
 }
 
@@ -85,16 +39,5 @@ body.dark-theme {
     .mode-selector {
     }
     
-    .current-mode-info {
-      padding: $spacing-sm;
-      
-      .mode-name {
-        font-size: $font-size-base;
-      }
-      
-      .mode-category {
-        font-size: $font-size-xs;
-      }
-    }
   }
 }
