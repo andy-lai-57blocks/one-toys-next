@@ -19,8 +19,7 @@ const HLSTool = () => {
   const [streamFileInfo, setStreamFileInfo] = useState({
     manifestSize: null,
     realDuration: null,
-    totalSegments: null,
-    estimatedTotalSize: null
+    totalSegments: null
   });
   
   const videoRef = useRef(null);
@@ -81,13 +80,10 @@ const HLSTool = () => {
       
       const contentType = response.headers.get('content-type');
       setHlsMimeType(contentType);
-      
-      // Log for debugging
-      console.log('HLS MIME Type detected:', contentType);
-      
       return contentType;
-    } catch (error) {
-      console.warn('Could not detect MIME type:', error);
+    } catch {
+      // Cross-origin manifests routinely refuse a HEAD request. The UI already
+      // says so, which is more useful than a console warning on every load.
       setHlsMimeType('Detection failed');
       return null;
     }
@@ -107,34 +103,19 @@ const HLSTool = () => {
       // Parse M3U8 manifest to extract information
       let realDuration = null;
       let totalSegments = 0;
-      let isLive = false;
-      
+
       const lines = manifestText.split('\n');
       let currentDuration = 0;
-      
+
       for (const line of lines) {
         const trimmedLine = line.trim();
-        
-        // Check if it's a live stream
-        if (trimmedLine.includes('#EXT-X-PLAYLIST-TYPE:VOD')) {
-          isLive = false;
-        } else if (trimmedLine.includes('#EXT-X-PLAYLIST-TYPE:EVENT') || trimmedLine.includes('#EXT-X-TARGETDURATION')) {
-          // Could be live or event
-        }
-        
-        // Get segment duration
+
         if (trimmedLine.startsWith('#EXTINF:')) {
           const durationMatch = trimmedLine.match(/#EXTINF:([\d.]+)/);
           if (durationMatch) {
             currentDuration += parseFloat(durationMatch[1]);
             totalSegments++;
           }
-        }
-        
-        // Check for total duration in master playlist
-        if (trimmedLine.startsWith('#EXT-X-STREAM-INF')) {
-          // This is a master playlist, we need to analyze individual streams
-          // For now, we'll get basic info
         }
       }
       
@@ -151,27 +132,12 @@ const HLSTool = () => {
         realDuration = currentDuration;
       }
       
-      setStreamFileInfo({
-        manifestSize,
-        realDuration: typeof realDuration === 'number' ? realDuration : realDuration,
-        totalSegments,
-        estimatedTotalSize: null // We'll calculate this later if needed
-      });
-      
-      console.log('HLS Manifest Analysis:', {
-        manifestSize,
-        realDuration,
-        totalSegments,
-        isLive
-      });
-      
-    } catch (error) {
-      console.warn('Could not analyze HLS manifest:', error);
+      setStreamFileInfo({ manifestSize, realDuration, totalSegments });
+    } catch {
       setStreamFileInfo({
         manifestSize: 'Analysis failed',
         realDuration: 'Analysis failed',
-        totalSegments: null,
-        estimatedTotalSize: null
+        totalSegments: null
       });
     }
   };
@@ -187,12 +153,7 @@ const HLSTool = () => {
     setAvailableLevels([]);
     setCurrentLevel(-1);
     setHlsMimeType(null);
-    setStreamFileInfo({
-      manifestSize: null,
-      realDuration: null,
-      totalSegments: null,
-      estimatedTotalSize: null
-    });
+    setStreamFileInfo({ manifestSize: null, realDuration: null, totalSegments: null });
 
     // Detect MIME type and analyze manifest
     await detectHLSMimeType(url);
@@ -218,16 +179,12 @@ const HLSTool = () => {
 
       // Auto-play when media is attached
       hls.on(Hls.Events.MEDIA_ATTACHED, () => {
-        console.log('Media attached, attempting auto-play...');
-        videoRef.current.play().catch(e => {
-          console.warn('Auto-play blocked by browser:', e);
-          // Auto-play was blocked, user will need to manually play
-        });
+        // Browsers routinely block autoplay, so a rejection here is expected
+        // and the built-in controls are the fallback.
+        videoRef.current.play().catch(() => {});
       });
 
       hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
-        console.log('Manifest loaded, found ' + data.levels.length + ' quality level(s)');
-        
         setStreamInfo({
           levels: data.levels.length,
           duration: data.totalduration || 'Live',
@@ -249,8 +206,10 @@ const HLSTool = () => {
       });
 
       hls.on(Hls.Events.ERROR, (event, data) => {
-        console.error('HLS Error:', data);
         if (data.fatal) {
+          // Only fatal errors are worth the console: hls.js emits non-fatal
+          // ones routinely and recovers from them on its own.
+          console.error('HLS fatal error:', data);
           switch (data.type) {
             case Hls.ErrorTypes.NETWORK_ERROR:
               setError('Network error: Unable to load the stream');
@@ -274,10 +233,7 @@ const HLSTool = () => {
       
       // Auto-play for native HLS
       videoRef.current.addEventListener('loadedmetadata', () => {
-        console.log('Native HLS loaded, attempting auto-play...');
-        videoRef.current.play().catch(e => {
-          console.warn('Auto-play blocked by browser:', e);
-        });
+        videoRef.current.play().catch(() => {});
       }, { once: true });
       setStreamInfo({
         levels: 1,
@@ -516,54 +472,6 @@ const HLSTool = () => {
           )}
         </div>
       )}
-
-      {/* Info Section */}
-      <div className="info-section">
-        <h3>📚 About HLS Streaming</h3>
-        <div className="info-grid">
-          <div className="info-item">
-            <h4>🎬 What is HLS?</h4>
-            <p>
-              HTTP Live Streaming (HLS) is a media streaming protocol developed by Apple. 
-              It delivers content by breaking the overall stream into small HTTP-based file downloads.
-            </p>
-          </div>
-          <div className="info-item">
-            <h4>📱 Compatibility</h4>
-            <p>
-              Native support in Safari, iOS, and macOS. Other browsers use hls.js for playback.
-              Supports adaptive bitrate streaming and live broadcasts.
-            </p>
-          </div>
-          <div className="info-item">
-            <h4>🔧 Features</h4>
-            <ul>
-              <li>Adaptive bitrate streaming</li>
-              <li>Multiple quality levels</li>
-              <li>Live and on-demand content</li>
-              <li>Cross-platform compatibility</li>
-            </ul>
-          </div>
-          <div className="info-item">
-            <h4>💡 Use Cases</h4>
-            <ul>
-              <li>Live streaming events</li>
-              <li>Video on demand services</li>
-              <li>Mobile app streaming</li>
-              <li>Broadcast television</li>
-            </ul>
-          </div>
-          <div className="info-item mime-type-card">
-            <h4>🏷️ MIME Types</h4>
-            <div className="mime-type-info">
-              <p><strong>application/vnd.apple.mpegurl</strong> - Apple&apos;s official MIME type</p>
-              <p><strong>application/x-mpegURL</strong> - Alternative widely-supported MIME type</p>
-              <p><strong>text/plain</strong> - Sometimes used by servers for m3u8 files</p>
-              <small>💡 Both Apple and x-mpegURL types are valid for HLS streams</small>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };
