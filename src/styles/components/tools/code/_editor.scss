@@ -604,13 +604,24 @@
   border-radius: $border-radius-lg;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  // The size cap belongs on the box, not as a max-height on the <video>.
+  // The video is width:100%, so a max-height only takes height away: on a wide
+  // desktop the element ended up around 2.7:1 while the picture stayed 16:9,
+  // and the difference was drawn as black pillarbox bars either side. Capping
+  // the width instead lets the aspect-ratio below settle the height on its own
+  // (960px wide is 540px tall), and it matters most on a large monitor where
+  // the container is ~1800px and an uncapped player would be ~1010px tall.
+  max-width: 960px;
+  margin: 0 auto;
 }
 
 .hls-video-player {
   width: 100%;
   height: auto;
-  min-height: 300px;
-  max-height: 500px;
+  // No min-height either: at a narrow width 16:9 needs less than the old 200px
+  // floor, so the floor would force the box taller than the picture again and
+  // bring the bars back at the other end of the scale.
+  aspect-ratio: 16 / 9;
   background: #000;
   border: none;
   border-radius: $border-radius-lg;
@@ -854,10 +865,6 @@
 
 // Responsive design for HLS player
 @media (max-width: 768px) {
-  .hls-video-player {
-    min-height: 200px;
-  }
-  
   .sample-stream-item {
     flex-direction: column;
     align-items: flex-start;

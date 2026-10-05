@@ -321,28 +321,7 @@ const HLSTool = () => {
         </div>
       )}
 
-      {/* Sample Streams */}
-      <div className="input-group">
-        <label className="input-label">Sample HLS Streams</label>
-        <div className="sample-streams">
-          {sampleStreams.map((stream, index) => (
-            <div key={index} className="sample-stream-item">
-              <div className="sample-stream-info">
-                <strong>{stream.name}</strong>
-                <p>{stream.description}</p>
-              </div>
-              <button 
-                className="btn btn-outline btn-sm" 
-                onClick={() => loadSample(stream.url)}
-              >
-                Load
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Video Player */}
+      {/* Video Player - the primary content, so it comes before the samples */}
       <div className="input-group">
         <label className="input-label">Video Player</label>
         <div className="hls-player-container">
@@ -365,6 +344,27 @@ const HLSTool = () => {
               </div>
             </div>
           )}
+        </div>
+      </div>
+
+      {/* Sample Streams */}
+      <div className="input-group">
+        <label className="input-label">Sample HLS Streams</label>
+        <div className="sample-streams">
+          {sampleStreams.map((stream, index) => (
+            <div key={index} className="sample-stream-item">
+              <div className="sample-stream-info">
+                <strong>{stream.name}</strong>
+                <p>{stream.description}</p>
+              </div>
+              <button 
+                className="btn btn-outline btn-sm" 
+                onClick={() => loadSample(stream.url)}
+              >
+                Load
+              </button>
+            </div>
+          ))}
         </div>
       </div>
 
