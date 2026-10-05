@@ -168,7 +168,7 @@ export const seoData = {
   // DateTime Tools
   '/datetime/cron-parser': {
     title: 'Cron Expression Parser — Explain & Preview Schedules | One Toys',
-    description: 'Parse any cron expression into plain English and see the next 10 run times in your own time zone, with correct daylight-saving handling. Supports 5-field crontab and 6-field schedules with seconds, plus a rule-based sentence converter. Runs entirely in your browser.',
+    description: 'Parse any cron expression into plain English and see the next 10 run times in your own time zone, with correct daylight-saving handling. Supports 5-field crontab and 6-field schedules with seconds. Runs entirely in your browser.',
     keywords: 'cron parser, cron expression, crontab generator, cron schedule, cron next run, cron explained, cron translator, crontab syntax, cron timezone, cron dst',
     type: 'tool'
   },

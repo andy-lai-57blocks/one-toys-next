@@ -183,30 +183,6 @@
     font-size: 0.82rem;
   }
 
-  /* Natural language input --------------------------------------------- */
-  .cron-ask {
-    display: flex;
-    gap: 0.6rem;
-    margin-top: 0.6rem;
-    flex-wrap: wrap;
-
-    .text-input {
-      flex: 1 1 260px;
-    }
-  }
-
-  .cron-nl-ok {
-    margin: 0.6rem 0 0;
-    font-size: 0.875rem;
-    color: #047857;
-  }
-
-  .cron-nl-fail {
-    margin: 0.6rem 0 0;
-    font-size: 0.875rem;
-    color: #b45309;
-  }
-
   /* Dark mode ----------------------------------------------------------- */
   .dark-mode & {
     .cron-preset {
@@ -261,14 +237,6 @@
 
     .cron-error-title {
       color: #fca5a5;
-    }
-
-    .cron-nl-ok {
-      color: #6ee7b7;
-    }
-
-    .cron-nl-fail {
-      color: #fcd34d;
     }
   }
 

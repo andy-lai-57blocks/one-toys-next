@@ -7,7 +7,6 @@ import {
   nextRuns,
   formatInTimeZone,
   utcOffsetLabel,
-  naturalLanguageToCron,
   COMMON_TIME_ZONES,
   PRESETS
 } from '../../../utils/cron';
@@ -18,8 +17,6 @@ const DEFAULT_EXPRESSION = '0 9 * * 1-5';
 const CronParser = () => {
   const [expression, setExpression] = useState(DEFAULT_EXPRESSION);
   const [timeZone, setTimeZone] = useState('UTC');
-  const [question, setQuestion] = useState('');
-  const [nlMessage, setNlMessage] = useState(null);
   const [copied, setCopied] = useState(null);
 
   // seoData promises "the next 10 run times in your own time zone", but the
@@ -72,19 +69,6 @@ const CronParser = () => {
       setTimeout(() => setCopied(null), 1800);
     } catch {
       setCopied(null);
-    }
-  };
-
-  const applyQuestion = () => {
-    const result = naturalLanguageToCron(question);
-    if (result) {
-      setExpression(result);
-      setNlMessage({ ok: true, text: `Matched "${question}" → ${result}` });
-    } else {
-      setNlMessage({
-        ok: false,
-        text: 'That sentence was not recognised. This converter only understands a small set of patterns — see the examples on this page.'
-      });
     }
   };
 
@@ -225,34 +209,6 @@ const CronParser = () => {
           </section>
         </>
       )}
-
-      <section className="cron-section" aria-label="Build an expression from a sentence">
-        <h3 className="cron-section-title">Describe it in words</h3>
-        <p className="cron-hint">
-          Deterministic pattern matching — no AI, no guessing. Recognised patterns are listed on this page.
-        </p>
-        <div className="cron-ask">
-          <input
-            type="text"
-            className="text-input"
-            value={question}
-            onChange={(event) => setQuestion(event.target.value)}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') applyQuestion();
-            }}
-            placeholder="weekdays at 9am"
-            spellCheck="false"
-          />
-          <button type="button" className="btn btn-primary btn-small" onClick={applyQuestion}>
-            Convert
-          </button>
-        </div>
-        {nlMessage && (
-          <p className={nlMessage.ok ? 'cron-nl-ok' : 'cron-nl-fail'} role="status">
-            {nlMessage.text}
-          </p>
-        )}
-      </section>
 
       {/* Same unit as the Image Compressor. The width and the top margin ride
           inline because SimpleAdSSG writes `margin: 0 auto` as an inline style,
