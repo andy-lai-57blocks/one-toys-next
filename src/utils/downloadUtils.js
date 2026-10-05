@@ -108,7 +108,26 @@ export const downloadAsFile = (content, filename = null, mimeType = null) => {
   }
 
   let fileInfo;
-  if (filename && mimeType) {
+
+  // Blobs, ArrayBuffers and typed arrays already carry their own bytes and type.
+  // detectFileType() only understands STRINGS, so running it on binary input is
+  // meaningless - and when a caller passed a blob URL, the "download" became a
+  // text file containing that URL. Every other caller passes a string, so this
+  // branch changes nothing for them.
+  const isBinary = (typeof Blob !== 'undefined' && content instanceof Blob)
+    || (typeof ArrayBuffer !== 'undefined' && (content instanceof ArrayBuffer || ArrayBuffer.isView(content)));
+
+  if (isBinary) {
+    const type = mimeType
+      || (typeof Blob !== 'undefined' && content instanceof Blob && content.type)
+      || 'application/octet-stream';
+    fileInfo = {
+      mimeType: type,
+      extension: (type.split('/')[1] || 'bin').replace(/^jpeg$/, 'jpg'),
+      type: 'File',
+    };
+    filename = filename || generateFilename(fileInfo.type, fileInfo.extension);
+  } else if (filename && mimeType) {
     // Use provided filename and mimeType
     fileInfo = { mimeType, extension: filename.split('.').pop(), type: 'File' };
   } else {

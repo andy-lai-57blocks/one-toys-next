@@ -258,7 +258,11 @@ const ImageCompressor = () => {
 
   const download = () => {
     if (!result || !file) return;
-    downloadAsFile(result.url, `${baseName(file.name)}-compressed.${ext}`);
+    // Pass the Blob itself, never its object URL. downloadAsFile() falls back to
+    // string-based type detection when it is not given a MIME type, so handing it
+    // a blob URL produced a text/plain file whose contents WERE that URL - the
+    // download had the right extension and could not be opened.
+    downloadAsFile(result.blob, `${baseName(file.name)}-compressed.${ext}`, format);
   };
 
   return (
