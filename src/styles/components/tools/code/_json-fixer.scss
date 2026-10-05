@@ -7,7 +7,7 @@
 .json-fixer-drop.is-dragging {
   outline: 2px solid var(--accent-color, #3b82f6);
   outline-offset: 2px;
-  border-radius: 0.5rem;
+  border-radius: $border-radius-lg;
 }
 
 .three-column-layout {

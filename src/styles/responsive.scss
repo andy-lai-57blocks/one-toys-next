@@ -89,7 +89,7 @@
   }
   
   .content-area {
-    border-radius: 0.75rem;
+    border-radius: $border-radius-xl;
     margin-bottom: 1rem;
   }
   
@@ -100,7 +100,7 @@
   /* Mobile-specific tool container adjustments */
   .tool-container {
     padding: 0.75rem;
-    border-radius: 0.75rem;
+    border-radius: $border-radius-xl;
   }
   
   .category-page {
@@ -230,7 +230,7 @@
   .tool-container {
     padding: 0.75rem;
     margin: 0;
-    border-radius: 0.375rem;
+    border-radius: $border-radius-md;
   }
   
   /* Mobile Forms and Buttons */
@@ -264,7 +264,7 @@
   .text-area {
     font-size: 1rem; /* Prevents zoom on iOS */
     padding: 1rem 1.25rem;
-    border-radius: 0.75rem;
+    border-radius: $border-radius-xl;
     border-width: 2px;
   }
   

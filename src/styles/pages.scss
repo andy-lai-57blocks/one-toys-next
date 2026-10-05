@@ -94,7 +94,7 @@
   justify-content: center;
   text-align: center;
   padding: 1rem 1.25rem;
-  border-radius: 0.75rem;
+  border-radius: $border-radius-xl;
   transition: all 0.3s ease;
 }
 
@@ -200,7 +200,7 @@
 .tool-card.category-card {
   background: white;
   border: 2px solid #f1f5f9;
-  border-radius: 1rem;
+  border-radius: $border-radius-2xl;
   padding: 0;
   text-decoration: none;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -329,7 +329,7 @@
   text-align: center;
   padding: 2rem;
   background: white;
-  border-radius: 1rem;
+  border-radius: $border-radius-2xl;
   border: 1px solid #f1f5f9;
   transition: all 0.3s ease;
 }

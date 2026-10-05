@@ -4,7 +4,7 @@
   .settings-panel {
     background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
     border: 2px solid #e2e8f0;
-    border-radius: $border-radius-lg;
+    border-radius: $border-radius-xl;
     padding: $spacing-lg;
     margin-top: $spacing-md;
     box-shadow: $shadow-sm;
@@ -151,7 +151,7 @@
     padding: $spacing-md;
     background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
     border: 2px solid #e2e8f0;
-    border-radius: $border-radius-lg;
+    border-radius: $border-radius-xl;
     box-shadow: $shadow-sm;
 
     .setting-display-item {
