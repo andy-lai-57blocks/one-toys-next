@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import AppLayout from '@/components/layout/AppLayout';
-import { JSONEscaper } from '@/components/tools/code';
+import JSONEscaper from '@/components/tools/code/JSONEscaper';
 import { generateToolMetadata, generateToolJsonLd } from '@/utils/pageGenerator';
 
 export const metadata: Metadata = generateToolMetadata('/code/json-escaper');

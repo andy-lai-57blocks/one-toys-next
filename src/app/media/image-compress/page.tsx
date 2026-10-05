@@ -1,13 +1,13 @@
 import { Metadata } from 'next';
 import AppLayout from '@/components/layout/AppLayout';
-import { PostcodeLookup } from '@/components/tools/info';
+import ImageCompressor from '@/components/tools/media/ImageCompressor';
 import { generateToolMetadata, generateToolJsonLd } from '@/utils/pageGenerator';
 
-export const metadata: Metadata = generateToolMetadata('/info/postcodes');
+export const metadata: Metadata = generateToolMetadata('/media/image-compress');
 
-export default function PostcodeLookupPage() {
-  const jsonLd = generateToolJsonLd('/info/postcodes');
-  
+export default function ImageCompressPage() {
+  const jsonLd = generateToolJsonLd('/media/image-compress');
+
   return (
     <AppLayout>
       {jsonLd && (
@@ -16,7 +16,7 @@ export default function PostcodeLookupPage() {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       )}
-      <PostcodeLookup />
+      <ImageCompressor />
     </AppLayout>
   );
 }

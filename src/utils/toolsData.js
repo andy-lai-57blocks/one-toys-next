@@ -24,6 +24,15 @@ export const allTools = [
     keywords: ['json', 'format', 'validate', 'minify', 'pretty', 'formatter', 'javascript', 'object', 'notation']
   },
   {
+    path: '/code/json-fixer',
+    title: 'JSON Fixer',
+    description: 'Repair broken JSON locally: code fences, comments, trailing commas, single quotes',
+    icon: '🩹',
+    category: 'Formatting',
+    section: 'Code',
+    keywords: ['json', 'fix', 'fixer', 'repair', 'invalid json', 'broken json', 'trailing comma', 'comments', 'jsonc', 'json5', 'llm output', 'clean json']
+  },
+  {
     path: '/code/xml',
     title: 'XML Formatter',
     description: 'Format, validate and minify XML',
@@ -98,14 +107,23 @@ export const allTools = [
     keywords: ['gzip', 'compress', 'decompress', 'compression', 'zip', 'archive', 'deflate']
   },
   
-  // Code Tools - Media
+  // Media Tools
   {
-    path: '/code/hls',
+    path: '/media/image-compress',
+    title: 'Image Compressor',
+    description: 'Resize and re-encode JPEG, PNG and WebP images without uploading them',
+    icon: '🖼️',
+    category: 'Images',
+    section: 'Media',
+    keywords: ['image', 'compress', 'compressor', 'resize', 'shrink', 'reduce image size', 'jpeg', 'jpg', 'png', 'webp', 'optimize image', 'image optimizer', 'photo']
+  },
+  {
+    path: '/media/hls',
     title: 'HLS Stream Player',
     description: 'Play and analyze HTTP Live Streaming (HLS) content',
     icon: '📺',
-    category: 'Media',
-    section: 'Code',
+    category: 'Streaming',
+    section: 'Media',
     keywords: ['hls', 'stream', 'player', 'video', 'http', 'live', 'streaming', 'm3u8', 'media']
   },
   
@@ -235,79 +253,6 @@ export const allTools = [
     category: 'Calculation',
     section: 'DateTime',
     keywords: ['date', 'calculate', 'calculator', 'difference', 'add', 'subtract', 'duration', 'time']
-  },
-  
-  // DateTime Tools - Tracking
-  {
-    path: '/datetime/countdown',
-    title: 'Countdown Tool',
-    description: 'Track important dates with live countdowns',
-    icon: '⏰',
-    category: 'Tracking',
-    section: 'DateTime',
-    keywords: ['countdown', 'timer', 'track', 'countdown', 'event', 'live', 'dates', 'tracking']
-  },
-  
-  // Info Tools - System
-  {
-    path: '/info/system',
-    title: 'System Information',
-    description: 'View browser and system information',
-    icon: '💻',
-    category: 'System',
-    section: 'Info',
-    keywords: ['system', 'information', 'browser', 'device', 'specs', 'hardware', 'software']
-  },
-  
-  // Info Tools - Network
-  {
-    path: '/info/network',
-    title: 'Network Information',
-    description: 'Check IP address and network details',
-    icon: '🌐',
-    category: 'Network',
-    section: 'Info',
-    keywords: ['network', 'ip', 'address', 'internet', 'connection', 'details', 'networking']
-  },
-  
-  // Info Tools - Browser
-  {
-    path: '/info/browser',
-    title: 'Browser Information',
-    description: 'View browser capabilities and features',
-    icon: '🌍',
-    category: 'Browser',
-    section: 'Info',
-    keywords: ['browser', 'information', 'capabilities', 'features', 'user', 'agent', 'detection']
-  },
-  
-  // Info Tools - Lookup
-  {
-    path: '/info/calling-codes',
-    title: 'International Calling Codes',
-    description: 'Search and lookup country calling codes worldwide',
-    icon: '📞',
-    category: 'Lookup',
-    section: 'Info',
-    keywords: ['calling', 'codes', 'international', 'country', 'phone', 'telephone', 'dialing']
-  },
-  {
-    path: '/info/public-services',
-    title: 'Public Service Numbers',
-    description: 'Find government, emergency, and public service phone numbers',
-    icon: '🏛️',
-    category: 'Lookup',
-    section: 'Info',
-    keywords: ['public', 'service', 'numbers', 'government', 'emergency', 'phone', 'official']
-  },
-  {
-    path: '/info/postcodes',
-    title: 'Postal Code Lookup',
-    description: 'Search postal codes, ZIP codes, and postcodes worldwide',
-    icon: '📮',
-    category: 'Lookup',
-    section: 'Info',
-    keywords: ['postal', 'code', 'postcode', 'zip', 'lookup', 'search', 'address', 'location']
   }
 ];
 
@@ -399,12 +344,14 @@ export const subdomainRoutes = {
   // Code Tools - Generators
   'password': '/code/password',
   'uuid': '/code/uuid',
-  'hls': '/code/hls',
+  'hls': '/media/hls',
+  'image': '/media/image-compress',
+  'compress': '/media/image-compress',
+  'resize': '/media/image-compress',
   
   // DateTime Tools
   'timestamp': '/datetime/timestamp',
   'timezone': '/datetime/timezone',
-  'countdown': '/datetime/countdown',
   'calculator': '/datetime/calculator',
   'format': '/datetime/format',
   'date': '/datetime/format',
@@ -420,17 +367,6 @@ export const subdomainRoutes = {
   'markdown': '/text/markdown',
   'md': '/text/markdown',
   'text': '/text/case-converter',
-  
-  // Info Tools
-  'browser': '/info/browser',
-  'system': '/info/system',
-  'network': '/info/network',
-  'codes': '/info/calling-codes',
-  'calling': '/info/calling-codes',
-  'services': '/info/public-services',
-  'postcodes': '/info/postcodes',
-  'zip': '/info/postcodes',
-  'info': '/info/browser',
   
   // Popular aliases
   'encode': '/code/base64',

@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import AppLayout from '@/components/layout/AppLayout';
-import { URLTool } from '@/components/tools/code';
+import URLTool from '@/components/tools/code/URLTool';
 import { generateToolMetadata, generateToolJsonLd } from '@/utils/pageGenerator';
 
 export const metadata: Metadata = generateToolMetadata('/code/url');

@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import AppLayout from '@/components/layout/AppLayout';
-import { XMLEscaper } from '@/components/tools/code';
+import XMLEscaper from '@/components/tools/code/XMLEscaper';
 import { generateToolMetadata, generateToolJsonLd } from '@/utils/pageGenerator';
 
 export const metadata: Metadata = generateToolMetadata('/code/xml-escaper');

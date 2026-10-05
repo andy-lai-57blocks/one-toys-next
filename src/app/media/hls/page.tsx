@@ -1,13 +1,13 @@
 import { Metadata } from 'next';
 import AppLayout from '@/components/layout/AppLayout';
-import { CallingCodesLookup } from '@/components/tools/info';
+import HLSTool from '@/components/tools/media/HLSTool';
 import { generateToolMetadata, generateToolJsonLd } from '@/utils/pageGenerator';
 
-export const metadata: Metadata = generateToolMetadata('/info/calling-codes');
+export const metadata: Metadata = generateToolMetadata('/media/hls');
 
-export default function CallingCodesLookupPage() {
-  const jsonLd = generateToolJsonLd('/info/calling-codes');
-  
+export default function HLSToolPage() {
+  const jsonLd = generateToolJsonLd('/media/hls');
+
   return (
     <AppLayout>
       {jsonLd && (
@@ -16,7 +16,7 @@ export default function CallingCodesLookupPage() {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       )}
-      <CallingCodesLookup />
+      <HLSTool />
     </AppLayout>
   );
 }

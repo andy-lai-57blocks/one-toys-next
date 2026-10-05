@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import AppLayout from '@/components/layout/AppLayout';
-import { UUIDGenerator } from '@/components/tools/code';
+import UUIDGenerator from '@/components/tools/code/UUIDGenerator';
 import { generateToolMetadata, generateToolJsonLd } from '@/utils/pageGenerator';
 
 export const metadata: Metadata = generateToolMetadata('/code/uuid');

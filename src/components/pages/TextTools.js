@@ -4,14 +4,8 @@ import React from 'react';
 import Link from 'next/link';
 
 const TextTools = () => {
+  // Tools ordered by general industry usage within each group (most-used first).
   const tools = [
-    {
-      path: '/text/space-remover',
-      title: 'Space Remover',
-      description: 'Remove, replace, or normalize spaces and whitespace in text',
-      icon: '🚫',
-      category: 'Processing'
-    },
     {
       path: '/text/case-converter',
       title: 'Case Converter',
@@ -25,6 +19,13 @@ const TextTools = () => {
       description: 'Analyze text with detailed character, word, and readability statistics',
       icon: '📊',
       category: 'Analysis'
+    },
+    {
+      path: '/text/space-remover',
+      title: 'Space Remover',
+      description: 'Remove, replace, or normalize spaces and whitespace in text',
+      icon: '🚫',
+      category: 'Processing'
     },
     {
       path: '/text/lorem',
@@ -42,45 +43,33 @@ const TextTools = () => {
     }
   ];
 
-  const groupedTools = tools.reduce((groups, tool) => {
-    const category = tool.category;
-    if (!groups[category]) {
-      groups[category] = [];
-    }
-    groups[category].push(tool);
-    return groups;
-  }, {});
-
+  // FLAT on purpose. This used to render five group headings for five tools —
+  // one heading per tool — and because each group held a single card, the
+  // auto-fit grid stretched that card to the full 1310px row. The heading
+  // delivered no grouping information, so it and the grouping code are gone.
   return (
     <div className="category-page">
-      
-      {Object.entries(groupedTools).map(([category, categoryTools], groupIndex) => (
-        <div key={category} className="tool-group">
-          <h2 className="group-title">{category}</h2>
-          <div className="tools-grid">
-            {categoryTools.map((tool, index) => {
-              const globalIndex = Object.entries(groupedTools).slice(0, groupIndex).reduce((acc, [, tools]) => acc + tools.length, 0) + index;
-              return (
-                <Link 
-                  key={tool.path} 
-                  href={tool.path} 
-                  className="tool-card category-card"
-                  style={{ '--card-index': globalIndex }}
-                >
-                  <div className="card-header">
-                    <div className="category-icon">{tool.icon}</div>
-                    <div className="category-arrow">→</div>
-                  </div>
-                  <div className="card-content">
-                    <h3>{tool.title}</h3>
-                    <p>{tool.description}</p>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      ))}
+      <header className="category-header">
+        <h1>Text Tools</h1>
+        <p>{tools.length} tools</p>
+      </header>
+
+      <div className="tool-grid">
+        {tools.map((tool, index) => (
+          <Link
+            key={tool.path}
+            href={tool.path}
+            className="tool-tile"
+            style={{ '--card-index': index }}
+          >
+            <span className="tool-tile-icon" aria-hidden="true">{tool.icon}</span>
+            <span className="tool-tile-body">
+              <span className="tool-tile-title">{tool.title}</span>
+              <span className="tool-tile-desc">{tool.description}</span>
+            </span>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 };

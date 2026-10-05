@@ -17,25 +17,23 @@ body {
 
 .app {
   display: flex;
+  flex-direction: column;
   min-height: 100vh;
 }
 
-/* Main Content Layout */
+/* Main Content Layout
+   The top navigation is `position: sticky`, so it sits in the normal flow and
+   the content simply follows it - there is no sidebar offset to compensate. */
 .main-content {
   flex: 1;
-  margin-left: 280px;
-  padding: 0.5rem 1.5rem 1.5rem 1.5rem;
-  transition: margin-left 0.3s ease;
+  width: 100%;
+  padding: 0.5rem $content-gutter 1.5rem $content-gutter;
   min-height: 100vh;
   background: #f8fafc;
 }
 
-.sidebar.collapsed + .main-content {
-  margin-left: 80px;
-}
-
 .content-container {
-  max-width: 1800px;
+  max-width: $content-max-width;
   margin: 0 auto;
   display: block;
 }
@@ -48,17 +46,11 @@ body {
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
-  min-height: calc(100vh - 8rem); /* Adjust height based on viewport, accounting for navbar and padding */
+  /* Fills the viewport below the sticky nav instead of leaving a stub card on
+     short pages. 9.5rem = nav bar + subnav + the main-content padding above and
+     below the card. */
+  min-height: calc(100vh - 9.5rem);
   padding: 0;
-}
-
-/* Global Search Section - Now positioned within content area */
-.global-search-section {
-  margin-bottom: 1.5rem;
-  
-  @media (max-width: 768px) {
-    margin-bottom: 1rem;
-  }
 }
 
 .content-area:hover {
@@ -144,9 +136,4 @@ body.dark-theme {
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-/* Utilities */
-.desktop-only {
-  display: block;
 }

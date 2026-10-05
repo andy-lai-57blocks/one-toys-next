@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import AppLayout from '@/components/layout/AppLayout';
-import { Base64Tool } from '@/components/tools/code';
+import Base64Tool from '@/components/tools/code/Base64Tool';
 import { generateToolMetadata, generateToolJsonLd } from '@/utils/pageGenerator';
 
 export const metadata: Metadata = generateToolMetadata('/code/base64');

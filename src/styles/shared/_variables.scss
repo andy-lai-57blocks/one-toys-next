@@ -10,6 +10,7 @@ $warning-color: #f59e0b;
 // Background Colors
 $bg-primary: #ffffff;
 $bg-secondary: #f8fafc;
+$bg-subtle: #f1f5f9;
 $bg-dark: #1f2937;
 $bg-card: #ffffff;
 
@@ -69,6 +70,19 @@ $border-radius-md: 0.375rem; // 6px
 $border-radius-lg: 0.5rem;   // 8px
 $border-radius-xl: 0.75rem;  // 12px
 $border-radius-2xl: 1rem;    // 16px
+
+// Layout containers
+// Shared by the content area (common.scss / responsive.scss) AND the sticky top
+// navigation (topnav.scss). The nav has to line its first item up with the left
+// edge of the content card at every breakpoint, so these values must have
+// exactly one definition. Change them here, never in a single component.
+$content-max-width: 1800px;
+$content-max-width-2xl: 2000px;   // >= 1600px
+$content-gutter: 1.5rem;          // horizontal padding of .main-content / .topnav
+$content-gutter-2xl: 2rem;        // >= 1600px
+$content-gutter-mobile: 0.75rem;  // <= 768px
+$content-inset-tablet: 1rem;      // extra inset, 577px - 1199px
+$topnav-bar-height: 4rem;
 
 // Box Shadow
 $shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);

@@ -134,7 +134,7 @@ const GlobalSearch = () => {
         onChange={handleInputChange}
         onFocus={handleInputFocus}
         onKeyDown={handleKeyDown}
-        placeholder="Search tools... (Press Enter to search)"
+        placeholder="Search tools…"
         className="global-search-input"
         autoComplete="off"
         spellCheck="false"

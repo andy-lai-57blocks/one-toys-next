@@ -1,0 +1,512 @@
+// Top navigation — replaces the old left sidebar.
+// User request 2026-10-05: "上面菜单，下边内容" (menu on top, content below).
+//
+// Two rows, deliberately given DIFFERENT treatments so the hierarchy is obvious:
+//
+//   row 1  .topnav-bar     white bar, full-height tabs with an underline indicator.
+//                          "Which part of the site am I in."
+//   row 2  .topnav-subnav  tinted band, plain links with a white pill for the
+//                          current tool. "Which tool of that part."
+//
+// Two white rows separated by a hairline (the first attempt) read as one flat
+// unstyled block, and giving both rows the same pill made the two levels
+// indistinguishable. Hence white vs tinted, underline vs pill.
+//
+// The strip carries no icons. Code has 14 tools, and 14 coloured emoji in a 12px
+// row is the loudest thing on screen; text alone makes it scannable and leaves
+// row 1's four icons as the colourful focal point.
+//
+// The header is `position: sticky`, NOT `fixed`. The document flow therefore
+// places the content underneath it with no compensating offset, and the nav stays
+// reachable while scrolling a tall tool page.
+//
+// GEOMETRY. The nav rows must start on the same x as the content card at every
+// breakpoint. The content side is `.main-content` (horizontal padding) wrapping
+// `.content-container` (max-width, plus an extra inset at 577-1199px). The
+// `nav-gutter` mixin reproduces that pair on a single element, so the numbers have
+// exactly one definition and the alignment cannot drift. The max-width is widened
+// by the padding because the element is border-box and the goal is a
+// $content-max-width CONTENT box, not border box.
+//
+// `.topnav` itself has NO horizontal padding: that is what lets `.topnav-subnav`
+// bleed to the viewport edges. A tinted band that stops short of the screen edge
+// looks like a floating widget instead of part of the chrome.
+
+@mixin nav-gutter($inset, $max-width) {
+  padding: 0 $inset;
+  max-width: calc(#{$max-width} + #{$inset} * 2);
+  margin: 0 auto;
+}
+
+.topnav {
+  position: sticky;
+  top: 0;
+  z-index: $z-sticky;
+  background: $bg-primary;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+/* Row 1 ------------------------------------------------------------------- */
+.topnav-bar {
+  @include nav-gutter($content-gutter, $content-max-width);
+
+  position: relative;
+  display: flex;
+  // stretch, so the tabs can run the full height of the bar and hang their
+  // underline on its bottom edge
+  align-items: stretch;
+  gap: $spacing-lg;
+  min-height: $topnav-bar-height;
+}
+
+.topnav-logo {
+  align-self: center;
+  flex-shrink: 0;
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: $primary-color;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: opacity $transition-fast;
+
+  &:hover {
+    opacity: 0.75;
+  }
+}
+
+.topnav-nav {
+  display: flex;
+  align-items: stretch;
+  min-width: 0;
+}
+
+.topnav-links {
+  display: flex;
+  align-items: stretch;
+  gap: 0.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  // `li` defaults to `display: list-item`, a block container, which BREAKS the
+  // stretch chain from .topnav-bar down to the link: the <a> then collapses to
+  // its own text height and sits at the top of the bar, with the underline
+  // floating mid-bar. Making the li a flex container lets the link fill it.
+  li {
+    display: flex;
+  }
+}
+
+.topnav-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: 0 0.75rem;
+  color: $text-secondary;
+  font-size: $font-size-sm;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color $transition-fast, background $transition-fast;
+
+  // underline indicator, sitting on the bottom edge of the bar
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0.5rem;
+    right: 0.5rem;
+    bottom: 0;
+    height: 2px;
+    border-radius: 2px 2px 0 0;
+    background: transparent;
+    transition: background $transition-fast;
+  }
+
+  &:hover {
+    color: $text-primary;
+    background: rgba($primary-color, 0.05);
+  }
+
+  &.active {
+    color: $primary-color;
+
+    &::after {
+      background: $primary-color;
+    }
+  }
+}
+
+.topnav-icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+/* Search box, pulled to the right end of the bar ---------------------------- */
+.topnav-search {
+  align-self: center;
+  flex-shrink: 0;
+  width: 280px;
+  margin-left: auto;
+
+  // The shared search styles are a full-width bordered block meant for the
+  // content area; in the bar it becomes a compact filled pill.
+  .global-search-container {
+    max-width: none;
+    margin: 0;
+  }
+
+  .global-search-input {
+    padding: 0.5rem 2.25rem;
+    font-size: $font-size-sm;
+    background: $bg-secondary;
+    border-color: transparent;
+    box-shadow: none;
+
+    &::placeholder {
+      color: $text-muted;
+    }
+
+    &:hover {
+      background: $bg-subtle;
+      border-color: transparent;
+      box-shadow: none;
+    }
+
+    &:focus {
+      background: $bg-primary;
+      border-color: $primary-color;
+      box-shadow: 0 0 0 3px rgba($primary-color, 0.12);
+      transform: none;
+    }
+  }
+
+  .search-input-icon {
+    left: 0.75rem;
+    font-size: $font-size-base;
+  }
+
+  .search-clear-button {
+    right: 0.5rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: $font-size-xs;
+  }
+}
+
+/* Hamburger — mobile only --------------------------------------------------- */
+.topnav-toggle {
+  display: none;
+  align-self: center;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  background: none;
+  border: none;
+  color: $text-secondary;
+  cursor: pointer;
+  border-radius: $border-radius-lg;
+  transition: background $transition-fast;
+
+  &:hover {
+    background: $bg-secondary;
+  }
+}
+
+.hamburger {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 20px;
+  height: 14px;
+
+  span {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: currentColor;
+    border-radius: 1px;
+    transition: transform $transition-normal, opacity $transition-fast;
+  }
+
+  span:last-child {
+    width: 70%;
+  }
+
+  &.open {
+    span:nth-child(1) {
+      transform: translateY(6px) rotate(45deg);
+    }
+
+    span:nth-child(2) {
+      opacity: 0;
+    }
+
+    span:nth-child(3) {
+      width: 100%;
+      transform: translateY(-6px) rotate(-45deg);
+    }
+  }
+}
+
+/* Row 2 -------------------------------------------------------------------- */
+.topnav-subnav {
+  background: $bg-subtle;
+  border-top: 1px solid $border-light;
+  border-bottom: 1px solid $border-light;
+}
+
+.subnav-scroll {
+  @include nav-gutter($content-gutter, $content-max-width);
+
+  overflow-x: auto;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+  // The fade goes on the scroller, never on .topnav-subnav: masking the band
+  // itself would fade its background into the page as well.
+  -webkit-mask-image: linear-gradient(to right, #000 0, #000 calc(100% - 2.5rem), transparent 100%);
+  mask-image: linear-gradient(to right, #000 0, #000 calc(100% - 2.5rem), transparent 100%);
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.subnav-links {
+  display: flex;
+  align-items: center;
+  gap: 0.125rem;
+  list-style: none;
+  margin: 0;
+  padding: 0.375rem 0;
+  // `max-content` keeps every tool on one line, `100%` stops the row from
+  // shrinking when there are only a few tools; the parent scrolls the overflow.
+  width: max-content;
+  min-width: 100%;
+}
+
+.subnav-link {
+  display: block;
+  padding: 0.25rem 0.625rem;
+  border-radius: $border-radius-md;
+  color: $text-secondary;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background $transition-fast, color $transition-fast;
+
+  &:hover {
+    background: rgba($primary-color, 0.07);
+    color: $text-primary;
+  }
+
+  // White pill on the tinted band — the inverse of the band, which makes the
+  // current tool unmissable without competing with row 1's underline.
+  &.active {
+    background: $bg-primary;
+    color: $primary-color;
+    font-weight: 600;
+    box-shadow: $shadow-sm;
+  }
+}
+
+/* Mobile ------------------------------------------------------------------- */
+.topnav-overlay {
+  display: none;
+}
+
+@media (max-width: $breakpoint-md) {
+  .topnav-bar {
+    gap: $spacing-sm;
+  }
+
+  .topnav-logo {
+    order: 1;
+    font-size: 1.15rem;
+  }
+
+  // Search stays in the bar rather than moving into the menu, so it is always
+  // one tap away. It takes whatever is left between logo and burger.
+  .topnav-search {
+    order: 2;
+    flex: 1;
+    width: auto;
+    min-width: 0;
+
+    .global-search-input {
+      padding: 0.5rem 2rem;
+    }
+  }
+
+  .topnav-toggle {
+    order: 3;
+    display: flex;
+  }
+
+  // The four primary links collapse into a panel hanging off the bar.
+  .topnav-nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    display: none;
+    align-self: auto;
+    padding: $spacing-sm;
+    background: $bg-primary;
+    border: 1px solid $border-light;
+    border-top: none;
+    border-radius: 0 0 $border-radius-xl $border-radius-xl;
+    box-shadow: $shadow-lg;
+
+    &.mobile-open {
+      display: block;
+    }
+  }
+
+  .topnav-links {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .topnav-link {
+    padding: 0.7rem 0.75rem;
+    font-size: $font-size-base;
+    border-radius: $border-radius-md;
+
+    // no room for an underline inside a stacked list
+    &::after {
+      display: none;
+    }
+
+    &.active {
+      background: rgba($primary-color, 0.08);
+    }
+  }
+
+  .subnav-links {
+    padding: 0.3125rem 0;
+  }
+
+  .subnav-link {
+    padding: 0.25rem 0.5rem;
+    font-size: $font-size-xs;
+  }
+
+  .topnav-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: $z-sticky - 1;
+    background: rgba(15, 23, 42, 0.35);
+  }
+}
+
+/* Gutter overrides — mirror .main-content + .content-container at each range.
+   Ordered narrowest-first; the ranges do not overlap, so neither does the
+   cascade. */
+@media (max-width: 576px) {
+  .topnav-bar,
+  .subnav-scroll {
+    @include nav-gutter($content-gutter-mobile, $content-max-width);
+  }
+}
+
+@media (min-width: 577px) and (max-width: 1199px) {
+  $nav-inset-tablet: $content-gutter + $content-inset-tablet;
+
+  .topnav-bar,
+  .subnav-scroll {
+    @include nav-gutter($nav-inset-tablet, $content-max-width);
+  }
+}
+
+@media (min-width: 1600px) {
+  .topnav-bar,
+  .subnav-scroll {
+    @include nav-gutter($content-gutter-2xl, $content-max-width-2xl);
+  }
+
+  .topnav-search {
+    width: 320px;
+  }
+}
+
+/* Dark theme --------------------------------------------------------------- */
+body.dark-theme {
+  .topnav {
+    background: $dark-bg-primary;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+
+  .topnav-logo {
+    color: #60a5fa;
+  }
+
+  .topnav-link {
+    color: $dark-text-secondary;
+
+    &:hover {
+      color: $dark-text-primary;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    &.active {
+      color: #93c5fd;
+    }
+  }
+
+  .topnav-search .global-search-input {
+    background: $dark-bg-secondary;
+    color: $dark-text-primary;
+    border-color: transparent;
+
+    &:hover {
+      background: #273549;
+    }
+
+    &:focus {
+      background: $dark-bg-primary;
+      border-color: $primary-color;
+    }
+  }
+
+  .topnav-toggle {
+    color: $dark-text-secondary;
+
+    &:hover {
+      background: $dark-bg-secondary;
+    }
+  }
+
+  .topnav-nav {
+    background: $dark-bg-primary;
+    border-color: $dark-border;
+  }
+
+  .topnav-subnav {
+    background: $dark-bg-secondary;
+    border-color: $dark-border;
+  }
+
+  .subnav-link {
+    color: $dark-text-secondary;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.06);
+      color: $dark-text-primary;
+    }
+
+    &.active {
+      background: $dark-bg-primary;
+      color: #93c5fd;
+    }
+  }
+}

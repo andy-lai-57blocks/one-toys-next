@@ -17,7 +17,7 @@ const CATEGORIES = [
   { path: '/code', title: 'Code tools', description: 'Encoders, decoders, formatters' },
   { path: '/text', title: 'Text tools', description: 'Convert, count, clean up text' },
   { path: '/datetime', title: 'DateTime tools', description: 'Timestamps, cron, time zones' },
-  { path: '/info', title: 'Info tools', description: 'Lookups and reference data' }
+  { path: '/media', title: 'Media tools', description: 'Compress images, play HLS streams' }
 ];
 
 export default function NotFound() {

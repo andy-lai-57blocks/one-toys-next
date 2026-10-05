@@ -4,47 +4,13 @@ import React from 'react';
 import Link from 'next/link';
 
 const Info = () => {
+  // Tools ordered by general industry usage within each group (most-used first).
   const tools = [
-    {
-      path: '/info/system',
-      title: 'System Information',
-      description: 'View browser and system information',
-      icon: '💻',
-      category: 'System'
-    },
-    {
-      path: '/info/network',
-      title: 'Network Information',
-      description: 'Check IP address and network details',
-      icon: '🌐',
-      category: 'Network'
-    },
-    {
-      path: '/info/browser',
-      title: 'Browser Information',
-      description: 'View browser capabilities and features',
-      icon: '🌍',
-      category: 'Browser'
-    },
     {
       path: '/info/calling-codes',
       title: 'International Calling Codes',
       description: 'Search and lookup country calling codes worldwide',
       icon: '📞',
-      category: 'Lookup'
-    },
-    {
-      path: '/info/public-services',
-      title: 'Public Service Numbers',
-      description: 'Find government, emergency, and public service phone numbers',
-      icon: '🏛️',
-      category: 'Lookup'
-    },
-    {
-      path: '/info/postcodes',
-      title: 'Postal Code Lookup',
-      description: 'Search postal codes, ZIP codes, and postcodes worldwide',
-      icon: '📮',
       category: 'Lookup'
     }
   ];
@@ -58,8 +24,8 @@ const Info = () => {
     return groups;
   }, {});
 
-  // Define category order with Lookup first
-  const categoryOrder = ['Lookup', 'System', 'Network', 'Browser'];
+  // Group order by general industry usage (most-used groups first)
+  const categoryOrder = ['Lookup'];
   const orderedGroupedTools = categoryOrder
     .filter(category => groupedTools[category]) // Only include categories that exist
     .map(category => [category, groupedTools[category]]);

@@ -24,21 +24,10 @@ export {
   SpaceRemover
 } from './text';
 
-// Info Tools
-export {
-  CallingCodesLookup,
-  PublicServiceNumbers,
-  PostcodeLookup,
-  BrowserInfo,
-  NetworkInfo,
-  SystemInfo
-} from './info';
-
 // DateTime Tools
 export {
   DateCalculator,
   DateFormatter,
   TimestampConverter,
-  TimezoneConverter,
-  CountdownTool
+  TimezoneConverter
 } from './datetime';

@@ -8,7 +8,7 @@ const BASE_URL = 'https://one-toys.com';
 const withSlash = (path: string) => `${BASE_URL}${path.endsWith('/') ? path : `${path}/`}`;
 
 // Category landing pages
-const CATEGORY_PATHS = ['/code', '/text', '/info', '/datetime'];
+const CATEGORY_PATHS = ['/code', '/text', '/datetime', '/media'];
 
 export const dynamic = 'force-static';
 

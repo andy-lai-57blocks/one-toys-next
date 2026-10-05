@@ -11,8 +11,8 @@ import { allTools } from '@/utils/toolsData';
 const SECTION_BY_PATH = {
   '/code': 'Code',
   '/text': 'Text',
-  '/info': 'Info',
-  '/datetime': 'DateTime'
+  '/datetime': 'DateTime',
+  '/media': 'Media'
 };
 
 const countTools = (path) =>
@@ -35,18 +35,18 @@ const Home = () => {
       toolCount: countTools('/text')
     },
     {
-      path: '/info',
-      title: 'Info',
-      description: 'System analysis and information retrieval functions',
-      icon: 'ℹ️',
-      toolCount: countTools('/info')
-    },
-    {
       path: '/datetime',
       title: 'DateTime',
       description: 'Comprehensive date, time, and timezone processing functions',
       icon: '🕐',
       toolCount: countTools('/datetime')
+    },
+    {
+      path: '/media',
+      title: 'Media',
+      description: 'Compress images and play HLS streams, locally in your browser',
+      icon: '🖼️',
+      toolCount: countTools('/media')
     }
   ];
 
@@ -60,25 +60,34 @@ const Home = () => {
       <div className="hero-section">
         <div className="hero-content">
           <div className="hero-badge">
-            <span className="hero-badge-icon">🚀</span>
-            <span className="hero-badge-text">Comprehensive Platform</span>
+            {/* Escape sequence rather than a literal glyph: the raw emoji was
+                silently replaced with U+FFFD in transit once already, which
+                rendered a "?" box in the badge. */}
+            <span className="hero-badge-icon" aria-hidden="true">
+              {'\uD83D\uDD12'}
+            </span>
+            <span className="hero-badge-text">Runs entirely in your browser</span>
           </div>
           <h1 className="home-title">
             <span className="title-highlight">One</span> Toys
           </h1>
+          {/* The copy stays factual on purpose: every number here is derived
+              from toolsData.js. The previous hardcoded "100+ Functions / 4
+              Categories" contradicted the category cards right underneath it
+              (which were already derived), and inflated copy is exactly the
+              thing that reads as machine-generated to a search engine. */}
           <p className="home-subtitle">
-            One Toys Tools is a comprehensive platform that integrates hundreds of practical functions, 
-            designed to help users process various types of data more efficiently and enhance work productivity. 
-            Everything you need, organized by category for seamless workflow optimization.
+            {allTools.length} focused tools for code, text and dates. Everything runs in
+            your browser, so nothing you paste is ever uploaded.
           </p>
           <div className="hero-stats">
             <div className="stat-item">
-              <span className="stat-number">100+</span>
-              <span className="stat-label">Functions</span>
+              <span className="stat-number">{allTools.length}</span>
+              <span className="stat-label">Tools</span>
             </div>
             <div className="stat-divider"></div>
             <div className="stat-item">
-              <span className="stat-number">4</span>
+              <span className="stat-number">{categories.length}</span>
               <span className="stat-label">Categories</span>
             </div>
             <div className="stat-divider"></div>
@@ -98,7 +107,10 @@ const Home = () => {
       <div className="categories-section">
         <div className="section-header">
           <h2 className="section-title">Explore Categories</h2>
-          <p className="section-subtitle">Discover hundreds of practical functions organized by category to boost your productivity</p>
+          <p className="section-subtitle">
+            {categories.length} categories, {allTools.length} tools in total. Pick one to
+            see everything inside it.
+          </p>
         </div>
         
         <div className="tools-grid">
@@ -145,8 +157,8 @@ const Home = () => {
           </div>
           <div className="feature-item">
             <div className="feature-icon">🚀</div>
-            <h4>Boost Productivity</h4>
-            <p>Hundreds of practical functions to streamline your workflow</p>
+            <h4>No Upload</h4>
+            <p>Nothing leaves your device, so there is no queue and nothing to wait for</p>
           </div>
         </div>
       </div>

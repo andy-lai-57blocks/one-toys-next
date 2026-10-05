@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import AppLayout from '@/components/layout/AppLayout';
-import { PasswordGenerator } from '@/components/tools/code';
+import PasswordGenerator from '@/components/tools/code/PasswordGenerator';
 import { generateToolMetadata, generateToolJsonLd } from '@/utils/pageGenerator';
 
 export const metadata: Metadata = generateToolMetadata('/code/password');

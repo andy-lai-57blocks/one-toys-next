@@ -3,7 +3,8 @@
 
 // Base styles
 @import 'common';
-@import 'sidebar'; 
+@import 'topnav';
+@import 'theme-toggle';
 @import 'forms';
 
 // Page styles
@@ -15,11 +16,11 @@
 // Component styles - Code Tools  
 @import 'components/tools/code/index';
 
-// Component styles - Info Tools
-@import 'components/tools/info/index';
-
 // Component styles - DateTime Tools
 @import 'components/tools/datetime/index';
+
+// Component styles - Media Tools
+@import 'components/tools/media/index';
 
 // Component styles - Shared Components
 @import 'components/breadcrumbs';

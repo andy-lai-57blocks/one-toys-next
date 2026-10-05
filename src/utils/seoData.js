@@ -3,8 +3,8 @@ export const seoData = {
   // Home page
   '/': {
     title: 'One Toys - Comprehensive Platform | Data Processing & Productivity Tools',
-    description: 'Comprehensive platform with hundreds of practical functions for efficient data processing and productivity. Encoding, decoding, formatting, generation, and text processing tools. Fast, secure, and mobile-friendly.',
-    keywords: 'base64 encoder, base64 decoder, base64 encode decode online, url encoder, url decoder, html encoder, html decoder, json formatter, json validator, json pretty, xml formatter, xml validator, xml pretty, gzip compression, password generator, uuid generator, lorem ipsum generator, text case converter, character counter, space remover, remove spaces from text, calling codes lookup, country phone codes, postcode lookup, system information, browser detection, network info, timestamp converter, unix timestamp, date formatter, date calculator, timezone converter, countdown timer, HLS player, m3u8 player, VAST validator, ad tag validator, text processing tools, developer tools, online tools, free web tools, productivity tools',
+    description: 'Browser-based tools for code, text and dates, all running locally. Encoding, decoding, formatting, generation and text processing. Fast, private, and free.',
+    keywords: 'base64 encoder, base64 decoder, base64 encode decode online, url encoder, url decoder, html encoder, html decoder, json formatter, json validator, json pretty, xml formatter, xml validator, xml pretty, gzip compression, password generator, uuid generator, lorem ipsum generator, text case converter, character counter, space remover, remove spaces from text, timestamp converter, unix timestamp, date formatter, date calculator, timezone converter, HLS player, m3u8 player, VAST validator, ad tag validator, text processing tools, developer tools, online tools, free web tools, productivity tools',
     type: 'website'
   },
 
@@ -23,17 +23,17 @@ export const seoData = {
     type: 'website'
   },
 
-  '/info': {
-    title: 'Info Tools - Lookup & System Information | One Toys',
-    description: 'Information lookup and system analysis tools. International calling codes, public service numbers, postcode lookup, system info, network details, and browser information.',
-    keywords: 'info tools, calling codes, country codes, public service numbers, postcode lookup, postal codes, system information, network info, browser detection',
+  '/datetime': {
+    title: 'DateTime Tools - Time & Date Utilities | One Toys',
+    description: 'Comprehensive date and time tools. Timestamp converter, date formatter, date calculator, timezone converter, and cron expression parser. Handle all your time-related tasks efficiently.',
+    keywords: 'datetime tools, timestamp converter, unix timestamp, date formatter, date calculator, timezone converter, cron parser, world clock, time tools',
     type: 'website'
   },
 
-  '/datetime': {
-    title: 'DateTime Tools - Time & Date Utilities | One Toys',
-    description: 'Comprehensive date and time tools. Timestamp converter, date formatter, date calculator, timezone converter, countdown timer. Handle all your time-related tasks efficiently.',
-    keywords: 'datetime tools, timestamp converter, unix timestamp, date formatter, date calculator, timezone converter, world clock, countdown timer, time tools',
+  '/media': {
+    title: 'Media Tools - Image Compressor & HLS Player | One Toys',
+    description: 'Compress and resize images, and play or inspect HLS streams, entirely in your browser. Nothing you open is uploaded, so your files never leave your device.',
+    keywords: 'media tools, image compressor, compress image, image optimizer, hls player, m3u8 player, http live streaming, video streaming tools',
     type: 'website'
   },
 
@@ -56,6 +56,13 @@ export const seoData = {
     title: 'JSON Formatter & Validator - Pretty Print JSON | One Toys',
     description: 'Professional JSON formatter and validator with syntax highlighting. Pretty print, minify, and validate JSON data. Dark/light mode support. Free online JSON tool.',
     keywords: 'json formatter, json validator, json pretty print, json minify, json beautifier, json parser, validate json, format json',
+    type: 'tool'
+  },
+
+  '/code/json-fixer': {
+    title: 'JSON Fixer — Repair Broken JSON Locally | One Toys',
+    description: 'Fix invalid JSON instantly: strip code fences, remove comments and trailing commas, convert single quotes, and recover JSON from surrounding prose. Runs entirely in your browser — nothing is uploaded.',
+    keywords: 'json fixer, fix json, repair json, invalid json, broken json, json comments, trailing comma, jsonc, ndjson, fix llm json output, clean up json',
     type: 'tool'
   },
 
@@ -87,10 +94,17 @@ export const seoData = {
     type: 'tool'
   },
 
-  '/code/hls': {
+  '/media/hls': {
     title: 'HLS Stream Player & Analyzer - HTTP Live Streaming | One Toys',
     description: 'Professional HLS stream player and analyzer. Play HTTP Live Streaming content, analyze stream quality, view adaptive bitrate levels. Supports live and on-demand streams.',
     keywords: 'hls play, hls player, http live streaming, hls stream analyzer, m3u8 player, adaptive streaming, live streaming, video streaming, hls tool',
+    type: 'tool'
+  },
+
+  '/media/image-compress': {
+    title: 'Image Compressor - Shrink JPEG, PNG & WebP Locally | One Toys',
+    description: 'Compress and resize images in your browser. Choose the quality and output format, see the exact size saving, then download. Your images are never uploaded to a server.',
+    keywords: 'image compressor, compress image, image compression online, reduce image size, resize image, jpeg compressor, webp converter, compress png, shrink photo, image optimizer',
     type: 'tool'
   },
 
@@ -151,49 +165,6 @@ export const seoData = {
     type: 'tool'
   },
 
-  // Info Tools
-  '/info/calling-codes': {
-    title: 'International Calling Codes Lookup | One Toys',
-    description: 'Comprehensive international calling codes database. Search country codes, area codes, and phone number formats for all countries worldwide.',
-    keywords: 'international calling codes, country codes, phone codes, dialing codes, international phone codes, country calling codes',
-    type: 'tool'
-  },
-
-  '/info/public-services': {
-    title: 'Public Service Numbers Directory | One Toys',
-    description: 'Emergency numbers and public service contacts worldwide. Police, fire, ambulance, and essential services for major countries.',
-    keywords: 'emergency numbers, public service numbers, police number, fire department, ambulance, emergency contacts, public services',
-    type: 'tool'
-  },
-
-  '/info/postcodes': {
-    title: 'Postcode Lookup - Global Postal Codes | One Toys',
-    description: 'Search postal codes and ZIP codes worldwide. Comprehensive postcode database with city and region information for international locations.',
-    keywords: 'postcode lookup, postal codes, zip codes, postal code search, zip code lookup, international postal codes',
-    type: 'tool'
-  },
-
-  '/info/system': {
-    title: 'System Information Display - Device Details | One Toys',
-    description: 'Display detailed system information about your device, browser, and operating system. Hardware specs, browser details, and system capabilities.',
-    keywords: 'system information, device info, browser info, operating system, hardware details, system specs, device details',
-    type: 'tool'
-  },
-
-  '/info/network': {
-    title: 'Network Information Tool - IP & Connection Details | One Toys',
-    description: 'Display network information including IP address, location, ISP details, and connection information. Network diagnostics and details.',
-    keywords: 'network information, ip address, network details, connection info, isp info, network diagnostics, ip lookup',
-    type: 'tool'
-  },
-
-  '/info/browser': {
-    title: 'Browser Information Detector - Browser Details | One Toys',
-    description: 'Detect and display detailed browser information including user agent, supported features, screen resolution, and browser capabilities.',
-    keywords: 'browser information, user agent, browser detection, browser details, browser capabilities, screen resolution',
-    type: 'tool'
-  },
-
   // DateTime Tools
   '/datetime/cron-parser': {
     title: 'Cron Expression Parser — Explain & Preview Schedules | One Toys',
@@ -228,13 +199,6 @@ export const seoData = {
     description: 'Convert time between different timezones. World clock with major cities, timezone abbreviations, and daylight saving time support.',
     keywords: 'timezone converter, world clock, time zones, timezone conversion, world time, international time, timezone tool',
     type: 'tool'
-  },
-
-  '/datetime/countdown': {
-    title: 'Countdown Timer - Track Important Dates | One Toys',
-    description: 'Create countdown timers for important events and dates. Track time remaining to holidays, deadlines, and special occasions.',
-    keywords: 'countdown timer, countdown clock, event countdown, date countdown, timer, countdown tool, event timer',
-    type: 'tool'
   }
 };
 
@@ -255,8 +219,8 @@ export const getBreadcrumbs = (path) => {
     const categoryLabels = {
       'code': 'Code Tools',
       'text': 'Text Tools', 
-      'info': 'Info Tools',
-      'datetime': 'DateTime Tools'
+      'datetime': 'DateTime Tools',
+      'media': 'Media Tools'
     };
 
     if (categoryLabels[category]) {

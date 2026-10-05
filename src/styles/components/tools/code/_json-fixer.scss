@@ -1,0 +1,22 @@
+// JSON Fixer — supplementary styles.
+// The three-column layout, the ace editors and the buttons all come from the
+// shared tool styles (identical to JSON Formatter), so the only pieces that are
+// unique to this tool are the drag-and-drop affordance on the input column and
+// the "cut off" warning state (R-18 is the one repair that guesses).
+
+.json-fixer-drop.is-dragging {
+  outline: 2px solid var(--accent-color, #3b82f6);
+  outline-offset: 2px;
+  border-radius: 0.5rem;
+}
+
+.three-column-layout {
+  .status-indicator.warn {
+    color: $warning-color;
+    cursor: help;
+  }
+
+  .dark-mode & .status-indicator.warn {
+    color: #fcd34d;
+  }
+}

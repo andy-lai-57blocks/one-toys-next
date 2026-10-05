@@ -19,6 +19,36 @@
       ],
       "destination": "https://one-toys.com/$1",
       "permanent": true
+    },
+    {
+      "source": "/info",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/info/:path*",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/datetime/countdown",
+      "destination": "/datetime/",
+      "permanent": true
+    },
+    {
+      "source": "/datetime/countdown/",
+      "destination": "/datetime/",
+      "permanent": true
+    },
+    {
+      "source": "/code/hls",
+      "destination": "/media/hls/",
+      "permanent": true
+    },
+    {
+      "source": "/code/hls/",
+      "destination": "/media/hls/",
+      "permanent": true
     }
   ],
   "rewrites": [

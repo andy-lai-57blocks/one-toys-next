@@ -25,7 +25,6 @@ const SearchResults = ({ results, query, onClear }) => {
               <Link href="/code" className="suggestion-link">Code Tools</Link>
               <Link href="/text" className="suggestion-link">Text Tools</Link>
               <Link href="/datetime" className="suggestion-link">DateTime Tools</Link>
-              <Link href="/info" className="suggestion-link">Info Tools</Link>
             </div>
           </div>
         </div>
