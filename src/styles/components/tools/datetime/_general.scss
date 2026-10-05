@@ -999,3 +999,50 @@ body.dark-theme {
     color: #94a3b8;
   }
 }
+
+/* Date Formatter: the pieces that had no CSS at all ------------------------
+   .error-section / .error-text (the invalid-input message), .format-help (the
+   format-token hint) and .custom-format-buttons (the preset row) were defined
+   in no stylesheet. An invalid date therefore rendered as plain body text with
+   no red anywhere, and the hint and preset row had no spacing of their own.
+   Modelled on the cron-parser equivalents, which already existed. */
+.error-section {
+  margin: $spacing-md 0;
+  padding: $spacing-md $spacing-lg;
+  border-radius: $border-radius-xl;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  border-left: 4px solid $error-color;
+}
+
+.error-text {
+  margin: 0;
+  font-size: $font-size-sm;
+  font-weight: 500;
+  color: $error-color;
+}
+
+.custom-format-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-xs;
+  margin-top: $spacing-sm;
+}
+
+.format-help {
+  margin-top: $spacing-sm;
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: $text-secondary;
+}
+
+/* Date Calculator: .operation-selector had no layout of its own. It is a child
+   of .primary-actions, and that gap applies between .primary-actions' children
+   - of which there is only this one - so the three operation buttons, which
+   .btn renders full width, sat flush against each other. Same fix as
+   .primary-actions itself uses. */
+.operation-selector {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+}
