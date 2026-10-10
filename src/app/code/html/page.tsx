@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import AppLayout from '@/components/layout/AppLayout';
 import HTMLTool from '@/components/tools/code/HTMLTool';
+import ToolPageContent from '@/components/shared/ToolPageContent';
 import { generateToolMetadata, generateToolJsonLd } from '@/utils/pageGenerator';
 
 export const metadata: Metadata = generateToolMetadata('/code/html');
@@ -17,6 +18,7 @@ export default function HTMLToolPage() {
         />
       )}
       <HTMLTool />
+      <ToolPageContent path="/code/html" />
     </AppLayout>
   );
 }

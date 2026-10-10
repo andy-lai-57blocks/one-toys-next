@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import AppLayout from '@/components/layout/AppLayout';
 import { MarkdownPreview } from '@/components/tools/text';
+import ToolPageContent from '@/components/shared/ToolPageContent';
 import { generateToolMetadata, generateToolJsonLd } from '@/utils/pageGenerator';
 
 export const metadata: Metadata = generateToolMetadata('/text/markdown');
@@ -17,6 +18,7 @@ export default function MarkdownPreviewPage() {
         />
       )}
       <MarkdownPreview />
+      <ToolPageContent path="/text/markdown" />
     </AppLayout>
   );
 }

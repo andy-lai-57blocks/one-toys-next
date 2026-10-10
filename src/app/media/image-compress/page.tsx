@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import AppLayout from '@/components/layout/AppLayout';
 import ImageCompressor from '@/components/tools/media/ImageCompressor';
+import ToolPageContent from '@/components/shared/ToolPageContent';
 import { generateToolMetadata, generateToolJsonLd } from '@/utils/pageGenerator';
 
 export const metadata: Metadata = generateToolMetadata('/media/image-compress');
@@ -17,6 +18,7 @@ export default function ImageCompressPage() {
         />
       )}
       <ImageCompressor />
+      <ToolPageContent path="/media/image-compress" />
     </AppLayout>
   );
 }

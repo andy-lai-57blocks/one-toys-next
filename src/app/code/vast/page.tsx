@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import AppLayout from '@/components/layout/AppLayout';
 import VASTFormatter from '@/components/tools/code/VASTFormatter';
+import ToolPageContent from '@/components/shared/ToolPageContent';
 import { generateToolMetadata, generateToolJsonLd } from '@/utils/pageGenerator';
 
 export const metadata: Metadata = generateToolMetadata('/code/vast');
@@ -17,6 +18,7 @@ export default function VASTFormatterPage() {
         />
       )}
       <VASTFormatter />
+      <ToolPageContent path="/code/vast" />
     </AppLayout>
   );
 }

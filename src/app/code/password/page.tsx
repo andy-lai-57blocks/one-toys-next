@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import AppLayout from '@/components/layout/AppLayout';
 import PasswordGenerator from '@/components/tools/code/PasswordGenerator';
+import ToolPageContent from '@/components/shared/ToolPageContent';
 import { generateToolMetadata, generateToolJsonLd } from '@/utils/pageGenerator';
 
 export const metadata: Metadata = generateToolMetadata('/code/password');
@@ -17,6 +18,7 @@ export default function PasswordGeneratorPage() {
         />
       )}
       <PasswordGenerator />
+      <ToolPageContent path="/code/password" />
     </AppLayout>
   );
 }

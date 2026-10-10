@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import AppLayout from '@/components/layout/AppLayout';
 import { SpaceRemover } from '@/components/tools/text';
+import ToolPageContent from '@/components/shared/ToolPageContent';
 import { generateToolMetadata, generateToolJsonLd } from '@/utils/pageGenerator';
 
 export const metadata: Metadata = generateToolMetadata('/text/space-remover');
@@ -17,6 +18,7 @@ export default function SpaceRemoverPage() {
         />
       )}
       <SpaceRemover />
+      <ToolPageContent path="/text/space-remover" />
     </AppLayout>
   );
 }

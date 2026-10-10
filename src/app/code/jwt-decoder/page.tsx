@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import AppLayout from '@/components/layout/AppLayout';
 import JWTDecoder from '@/components/tools/code/JWTDecoder';
+import ToolPageContent from '@/components/shared/ToolPageContent';
 import { generateToolMetadata, generateToolJsonLd } from '@/utils/pageGenerator';
 
 export const metadata: Metadata = generateToolMetadata('/code/jwt-decoder');
@@ -17,6 +18,7 @@ export default function JwtDecoderPage() {
         />
       )}
       <JWTDecoder />
+      <ToolPageContent path="/code/jwt-decoder" />
     </AppLayout>
   );
 }

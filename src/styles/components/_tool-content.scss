@@ -10,30 +10,55 @@
   background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
 }
 
-/* One reading column for every text-bearing block, so all of them start at the
-   same left edge and end at the same right edge. Without this the copy spans
-   the full container (~106 characters per line at 1440px).
-   Capped in rem rather than ch: the body font's "0" glyph is much wider than an
-   average character (1ch measures about 1.36 real characters here), so a
-   ch-based cap comes out far wider than intended. 38rem = 608px, which is
-   roughly 85 characters per line at the 15.6px body size. */
+/* Reading measure for the copy below a tool. It is fluid - the centred wrapper
+   below sizes itself to clamp($content-column, 55vw, $content-column-wide), so
+   wide viewports use more of the card - and the inner blocks simply fill it.
+   Both bounds are in rem rather than ch: the body font's "0" glyph is much wider
+   than an average character (1ch measures about 1.36 real characters here), so a
+   ch-based cap comes out far wider than intended. 38rem = 608px is roughly 85
+   characters per line at the 15.6px body size; the 48rem upper bound keeps the
+   longest lines readable on large monitors. */
 $content-column: 38rem;
+$content-column-wide: 48rem;
 
 .tool-content-body,
 .tool-examples,
 .tool-faq,
-.tool-privacy,
 .tool-limits-list,
 .tool-related-list {
-  max-width: $content-column;
+  max-width: 100%;
 }
 
 .tool-content-section {
   margin-top: 2rem;
 }
 
-.tool-page-content > .tool-content-section:first-child,
-.tool-page-content > .tool-privacy:first-child {
+/* The band below the tool spans the full card width, but the copy must not. The
+   grid inside is centred on a fluid measure that grows with the viewport (55vw),
+   capped at `$content-column-wide` so lines stay readable and floored at
+   `$content-column`; when the container is narrower than that floor it is simply
+   container-width, so tablet and mobile are unaffected. */
+.tool-content-grid {
+  max-width: clamp($content-column, 55vw, $content-column-wide);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Wide screens: two columns, so the extra width is used without stretching the
+   prose. Left = explanation, right = FAQ + related tools. Below 1100px it falls
+   back to the single centred column above. */
+@media (min-width: 1100px) {
+  .tool-content-grid--split {
+    max-width: 72rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    column-gap: 3rem;
+    align-items: start;
+  }
+}
+
+.tool-content-main > .tool-content-section:first-child,
+.tool-content-aside > .tool-content-section:first-child {
   margin-top: 0;
 }
 

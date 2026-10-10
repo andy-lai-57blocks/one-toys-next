@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import AppLayout from '@/components/layout/AppLayout';
 import JSONFormatter from '@/components/tools/code/JSONFormatter';
+import ToolPageContent from '@/components/shared/ToolPageContent';
 import { generateToolMetadata, generateToolJsonLd } from '@/utils/pageGenerator';
 
 export const metadata: Metadata = generateToolMetadata('/code/json');
@@ -17,6 +18,7 @@ export default function JSONPage() {
         />
       )}
       <JSONFormatter />
+      <ToolPageContent path="/code/json" />
     </AppLayout>
   );
 }

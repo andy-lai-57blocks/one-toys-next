@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import AppLayout from '@/components/layout/AppLayout';
 import { DateFormatter } from '@/components/tools/datetime';
+import ToolPageContent from '@/components/shared/ToolPageContent';
 import { generateToolMetadata, generateToolJsonLd } from '@/utils/pageGenerator';
 
 export const metadata: Metadata = generateToolMetadata('/datetime/format');
@@ -17,6 +18,7 @@ export default function DateFormatterPage() {
         />
       )}
       <DateFormatter />
+      <ToolPageContent path="/datetime/format" />
     </AppLayout>
   );
 }

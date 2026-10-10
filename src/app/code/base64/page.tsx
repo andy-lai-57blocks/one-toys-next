@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import AppLayout from '@/components/layout/AppLayout';
 import Base64Tool from '@/components/tools/code/Base64Tool';
+import ToolPageContent from '@/components/shared/ToolPageContent';
 import { generateToolMetadata, generateToolJsonLd } from '@/utils/pageGenerator';
 
 export const metadata: Metadata = generateToolMetadata('/code/base64');
@@ -17,6 +18,7 @@ export default function Base64Page() {
         />
       )}
       <Base64Tool />
+      <ToolPageContent path="/code/base64" />
     </AppLayout>
   );
 }

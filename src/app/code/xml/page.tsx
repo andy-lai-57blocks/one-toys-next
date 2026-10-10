@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import AppLayout from '@/components/layout/AppLayout';
 import XMLFormatter from '@/components/tools/code/XMLFormatter';
+import ToolPageContent from '@/components/shared/ToolPageContent';
 import { generateToolMetadata, generateToolJsonLd } from '@/utils/pageGenerator';
 
 export const metadata: Metadata = generateToolMetadata('/code/xml');
@@ -17,6 +18,7 @@ export default function XMLFormatterPage() {
         />
       )}
       <XMLFormatter />
+      <ToolPageContent path="/code/xml" />
     </AppLayout>
   );
 }

@@ -4,6 +4,7 @@ import AppLayout from '@/components/layout/AppLayout';
 // that barrel re-exports tools which pull in the ~600 kB ace editor, and this
 // page must stay inside the PRD's < 20 kB first-load budget.
 import JSONFixer from '@/components/tools/code/JSONFixer';
+import ToolPageContent from '@/components/shared/ToolPageContent';
 import { generateToolMetadata, generateToolJsonLd } from '@/utils/pageGenerator';
 
 export const metadata: Metadata = generateToolMetadata('/code/json-fixer');
@@ -20,6 +21,7 @@ export default function JsonFixerPage() {
         />
       )}
       <JSONFixer />
+      <ToolPageContent path="/code/json-fixer" />
     </AppLayout>
   );
 }
