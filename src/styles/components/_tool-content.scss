@@ -328,11 +328,26 @@ $content-column-wide: 48rem;
   color: var(--text-secondary, #6b7280);
 }
 
-/* Dark mode ------------------------------------------------------------ */
-.dark-mode {
+/* Dark mode ------------------------------------------------------------
+   `body.dark-theme` is the class ThemeContext toggles on <body>. The tools add
+   their own `dark-mode` class to `.tool-container`, but this content block is a
+   SIBLING of that container, so `.dark-mode` never matched here and the whole
+   block below was dead - use the global class instead.
+   Also note `--text-primary` / `--text-secondary` are not defined anywhere in
+   the project, so every `var(--text-*, fallback)` in this file resolves to the
+   light-mode fallback. Anything that carries text has to be restated here. */
+body.dark-theme {
   .tool-page-content {
     background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
   }
+
+  /* Titles and questions were falling back to near-black. */
+  .tool-content-title,
+  .tool-example-title,
+  .tool-faq-question {
+    color: #f1f5f9;
+  }
+
   .tool-content-body,
   .tool-privacy-body,
   .tool-limits-list,
@@ -344,14 +359,21 @@ $content-column-wide: 48rem;
     color: #cbd5e1;
   }
 
+  .tool-content-body a {
+    color: #60a5fa;
+  }
+
+  /* Mirrors the light treatment: card background matches the gradient end and
+     the border provides the definition, so this sits on the band rather than
+     disappearing into it the way a flat #1e293b did. */
   .tool-example,
   .tool-faq-item {
-    background: #1e293b;
+    background: #0f172a;
     border-color: #334155;
   }
 
   .tool-example-code {
-    background: #0f172a;
+    background: #020617;
     color: #e2e8f0;
   }
 
