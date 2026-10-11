@@ -20,7 +20,7 @@
   }
 
   @media (max-width: $breakpoint-md) {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -35,6 +35,14 @@
 
   .btn {
     flex: 0 0 auto;
+  }
+
+  /* A datetime-local input needs ~190px to render "10/11/2026, 14:56" without
+     clipping. Sharing a line with the 100px Now button leaves it ~146px on a
+     phone, so stack them rather than let the value get cut off. */
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: stretch;
   }
 }
 
@@ -60,12 +68,51 @@
     border-color: $border-light;
   }
 
-  /* Below this the five columns no longer fit side by side, so every cell gets
-     its own line rather than the row overflowing. */
+  /* On a phone five columns cannot fit. Two columns over three lines instead of
+     five stacked lines: roughly half the height, and the time stays next to the
+     city it belongs to.
+     `minmax(0, 1fr)` and never a bare `1fr` - a bare `1fr` keeps an automatic
+     min-CONTENT floor, and the intrinsic width of a datetime-local input made
+     that floor ~396px, which overflowed the card by up to 106px. */
   @media (max-width: $breakpoint-md) {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'zone time'
+      'date slot'
+      'actions actions';
     row-gap: $spacing-sm;
+    column-gap: $spacing-sm;
     padding: $spacing-md;
+
+    .tz-zone {
+      grid-area: zone;
+    }
+
+    .tz-time {
+      grid-area: time;
+      justify-self: end;
+    }
+
+    .tz-clock {
+      font-size: 1.3rem;
+    }
+
+    .tz-clock-12 {
+      font-size: $font-size-xs;
+    }
+
+    .tz-date {
+      grid-area: date;
+    }
+
+    .tz-slot {
+      grid-area: slot;
+      justify-self: end;
+    }
+
+    .tz-actions {
+      grid-area: actions;
+    }
   }
 }
 
