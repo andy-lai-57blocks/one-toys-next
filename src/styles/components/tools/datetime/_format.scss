@@ -5,12 +5,14 @@
    .btn btn-outline btn-small, presets use .chip, and all metrics come from
    forms.scss. Only the parts that are unique to this page live here. */
 
+/* Fills the card, exactly like the other four datetime tools. This used to
+   carry its own `max-width: 62rem; margin: 0 auto` from the first draft, which
+   left the formatter at 992px while every other tool measured 1182px - i.e. the
+   odd one out for no reason anyone could see. */
 .fmt-formatter {
   display: flex;
   flex-direction: column;
   gap: $spacing-lg;
-  max-width: 62rem;
-  margin: 0 auto;
 }
 
 /* Loading placeholder - the zone list needs the browser, so the first paint
