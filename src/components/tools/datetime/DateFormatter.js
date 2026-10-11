@@ -1,322 +1,359 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import SimpleAd from '../../ads/SimpleAdSSG';
+import {
+  formatter,
+  numericParts,
+  parseWallInput,
+  wallToInstant,
+  wallInputValueIn,
+  zoneName
+} from '@/utils/timezone';
 
-const DateFormatter = () => {
-  const [inputDate, setInputDate] = useState('');
-  const [selectedTimezone, setSelectedTimezone] = useState('UTC'); // Start with UTC to prevent hydration mismatch
-  const [customFormat, setCustomFormat] = useState('');
-  const [results, setResults] = useState({});
+// Target zones with the labels people actually recognise. The Timezone
+// Converter is the tool for global coverage; this page only needs the zones a
+// date-formatting job is normally reported in.
+const ZONES = [
+  ['UTC', 'UTC'],
+  ['America/Los_Angeles', 'Los Angeles (PT)'],
+  ['America/Denver', 'Denver (MT)'],
+  ['America/Chicago', 'Chicago (CT)'],
+  ['America/New_York', 'New York (ET)'],
+  ['America/Sao_Paulo', 'São Paulo'],
+  ['Europe/London', 'London (GMT/BST)'],
+  ['Europe/Paris', 'Paris (CET)'],
+  ['Europe/Berlin', 'Berlin (CET)'],
+  ['Europe/Moscow', 'Moscow'],
+  ['Asia/Dubai', 'Dubai'],
+  ['Asia/Kolkata', 'Kolkata (IST)'],
+  ['Asia/Shanghai', 'Shanghai (CST)'],
+  ['Asia/Tokyo', 'Tokyo (JST)'],
+  ['Asia/Singapore', 'Singapore'],
+  ['Australia/Sydney', 'Sydney (AET)'],
+  ['Pacific/Auckland', 'Auckland']
+];
 
-  useEffect(() => {
-    // Set user's timezone and initial date after hydration
-    if (typeof window !== 'undefined') {
-      const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      setSelectedTimezone(userTimezone);
-      
-      const now = new Date();
-      setInputDate(now.toISOString().slice(0, 16));
+const PRESETS = [
+  'YYYY-MM-DD HH:mm:ss',
+  'DD/MM/YYYY HH:mm',
+  'MMM DD, YYYY',
+  'DDD, MMMM DD, YYYY'
+];
+
+const pad2 = (n) => String(n).padStart(2, '0');
+
+/**
+ * Replace format tokens with the value of `instant` AS READ IN `zone`.
+ *
+ * Longest tokens are substituted first, otherwise `MM` would eat the first two
+ * characters of `MMMM` and `YY` the last two of `YYYY`.
+ */
+function formatCustom(instant, zone, pattern) {
+  const p = numericParts(instant, zone);
+  const tokens = [
+    ['MMMM', formatter(zone, { month: 'long' }).format(instant)],
+    ['MMM', formatter(zone, { month: 'short' }).format(instant)],
+    ['DDDD', formatter(zone, { weekday: 'long' }).format(instant)],
+    ['DDD', formatter(zone, { weekday: 'short' }).format(instant)],
+    ['YYYY', String(p.year)],
+    ['YY', String(p.year).slice(-2)],
+    ['MM', pad2(p.month)],
+    ['DD', pad2(p.day)],
+    ['HH', pad2(p.hour)],
+    ['mm', pad2(p.minute)],
+    ['ss', pad2(p.second)]
+  ];
+
+  let out = pattern;
+  for (const [token, value] of tokens) out = out.split(token).join(value);
+  return out;
+}
+
+/**
+ * Every value is derived from the same instant, read in the same zone, so the
+ * groups can never disagree with each other.
+ */
+function buildGroups(instant, zone) {
+  const p = numericParts(instant, zone);
+  const inZone = (options, locale) => formatter(zone, options, locale).format(instant);
+  const ms = instant.getTime();
+
+  return [
+    {
+      title: 'Common',
+      icon: '⚡',
+      rows: [
+        ['ISO 8601', instant.toISOString()],
+        ['RFC 2822', instant.toUTCString()],
+        ['Date', inZone({ weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })],
+        ['Time (24-hour)', `${pad2(p.hour)}:${pad2(p.minute)}`],
+        ['Time (12-hour)', inZone({ hour: 'numeric', minute: '2-digit', hour12: true })],
+        ['Unix seconds', String(Math.floor(ms / 1000))],
+        ['Unix milliseconds', String(ms)]
+      ]
+    },
+    {
+      title: 'Date layouts',
+      icon: '📐',
+      rows: [
+        ['YYYY-MM-DD', `${p.year}-${pad2(p.month)}-${pad2(p.day)}`],
+        ['DD/MM/YYYY', `${pad2(p.day)}/${pad2(p.month)}/${p.year}`],
+        ['MM/DD/YYYY', `${pad2(p.month)}/${pad2(p.day)}/${p.year}`],
+        ['DD-MM-YYYY', `${pad2(p.day)}-${pad2(p.month)}-${p.year}`],
+        ['YYYY/MM/DD', `${p.year}/${pad2(p.month)}/${pad2(p.day)}`],
+        ['YY-MM-DD', `${String(p.year).slice(-2)}-${pad2(p.month)}-${pad2(p.day)}`],
+        ['HH:MM', `${pad2(p.hour)}:${pad2(p.minute)}`],
+        ['HH:MM:SS', `${pad2(p.hour)}:${pad2(p.minute)}:${pad2(p.second)}`]
+      ]
+    },
+    {
+      title: 'Readable',
+      icon: '💬',
+      rows: [
+        ['Full date', inZone({ weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })],
+        ['Month and year', inZone({ year: 'numeric', month: 'long' })],
+        ['Weekday', inZone({ weekday: 'long' })],
+        ['Date and time', inZone({
+          weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+          hour: 'numeric', minute: '2-digit'
+        })],
+        ['Time and zone', `${inZone({ hour: '2-digit', minute: '2-digit', hour12: false }).replace(/^24/, '00')} ${zoneName(instant, zone) || zone}`]
+      ]
+    },
+    {
+      title: 'Locale',
+      icon: '🌍',
+      rows: [
+        ['United States', inZone({ dateStyle: 'short' }, 'en-US')],
+        ['United Kingdom', inZone({ dateStyle: 'short' }, 'en-GB')],
+        ['Germany', inZone({ dateStyle: 'short' }, 'de-DE')],
+        ['France', inZone({ dateStyle: 'short' }, 'fr-FR')],
+        ['Japan', inZone({ dateStyle: 'short' }, 'ja-JP')],
+        ['China', inZone({ dateStyle: 'short' }, 'zh-CN')],
+        ['India', inZone({ dateStyle: 'short' }, 'en-IN')],
+        ['Brazil', inZone({ dateStyle: 'short' }, 'pt-BR')]
+      ]
+    },
+    {
+      title: 'Numbers',
+      icon: '🔢',
+      rows: [
+        ['Year', String(p.year)],
+        ['Month (1-12)', String(p.month)],
+        ['Day of month', String(p.day)],
+        ['Hour (0-23)', String(p.hour)],
+        ['Minute', String(p.minute)],
+        ['Second', String(p.second)]
+      ]
     }
+  ];
+}
+
+export default function DateFormatter() {
+  const [mounted, setMounted] = useState(false);
+  const [isNow, setIsNow] = useState(true);
+  const [now, setNow] = useState(null);
+  const [wall, setWall] = useState('');
+  const [userZone, setUserZone] = useState('UTC');
+  const [zone, setZone] = useState('UTC');
+  const [pattern, setPattern] = useState('YYYY-MM-DD HH:mm:ss');
+  const [copied, setCopied] = useState('');
+
+  // Mount only: the browser's zone is not known during static export.
+  useEffect(() => {
+    const start = new Date();
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
+    setUserZone(tz);
+    setZone(tz);
+    setWall(wallInputValueIn(start, tz));
+    setNow(start);
+    setMounted(true);
   }, []);
 
+  // The clock only ticks while the live reading is what is being formatted.
   useEffect(() => {
-    if (inputDate) {
-      formatDate();
-    }
-  }, [inputDate, selectedTimezone, customFormat]);
+    if (!isNow) return undefined;
+    const id = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(id);
+  }, [isNow]);
 
-  const formatDate = () => {
-    try {
-      const date = new Date(inputDate);
-      
-      if (isNaN(date.getTime())) {
-        setResults({ error: 'Invalid date format' });
-        return;
-      }
+  const instant = useMemo(() => {
+    if (!now) return null;
+    if (isNow) return now;
+    const parsed = parseWallInput(wall);
+    // A typed date/time is a wall-clock reading in the user's OWN zone; the
+    // zone selector above only chooses how it is displayed.
+    return parsed ? wallToInstant(parsed, userZone) : null;
+  }, [now, isNow, wall, userZone]);
 
-      const commonFormats = {
-        'ISO 8601': date.toISOString(),
-        'RFC 2822': date.toUTCString(),
-        'Local String': date.toLocaleString('en-US', { timeZone: selectedTimezone }),
-        'Date Only': date.toLocaleDateString('en-US', { timeZone: selectedTimezone }),
-        'Time Only': date.toLocaleTimeString('en-US', { timeZone: selectedTimezone }),
-        'Unix Timestamp': Math.floor(date.getTime() / 1000),
-        'Unix Milliseconds': date.getTime(),
-        'Year': date.getFullYear(),
-        'Month (1-12)': date.getMonth() + 1,
-        'Day': date.getDate(),
-        'Hour (0-23)': date.getHours(),
-        'Minute': date.getMinutes(),
-        'Second': date.getSeconds()
-      };
-
-      const localeFormats = {
-        'US Format': date.toLocaleDateString('en-US', { timeZone: selectedTimezone }),
-        'UK Format': date.toLocaleDateString('en-GB', { timeZone: selectedTimezone }),
-        'German Format': date.toLocaleDateString('de-DE', { timeZone: selectedTimezone }),
-        'French Format': date.toLocaleDateString('fr-FR', { timeZone: selectedTimezone }),
-        'Japanese Format': date.toLocaleDateString('ja-JP', { timeZone: selectedTimezone }),
-        'Chinese Format': date.toLocaleDateString('zh-CN', { timeZone: selectedTimezone }),
-        'Arabic Format': date.toLocaleDateString('ar-SA', { timeZone: selectedTimezone })
-      };
-
-      const businessFormats = {
-        'Full Date': date.toLocaleDateString('en-US', { 
-          weekday: 'long',
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-          timeZone: selectedTimezone
-        }),
-        'Short Date': date.toLocaleDateString('en-US', { 
-          month: 'short',
-          day: 'numeric',
-          year: 'numeric',
-          timeZone: selectedTimezone
-        }),
-        'Month Year': date.toLocaleDateString('en-US', { 
-          month: 'long',
-          year: 'numeric',
-          timeZone: selectedTimezone
-        }),
-        'Weekday Only': date.toLocaleDateString('en-US', { 
-          weekday: 'long',
-          timeZone: selectedTimezone
-        }),
-        'Time 12-hour': date.toLocaleTimeString('en-US', { 
-          hour: 'numeric',
-          minute: '2-digit',
-          timeZone: selectedTimezone
-        }),
-        'Time 24-hour': date.toLocaleTimeString('en-US', { 
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: false,
-          timeZone: selectedTimezone
-        }),
-        'Full DateTime': date.toLocaleString('en-US', { 
-          weekday: 'long',
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-          timeZone: selectedTimezone
-        })
-      };
-
-      const technicalFormats = {
-        'YYYY-MM-DD': date.toISOString().split('T')[0],
-        'DD/MM/YYYY': date.toLocaleDateString('en-GB', { timeZone: selectedTimezone }),
-        'MM/DD/YYYY': date.toLocaleDateString('en-US', { timeZone: selectedTimezone }),
-        'DD-MM-YYYY': date.toLocaleDateString('en-GB', { timeZone: selectedTimezone }).replace(/\//g, '-'),
-        'YYYY/MM/DD': `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`,
-        'YY-MM-DD': `${String(date.getFullYear()).slice(-2)}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`,
-        'HH:MM:SS': date.toLocaleTimeString('en-US', { hour12: false, timeZone: selectedTimezone }),
-        'HH:MM': date.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', timeZone: selectedTimezone })
-      };
-
-      let customResult = '';
-      if (customFormat) {
-        try {
-          customResult = formatCustomDate(date, customFormat, selectedTimezone);
-        } catch (error) {
-          customResult = 'Invalid custom format';
-        }
-      }
-
-      setResults({
-        common: commonFormats,
-        locale: localeFormats,
-        business: businessFormats,
-        technical: technicalFormats,
-        custom: customResult
-      });
-    } catch (error) {
-      setResults({ error: 'Invalid date format' });
-    }
-  };
-
-  const formatCustomDate = (date, format, timezone) => {
-    // Simple custom format implementation
-    const tokens = {
-      'YYYY': date.getFullYear(),
-      'YY': String(date.getFullYear()).slice(-2),
-      'MM': String(date.getMonth() + 1).padStart(2, '0'),
-      'DD': String(date.getDate()).padStart(2, '0'),
-      'HH': String(date.getHours()).padStart(2, '0'),
-      'mm': String(date.getMinutes()).padStart(2, '0'),
-      'ss': String(date.getSeconds()).padStart(2, '0'),
-      'DDD': date.toLocaleDateString('en-US', { weekday: 'long', timeZone: timezone }),
-      'MMM': date.toLocaleDateString('en-US', { month: 'short', timeZone: timezone }),
-      'MMMM': date.toLocaleDateString('en-US', { month: 'long', timeZone: timezone })
-    };
-
-    let result = format;
-    Object.entries(tokens).forEach(([token, value]) => {
-      result = result.replace(new RegExp(token, 'g'), value);
-    });
-
-    return result;
-  };
-
-  const setCurrentDate = () => {
-    const now = new Date();
-    setInputDate(now.toISOString().slice(0, 16));
-  };
-
-  const [copied, setCopied] = useState('');
-  const copyToClipboard = (value, label) => {
-    navigator.clipboard.writeText(value.toString()).then(() => {
-      setCopied(label);
-      setTimeout(() => setCopied(''), 2000);
-    });
-  };
-
-  const timezones = [
-    { value: Intl.DateTimeFormat().resolvedOptions().timeZone, label: `Local (${Intl.DateTimeFormat().resolvedOptions().timeZone})` },
-    { value: 'UTC', label: 'UTC' },
-    { value: 'America/New_York', label: 'Eastern Time (ET)' },
-    { value: 'America/Chicago', label: 'Central Time (CT)' },
-    { value: 'America/Denver', label: 'Mountain Time (MT)' },
-    { value: 'America/Los_Angeles', label: 'Pacific Time (PT)' },
-    { value: 'Europe/London', label: 'London (GMT/BST)' },
-    { value: 'Europe/Paris', label: 'Paris (CET/CEST)' },
-    { value: 'Europe/Berlin', label: 'Berlin (CET/CEST)' },
-    { value: 'Asia/Tokyo', label: 'Tokyo (JST)' },
-    { value: 'Asia/Shanghai', label: 'Shanghai (CST)' },
-    { value: 'Asia/Kolkata', label: 'India (IST)' },
-    { value: 'Australia/Sydney', label: 'Sydney (AEST/AEDT)' }
-  ];
-
-  const customFormats = [
-    'YYYY-MM-DD HH:mm:ss',
-    'DD/MM/YYYY HH:mm',
-    'MMM DD, YYYY',
-    'DDD, MMMM DD, YYYY',
-    'YYYY/MM/DD',
-    'DD-MM-YY HH:mm'
-  ];
-
-  const ResultSection = ({ title, data, icon }) => (
-    <div className="result-group">
-      <h4>
-        <span className="result-icon">{icon}</span>
-        {title}
-      </h4>
-      <div className="result-grid">
-        {Object.entries(data).map(([format, value]) => (
-          <div key={format} className="result-item">
-            <span className="result-label">{format}:</span>
-            <span className="result-value">{value}</span>
-            <button 
-              className="btn btn-outline btn-small"
-              onClick={() => copyToClipboard(value, `${title}-${format}`)}
-            >
-              {copied === `${title}-${format}` ? '✓' : '📋'}
-            </button>
-          </div>
-        ))}
-      </div>
-    </div>
+  const zoneOptions = useMemo(
+    () => [[userZone, `Local (${userZone})`], ...ZONES.filter(([value]) => value !== userZone)],
+    [userZone]
   );
+
+  const groups = useMemo(
+    () => (instant ? buildGroups(instant, zone) : []),
+    [instant, zone]
+  );
+
+  const customResult = instant ? formatCustom(instant, zone, pattern) : '';
+  const wallValue = isNow && now ? wallInputValueIn(now, userZone) : wall;
+
+  const copy = async (value, tag) => {
+    if (!value) return;
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopied(tag);
+      setTimeout(() => setCopied(''), 1500);
+    } catch {
+      /* clipboard unavailable - the value is selectable, so no need to shout */
+    }
+  };
+
+  if (!mounted) {
+    return (
+      <div className="tool-container">
+        <div className="fmt-formatter">
+          <div className="fmt-skeleton" />
+          <div className="fmt-skeleton fmt-skeleton-row" />
+          <div className="fmt-skeleton fmt-skeleton-row" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="tool-container">
-        <div className="input-section">
-          <div className="input-group">
-            <label className="input-label">Input Date & Time</label>
-            <input
-              type="datetime-local"
-              className="text-input"
-              value={inputDate}
-              onChange={(e) => setInputDate(e.target.value)}
-            />
-            <button className="btn btn-outline btn-small" onClick={setCurrentDate}>
-              📍 Use Current Time
-            </button>
+      <div className="fmt-formatter">
+        <section className="fmt-inputs">
+          <div className="fmt-field">
+            <label className="input-label" htmlFor="fmt-input">Date &amp; time</label>
+            <div className="fmt-field-row">
+              <input
+                id="fmt-input"
+                type="datetime-local"
+                className="text-input fmt-input"
+                value={wallValue}
+                onChange={(event) => {
+                  setWall(event.target.value);
+                  setIsNow(false);
+                }}
+              />
+              <button
+                type="button"
+                className={`btn btn-outline btn-small fmt-now${isNow ? ' is-active' : ''}`}
+                onClick={() => { setNow(new Date()); setIsNow(true); }}
+              >
+                Now
+              </button>
+            </div>
           </div>
 
-          <div className="input-group">
-            <label className="input-label">Target Timezone</label>
+          <div className="fmt-field">
+            <label className="input-label" htmlFor="fmt-zone">Target timezone</label>
             <select
-              className="text-input"
-              value={selectedTimezone}
-              onChange={(e) => setSelectedTimezone(e.target.value)}
+              id="fmt-zone"
+              className="text-input fmt-select"
+              value={zone}
+              onChange={(event) => setZone(event.target.value)}
             >
-              {timezones.map(tz => (
-                <option key={tz.value} value={tz.value}>{tz.label}</option>
+              {zoneOptions.map(([value, label]) => (
+                <option key={value} value={value}>{label}</option>
               ))}
             </select>
           </div>
+        </section>
 
-          <div className="input-group">
-            <label className="input-label">Custom Format (Optional)</label>
-            <input
-              type="text"
-              className="text-input"
-              value={customFormat}
-              onChange={(e) => setCustomFormat(e.target.value)}
-              placeholder="YYYY-MM-DD HH:mm:ss"
-            />
-            <div className="custom-format-buttons">
-              {customFormats.map(format => (
+        {!instant ? (
+          <p className="fmt-empty">Enter a date and time to see the formats.</p>
+        ) : (
+          <>
+            <p className="fmt-summary">
+              <strong>{formatter(zone, {
+                weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'
+              }).format(instant)}</strong>
+              <span className="fmt-summary-sep">·</span>
+              {formatter(zone, { hour: 'numeric', minute: '2-digit', hour12: true }).format(instant)}
+              <span className="fmt-summary-sep">·</span>
+              <span className="fmt-summary-zone">{zoneName(instant, zone) || zone}</span>
+            </p>
+
+            <section className="fmt-custom">
+              <label className="input-label" htmlFor="fmt-pattern">Custom format</label>
+              <div className="fmt-pattern">
+                <input
+                  id="fmt-pattern"
+                  type="text"
+                  className="text-input fmt-pattern-input"
+                  value={pattern}
+                  onChange={(event) => setPattern(event.target.value)}
+                  spellCheck={false}
+                  autoComplete="off"
+                  placeholder="YYYY-MM-DD HH:mm:ss"
+                />
                 <button
-                  key={format}
-                  className="btn btn-outline btn-small"
-                  onClick={() => setCustomFormat(format)}
+                  type="button"
+                  className="fmt-icon-btn"
+                  onClick={() => copy(customResult, 'custom')}
+                  aria-label="Copy custom format result"
+                  title="Copy"
                 >
-                  {format}
+                  {copied === 'custom' ? '✓' : '📋'}
                 </button>
+              </div>
+              <output className="fmt-pattern-out">{customResult || '—'}</output>
+              <div className="fmt-presets">
+                {PRESETS.map((preset) => (
+                  <button
+                    key={preset}
+                    type="button"
+                    className={`fmt-chip${pattern === preset ? ' is-active' : ''}`}
+                    onClick={() => setPattern(preset)}
+                  >
+                    {preset}
+                  </button>
+                ))}
+              </div>
+              <p className="fmt-tokens">
+                <strong>Tokens:</strong> YYYY year · YY short year · MM month · DD day ·
+                HH hour · mm minute · ss second · DDD weekday · MMM month name · MMMM full month
+              </p>
+            </section>
+
+            <div className="fmt-groups">
+              {groups.map((group, index) => (
+                <details key={group.title} className="fmt-group" open={index === 0}>
+                  <summary className="fmt-group-head">
+                    <span className="fmt-group-icon" aria-hidden="true">{group.icon}</span>
+                    <span className="fmt-group-title">{group.title}</span>
+                    <span className="fmt-group-count">{group.rows.length}</span>
+                  </summary>
+                  <ul className="fmt-rows">
+                    {group.rows.map(([label, value]) => (
+                      <li key={label} className="fmt-row">
+                        <span className="fmt-row-label">{label}</span>
+                        <span className="fmt-row-value">{value}</span>
+                        <button
+                          type="button"
+                          className="fmt-icon-btn fmt-row-copy"
+                          onClick={() => copy(value, label)}
+                          aria-label={`Copy ${label}`}
+                          title="Copy"
+                        >
+                          {copied === label ? '✓' : '📋'}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </details>
               ))}
             </div>
-            <div className="format-help">
-              <p><strong>Format tokens:</strong> YYYY (year), MM (month), DD (day), HH (hour), mm (minute), ss (second), DDD (weekday), MMM (short month), MMMM (full month)</p>
-            </div>
-          </div>
-        </div>
+          </>
+        )}
 
-        {results.error ? (
-          <div className="error-section">
-            <p className="error-text">❌ {results.error}</p>
-          </div>
-        ) : results.common ? (
-          <div className="results-section">
-            <h3>📊 Formatted Results</h3>
-            
-            <ResultSection title="Common Formats" data={results.common} icon="⚡" />
-            <ResultSection title="Locale Formats" data={results.locale} icon="🌍" />
-            <ResultSection title="Business Formats" data={results.business} icon="💼" />
-            <ResultSection title="Technical Formats" data={results.technical} icon="⚙️" />
-            
-            {customFormat && results.custom && (
-              <div className="result-group">
-                <h4>
-                  <span className="result-icon">🎯</span>
-                  Custom Format Result
-                </h4>
-                <div className="custom-result">
-                  <div className="result-item large">
-                    <span className="result-label">Format: {customFormat}</span>
-                    <span className="result-value custom">{results.custom}</span>
-                    <button 
-                      className="btn btn-primary"
-                      onClick={() => copyToClipboard(results.custom, 'Custom')}
-                    >
-                      {copied === 'Custom' ? '✓ Copied!' : '📋 Copy Result'}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        ) : null}
-
-      <SimpleAd adSlot="8095900796" style={{ width: '100%', marginTop: '1.5rem' }} />
+        <SimpleAd adSlot="8095900796" />
+      </div>
     </div>
   );
-};
-
-export default DateFormatter;
+}

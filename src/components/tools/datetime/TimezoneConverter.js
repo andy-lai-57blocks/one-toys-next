@@ -2,111 +2,22 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import SimpleAd from '../../ads/SimpleAdSSG';
+import {
+  formatter,
+  OPT,
+  pad,
+  partsOf,
+  zoneOffsetMinutes,
+  wallToInstant,
+  wallInputValue,
+  wallInputValueIn,
+  parseWallInput,
+  time24,
+  zoneName
+} from '@/utils/timezone';
 
-// ---------------------------------------------------------------------------
-// Timezone maths.
-//
-// Offsets are derived from Intl.DateTimeFormat, never from
-// Date#getTimezoneOffset (which only reports the BROWSER's zone) and never from
-// the `new Date(date.toLocaleString(...))` trick, which is wrong across a DST
-// boundary. All offsets here are minutes east of UTC.
-//
-// The clock ticks once per second, so formatters are cached - constructing a
-// fresh Intl.DateTimeFormat per row per tick costs real milliseconds.
-// ---------------------------------------------------------------------------
-
-const FORMAT_CACHE = new Map();
-
-function formatter(timeZone, options) {
-  const key = `${timeZone}|${JSON.stringify(options)}`;
-  let instance = FORMAT_CACHE.get(key);
-  if (!instance) {
-    instance = new Intl.DateTimeFormat('en-US', { timeZone, ...options });
-    FORMAT_CACHE.set(key, instance);
-  }
-  return instance;
-}
-
-const OPT = {
-  time24: { hour: '2-digit', minute: '2-digit', hour12: false },
-  time12: { hour: 'numeric', minute: '2-digit', hour12: true },
-  dateFull: { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' },
-  hour: { hour: '2-digit', hour12: false },
-  weekday: { weekday: 'short' },
-  abbr: { timeZoneName: 'short' },
-  ymd: { year: 'numeric', month: '2-digit', day: '2-digit' },
-  ymdt: {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    // MUST be explicit. en-US defaults to h12, which returns the hour as "02"
-    // for 2 PM plus a separate dayPeriod part - read without it, every offset
-    // computed here comes out 12 hours wrong.
-    hour12: false
-  }
-};
-
-function partsOf(instant, timeZone, options) {
-  const out = {};
-  for (const part of formatter(timeZone, options).formatToParts(instant)) {
-    out[part.type] = part.value;
-  }
-  return out;
-}
-
-/** Minutes east of UTC for `timeZone` at `instant`. */
-function zoneOffsetMinutes(instant, timeZone) {
-  const p = partsOf(instant, timeZone, OPT.ymdt);
-  const hour = p.hour === '24' ? '00' : p.hour; // some engines report 24 at midnight
-  const asUTC = Date.UTC(+p.year, +p.month - 1, +p.day, +hour, +p.minute);
-  const base = Math.floor(instant.getTime() / 60000) * 60000;
-  return Math.round((asUTC - base) / 60000);
-}
-
-/**
- * The instant at which a wall-clock reading occurs in `timeZone`. Two passes:
- * around a DST change the offset that applies is the one in effect at the
- * RESULT, not at the naive guess.
- */
-function wallToInstant(wall, timeZone) {
-  const naiveUTC = Date.UTC(wall.year, wall.month - 1, wall.day, wall.hour, wall.minute);
-  const firstPass = zoneOffsetMinutes(new Date(naiveUTC), timeZone);
-  let instant = naiveUTC - firstPass * 60000;
-  const secondPass = zoneOffsetMinutes(new Date(instant), timeZone);
-  if (secondPass !== firstPass) instant = naiveUTC - secondPass * 60000;
-  return new Date(instant);
-}
-
-const pad = (n) => String(n).padStart(2, '0');
-
-/** Browser-local wall clock, i.e. a valid value for <input type="datetime-local">. */
-function wallInputValue(date) {
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
-}
-
-/** Wall-clock reading of `instant` AS SEEN IN `timeZone`, as an input value. */
-function wallInputValueIn(instant, timeZone) {
-  const p = partsOf(instant, timeZone, OPT.ymdt);
-  return `${p.year}-${p.month}-${p.day}T${p.hour === '24' ? '00' : p.hour}:${p.minute}`;
-}
-
-function parseWallInput(value) {
-  const match = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(value || '');
-  if (!match) return null;
-  return { year: +match[1], month: +match[2], day: +match[3], hour: +match[4], minute: +match[5] };
-}
-
-/** en-US renders midnight as 24:xx with hour12:false, so normalise it. */
-function time24(instant, timeZone) {
-  return formatter(timeZone, OPT.time24).format(instant).replace(/^24/, '00');
-}
-
-/** "GMT+8" / "EDT" - computed for the displayed instant, so DST is always right. */
-function zoneName(instant, timeZone) {
-  return partsOf(instant, timeZone, OPT.abbr).timeZoneName || '';
-}
+// Shared timezone maths lives in `@/utils/timezone` - the Date Formatter uses it
+// too, and the `hour12: false` detail there is easy to get wrong twice.
 
 /** Whole-day difference between the calendar dates of two zones. */
 function dayDifference(instant, fromZone, toZone) {
