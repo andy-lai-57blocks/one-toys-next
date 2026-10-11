@@ -99,7 +99,7 @@ const CronParser = () => {
           <button
             key={preset.expression}
             type="button"
-            className={`cron-preset ${expression === preset.expression ? 'active' : ''}`}
+            className={`chip${expression === preset.expression ? ' is-active' : ''}`}
             onClick={() => setExpression(preset.expression)}
             title={preset.expression}
           >

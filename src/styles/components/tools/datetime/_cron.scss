@@ -1,8 +1,8 @@
 // Cron Parser tool styles
 .cron-tool {
   .cron-input {
-    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-    font-size: 1.05rem;
+    font-family: $font-family-mono;
+    font-size: $font-size-base;
     letter-spacing: 0.06em;
   }
 
@@ -12,42 +12,19 @@
 
   .cron-hint {
     margin-top: 0.5rem;
-    font-size: 0.85rem;
+    font-size: $font-size-sm;
     line-height: 1.55;
-    color: var(--text-secondary, #6b7280);
+    color: $text-secondary;
   }
 
   /* Presets ------------------------------------------------------------- */
+  /* The chips themselves are the shared .chip (forms.scss). Only the wrapping
+     row lives here, so cron cannot drift from the other pages again. */
   .cron-presets {
     display: flex;
     flex-wrap: wrap;
     gap: $spacing-sm;
     margin: 0.75rem 0 1.5rem;
-  }
-
-  .cron-preset {
-    border: 1px solid #e2e8f0;
-    background: #f8fafc;
-    color: var(--text-secondary, #475569);
-    border-radius: 999px;
-    padding: $spacing-xs 0.75rem;
-    font-size: 0.78rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    white-space: nowrap;
-
-    &:hover {
-      border-color: #93c5fd;
-      color: #1d4ed8;
-      background: #eff6ff;
-    }
-
-    &.active {
-      background: #3b82f6;
-      border-color: #3b82f6;
-      color: #ffffff;
-      font-weight: 600;
-    }
   }
 
   /* Errors -------------------------------------------------------------- */
@@ -68,15 +45,15 @@
 
   .cron-error-hint {
     margin: 0.5rem 0 0;
-    font-size: 0.875rem;
+    font-size: $font-size-sm;
     line-height: 1.55;
-    color: var(--text-secondary, #4b5563);
+    color: $text-secondary;
   }
 
   .cron-error-list {
     margin: $spacing-sm 0 0 $spacing-md;
     padding: 0;
-    font-size: 0.85rem;
+    font-size: $font-size-sm;
     color: #92400e;
   }
 
@@ -95,9 +72,9 @@
 
   .cron-section-title {
     margin: 0 0 $spacing-sm;
-    font-size: 1.05rem;
-    font-weight: 600;
-    color: var(--text-primary, #1f2937);
+    font-size: $font-size-lg;
+    font-weight: 700;
+    color: $text-primary;
   }
 
   .cron-section-head .cron-section-title {
@@ -118,22 +95,22 @@
 
   .cron-description {
     margin: 0;
-    font-size: 1.1rem;
+    font-size: $font-size-base;
     font-weight: 600;
-    color: var(--text-primary, #1e3a8a);
+    color: #1e3a8a;
     flex: 1 1 260px;
   }
 
   .cron-notes {
     margin: 0.75rem 0 0 $spacing-md;
     padding: 0;
-    font-size: 0.85rem;
+    font-size: $font-size-sm;
     line-height: 1.55;
-    color: var(--text-secondary, #4b5563);
+    color: $text-secondary;
   }
 
   .cron-offset {
-    font-size: 0.78rem;
+    font-size: $font-size-xs;
     font-weight: 600;
     padding: $spacing-xs $spacing-sm;
     border-radius: 999px;
@@ -151,14 +128,14 @@
   .cron-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.875rem;
+    font-size: $font-size-sm;
 
     th {
       text-align: left;
       padding: $spacing-sm 0.75rem;
       background: #f8fafc;
       font-weight: 600;
-      color: var(--text-secondary, #475569);
+      color: $text-secondary;
       border-bottom: 1px solid #e2e8f0;
       white-space: nowrap;
     }
@@ -166,7 +143,7 @@
     td {
       padding: $spacing-sm 0.75rem;
       border-bottom: 1px solid #eef2f7;
-      color: var(--text-primary, #1f2937);
+      color: $text-primary;
       // .cron-table-wrap already scrolls horizontally, so letting a cell break
       // onto a second line buys no width and cost height: all 10 rows wrapped
       // and measured ~57px each, 570px of table for 10 short rows.
@@ -179,29 +156,16 @@
   }
 
   .cron-mono {
-    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-    font-size: 0.82rem;
+    font-family: $font-family-mono;
+    font-size: $font-size-sm;
   }
 
-  /* Dark mode ----------------------------------------------------------- */
-  .dark-mode & {
-    .cron-preset {
-      background: #1e293b;
-      border-color: #334155;
-      color: #cbd5e1;
-
-      &:hover {
-        background: #1e3a5f;
-        color: #93c5fd;
-      }
-
-      &.active {
-        background: #2563eb;
-        border-color: #2563eb;
-        color: #ffffff;
-      }
-    }
-
+  /* Dark mode -----------------------------------------------------------
+     Keyed on `body.dark-theme`, NOT `.dark-mode`. Nothing in this project ever
+     puts a `dark-mode` class on a container - ThemeContext toggles `dark-theme`
+     on <body> - so the previous `.dark-mode &` block never matched once and
+     this page had NO dark styling at all. */
+  body.dark-theme & {
     .cron-summary {
       background: rgba(59, 130, 246, 0.14);
       border-color: rgba(59, 130, 246, 0.4);
@@ -209,6 +173,12 @@
 
     .cron-description {
       color: #bfdbfe;
+    }
+
+    .cron-hint,
+    .cron-notes,
+    .cron-error-hint {
+      color: $dark-text-secondary;
     }
 
     .cron-offset {
@@ -222,7 +192,10 @@
       border-bottom-color: #334155;
     }
 
+    /* The dead block never set this, so every cell stayed #1f2937 - dark text
+       on a dark card, i.e. the table was unreadable. */
     .cron-table td {
+      color: $dark-text-primary;
       border-bottom-color: #334155;
     }
 
@@ -238,15 +211,15 @@
     .cron-error-title {
       color: #fca5a5;
     }
+
+    .cron-error-list {
+      color: #fcd34d;
+    }
   }
 
   @media (max-width: 600px) {
     .cron-table {
-      font-size: 0.78rem;
-    }
-
-    .cron-description {
-      font-size: 1rem;
+      font-size: $font-size-xs;
     }
   }
 }

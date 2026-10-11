@@ -294,7 +294,7 @@ export default function DateFormatter() {
                 />
                 <button
                   type="button"
-                  className="fmt-icon-btn"
+                  className="btn btn-outline btn-small"
                   onClick={() => copy(customResult, 'custom')}
                   aria-label="Copy custom format result"
                   title="Copy"
@@ -308,7 +308,7 @@ export default function DateFormatter() {
                   <button
                     key={preset}
                     type="button"
-                    className={`fmt-chip${pattern === preset ? ' is-active' : ''}`}
+                    className={`chip${pattern === preset ? ' is-active' : ''}`}
                     onClick={() => setPattern(preset)}
                   >
                     {preset}
@@ -331,18 +331,22 @@ export default function DateFormatter() {
                   </summary>
                   <ul className="fmt-rows">
                     {group.rows.map(([label, value]) => (
-                      <li key={label} className="fmt-row">
-                        <span className="fmt-row-label">{label}</span>
-                        <span className="fmt-row-value">{value}</span>
-                        <button
-                          type="button"
-                          className="fmt-icon-btn fmt-row-copy"
-                          onClick={() => copy(value, label)}
-                          aria-label={`Copy ${label}`}
-                          title="Copy"
-                        >
-                          {copied === label ? '✓' : '📋'}
-                        </button>
+                      <li key={label}>
+                        {/* Same row markup as Timestamp Converter and Date
+                            Calculator, so all three read identically. */}
+                        <div className="result-item">
+                          <span className="result-label">{label}:</span>
+                          <span className="result-value">{value}</span>
+                          <button
+                            type="button"
+                            className="btn btn-outline btn-small"
+                            onClick={() => copy(value, label)}
+                            aria-label={`Copy ${label}`}
+                            title="Copy"
+                          >
+                            {copied === label ? '✓' : '📋'}
+                          </button>
+                        </div>
                       </li>
                     ))}
                   </ul>

@@ -245,21 +245,7 @@
   justify-content: flex-end;
 }
 
-.tz-remove {
-  border: none;
-  background: none;
-  cursor: pointer;
-  font-size: $font-size-lg;
-  line-height: 1;
-  color: $text-muted;
-  padding: 0 $spacing-xs;
-  border-radius: $border-radius-sm;
-
-  &:hover {
-    color: $error-color;
-    background: rgba($error-color, 0.1);
-  }
-}
+/* The remove button is the shared .icon-btn now - see forms.scss. */
 
 .tz-add {
   margin-top: $spacing-lg;
@@ -364,15 +350,6 @@ body.dark-theme {
   .tz-slot-ok {
     background: rgba($success-color, 0.22);
     color: #6ee7b7;
-  }
-
-  .tz-remove {
-    color: #94a3b8;
-
-    &:hover {
-      color: #fca5a5;
-      background: rgba($error-color, 0.18);
-    }
   }
 
   .tz-skeleton {

@@ -240,10 +240,11 @@
     margin: 1.5rem 0;
   }
   
+  /* Button METRICS live in forms.scss only. Re-declaring them here is what made
+     the same class render differently per viewport: this block's
+     `min-width: 100px` silently overrode .btn-small's own 60px, so a "small"
+     button was never actually narrower than a large one on phones. */
   .btn {
-    min-width: 100px;
-    padding: 0.5rem 1rem;
-    font-size: 0.875rem;
     touch-action: manipulation;
   }
   
@@ -255,9 +256,9 @@
     transform: scale(0.98);
   }
   
+  /* .btn-small metrics: forms.scss (this block used to restate them) */
   .btn-small {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.75rem;
+    touch-action: manipulation;
   }
   
   .text-input,
@@ -418,7 +419,11 @@
     flex-direction: column;
   }
   
-  .btn {
+  /* Only the ACTION tier goes full width. An inline utility (.btn-small - the
+     copy / Now / Today buttons that live INSIDE a row beside an input) must
+     keep its natural width; making it 100% is what squeezed the sibling
+     datetime input down to 44px at 320px. */
+  .btn:not(.btn-small) {
     width: 100%;
     margin-bottom: 0.5rem;
   }

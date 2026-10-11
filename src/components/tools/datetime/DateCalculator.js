@@ -435,7 +435,7 @@ const DateCalculator = () => {
           </div>
         ) : results.type ? (
           <div className="results-section">
-            <h3>📊 Calculation Results</h3>
+            <h3 className="section-title">📊 Calculation Results</h3>
 
             {results.type === 'difference' && (
               <>

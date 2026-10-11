@@ -361,7 +361,7 @@ const TimezoneConverter = () => {
                 {!row.isSource && (
                   <button
                     type="button"
-                    className="tz-remove"
+                    className="icon-btn"
                     title={`Remove ${row.city}`}
                     aria-label={`Remove ${row.city}`}
                     onClick={() => removeTarget(row.tz)}

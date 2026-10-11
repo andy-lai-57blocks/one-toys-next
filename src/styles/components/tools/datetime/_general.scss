@@ -19,8 +19,12 @@
   border: 2px solid #e2e8f0;
   background: #fafafa;
   color: $text-secondary;
-  font-size: 0.875rem;
+  font-size: $font-size-sm;
   font-weight: 500;
+  /* Same deterministic height as .btn, so a tab and a button in the same row
+     do not disagree by a pixel or two. */
+  line-height: 1.25;
+  min-height: 38px;
   border-radius: $border-radius-lg;
   cursor: pointer;
   transition: all $transition-fast;

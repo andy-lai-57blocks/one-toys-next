@@ -27,6 +27,10 @@
   border: 2px solid #e2e8f0;
   border-radius: $border-radius-xl;
   font-size: 0.925rem;
+  /* Form controls do NOT inherit font-family by default - without this every
+     input/select on the site renders in the UA's Arial instead of the page
+     font, which reads as "the fonts do not match". */
+  font-family: inherit;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   background: #fafafa;
   color: #1f2937;
@@ -70,6 +74,14 @@
   cursor: pointer;
   transition: all 0.15s ease;
   font-size: 0.875rem;
+  /* Same reason as .text-input: a <button> does not inherit the page font, so
+     every button on the site was rendering in Arial. */
+  font-family: inherit;
+  /* A fixed line box + min-height makes the height independent of what is
+     inside. Glyphs (emoji especially) have wildly different line boxes, which
+     is why the SAME class used to render at both 24px and 26px. */
+  line-height: 1.25;
+  min-height: 38px;
   position: relative;
   overflow: hidden;
   letter-spacing: 0.025em;
@@ -132,6 +144,20 @@
   border-color: #cbd5e1;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
   transform: translateY(-1px);
+}
+
+/* Form controls do not inherit font-family from their ancestors - the UA gives
+   them its own default (Arial on macOS/Windows Chrome). One rule here is what
+   makes EVERY button, select and input on the site use the page font, instead
+   of patching it class by class. Element specificity (0,0,1) is the lowest, so
+   anything that sets font-family explicitly still wins. */
+button,
+input,
+select,
+textarea,
+optgroup,
+option {
+  font-family: inherit;
 }
 
 /* Dark theme styles for forms and buttons */
@@ -207,6 +233,33 @@ body.dark-theme {
       background: #3f4956;
       border-color: #64748b;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    }
+  }
+
+  .icon-btn {
+    border-color: #475569;
+    color: #94a3b8;
+
+    &:hover {
+      border-color: #60a5fa;
+      color: #60a5fa;
+    }
+  }
+
+  .chip {
+    border-color: #475569;
+    color: #cbd5e1;
+
+    &:hover {
+      border-color: #60a5fa;
+      color: #60a5fa;
+    }
+
+    &.is-active,
+    &.active {
+      border-color: #60a5fa;
+      background: #60a5fa;
+      color: #0f172a;
     }
   }
 
@@ -297,12 +350,77 @@ body.dark-theme {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
+/* The inline-utility tier. Deliberately smaller than .btn (it sits inside rows
+   beside inputs) but built from the SAME ingredients - inherited font, weight
+   500, radius scale - so the two tiers read as one family. */
 .btn-small {
-  padding: 0.25rem 0.5rem;
-  font-size: 0.75rem;
+  padding: 0 0.625rem;
+  font-size: $font-size-xs;
+  font-weight: 500;
+  line-height: 1;
+  height: 28px;
+  min-height: 0;
+  /* Was 60px, and .btn's 100px overrode it inside the mobile media query - a
+     fixed min-width stops an inline button from ever shrinking in a flex row. */
+  min-width: 0;
   border-radius: $border-radius-md;
-  min-width: 60px;
-  font-weight: 400;
+}
+
+/* Icon-only button: a square sibling of .btn-small, for per-row actions
+   (copy / remove). Replaces the per-page one-offs. */
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid #e2e8f0;
+  border-radius: $border-radius-md;
+  background: transparent;
+  font-family: inherit;
+  font-size: $font-size-sm;
+  line-height: 1;
+  color: #64748b;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+
+  &:hover {
+    border-color: $primary-color;
+    color: $primary-color;
+  }
+}
+
+/* Pill preset chip, for "load this example" rows. */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  height: 26px;
+  padding: 0 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 999px;
+  background: transparent;
+  font-family: inherit;
+  font-size: $font-size-xs;
+  font-weight: 500;
+  line-height: 1;
+  color: #64748b;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+
+  &:hover {
+    border-color: $primary-color;
+    color: $primary-color;
+  }
+
+  /* Both spellings exist in the markup; unify on .is-active going forward. */
+  &.is-active,
+  &.active {
+    border-color: $primary-color;
+    background: $primary-color;
+    color: #ffffff;
+  }
 }
 
 .checkbox-group {

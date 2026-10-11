@@ -1,8 +1,9 @@
 /* Date Formatter - redesigned 2026-10-11.
-   The page answers one question ("what does this instant look like, written
-   other ways?"), so the old 35-row wall of label/value pairs is replaced by
-   collapsed groups plus one prominent custom-format line. Dark mode keys off
-   `body.dark-theme`, the class ThemeContext toggles on <body>. */
+   This file deliberately defines NO buttons, NO row layout and NO type scale of
+   its own. Rows use the shared .result-item / .result-label / .result-value
+   markup (same as Timestamp Converter and Date Calculator), copies use
+   .btn btn-outline btn-small, presets use .chip, and all metrics come from
+   forms.scss. Only the parts that are unique to this page live here. */
 
 .fmt-formatter {
   display: flex;
@@ -70,19 +71,9 @@
   }
 }
 
-/* `.btn` carries a 100px min-width and goes full-width on the narrowest
-   phones, which squeezed the date input down to 44px at 320px. This needs to
-   outrank `.btn`, hence the deliberately deep selector. */
-.fmt-formatter .fmt-field-row .fmt-now {
+/* Only layout, no metrics - .btn-small already carries height/padding/min-width. */
+.fmt-now {
   flex: 0 0 auto;
-  width: auto;
-  min-width: 0;
-  padding: $spacing-sm $spacing-md;
-
-  &.is-active {
-    border-color: $primary-color;
-    color: $primary-color;
-  }
 }
 
 /* Summary ------------------------------------------------------------------ */
@@ -139,6 +130,7 @@
   font-family: $font-family-mono;
 }
 
+/* Mirrors .result-value.custom in _general.scss - the "answer" of this panel. */
 .fmt-pattern-out {
   display: block;
   padding: $spacing-md;
@@ -146,7 +138,8 @@
   background: $bg-subtle;
   font-family: $font-family-mono;
   font-size: $font-size-lg;
-  color: $text-primary;
+  font-weight: 700;
+  color: $primary-color;
   overflow-wrap: anywhere;
 }
 
@@ -156,32 +149,9 @@
   gap: $spacing-xs;
 }
 
-.fmt-chip {
-  padding: $spacing-xs $spacing-sm;
-  border: 1px solid $bg-subtle;
-  border-radius: 999px;
-  background: transparent;
-  font-family: $font-family-mono;
-  font-size: $font-size-xs;
-  color: $text-secondary;
-  cursor: pointer;
-  transition: border-color 0.15s ease, color 0.15s ease;
-
-  &:hover {
-    border-color: $primary-color;
-    color: $primary-color;
-  }
-
-  &.is-active {
-    border-color: $primary-color;
-    background: $primary-color;
-    color: #ffffff;
-  }
-}
-
 .fmt-tokens {
   margin: 0;
-  font-size: $font-size-xs;
+  font-size: $font-size-sm;
   line-height: 1.6;
   color: $text-muted;
 
@@ -231,6 +201,8 @@
   transform: rotate(180deg);
 }
 
+/* Fixed width: glyphs like the triangular ruler are much wider than a letter
+   and used to wrap their own title onto a second line. */
 .fmt-group-icon {
   flex: 0 0 auto;
   width: 1.5em;
@@ -239,9 +211,11 @@
   text-align: center;
 }
 
+/* Same tier as .section-title / .cron-section-title. */
 .fmt-group-title {
   flex: 1 1 auto;
-  font-weight: 600;
+  font-size: $font-size-lg;
+  font-weight: 700;
   color: $text-primary;
 }
 
@@ -254,88 +228,23 @@
 }
 
 .fmt-rows {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
   margin: 0;
   padding: 0 $spacing-md $spacing-md;
   list-style: none;
 }
 
-.fmt-row {
-  display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.6fr) auto;
-  align-items: center;
-  gap: $spacing-sm;
-  padding: $spacing-sm 0;
-  border-top: 1px solid $bg-subtle;
-
-  &:first-child {
-    border-top: 0;
-  }
-}
-
-.fmt-row-label {
-  min-width: 0;
-  font-size: $font-size-sm;
-  color: $text-secondary;
-}
-
-.fmt-row-value {
-  min-width: 0;
-  font-family: $font-family-mono;
-  font-size: $font-size-sm;
-  color: $text-primary;
-  overflow-wrap: anywhere;
-}
-
-/* Icon-only copy buttons: a full `.btn` would take a third of a phone row. */
-.fmt-icon-btn {
-  flex: 0 0 auto;
-  width: 30px;
-  height: 30px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  border: 1px solid $bg-subtle;
-  border-radius: $border-radius-sm;
-  background: transparent;
-  font-size: $font-size-sm;
-  line-height: 1;
-  color: $text-secondary;
-  cursor: pointer;
-  transition: border-color 0.15s ease, color 0.15s ease;
-
-  &:hover {
-    border-color: $primary-color;
-    color: $primary-color;
-  }
-}
-
-/* Long values (ISO strings, full dates) cannot share a line with a label on a
-   phone, so the row becomes label + copy, then value underneath. */
+/* Mobile: a long value (ISO string, full date) cannot share a line with its
+   label in a 280px row, so the label sits above the value. */
 @media (max-width: 480px) {
-  .fmt-row {
-    grid-template-columns: minmax(0, 1fr) auto;
-    grid-template-areas:
-      'label copy'
-      'value value';
-    align-items: center;
-  }
-
-  .fmt-row-label {
-    grid-area: label;
-  }
-
-  .fmt-row-value {
-    grid-area: value;
-    padding-left: 0;
-  }
-
-  .fmt-row-copy {
-    grid-area: copy;
-  }
-
   .fmt-custom {
     padding: $spacing-md;
+  }
+
+  .fmt-rows {
+    padding: 0 $spacing-sm $spacing-sm;
   }
 }
 
@@ -354,14 +263,8 @@ body.dark-theme {
     color: $dark-text-primary;
   }
 
-  /* The custom-format output sits on the same dark surface as the summary but
-     would otherwise keep the light #1f2937 colour (luminance ~40). */
   .fmt-pattern-out {
-    color: $dark-text-primary;
-  }
-
-  .fmt-pattern-input {
-    color: $dark-text-primary;
+    color: #60a5fa;
   }
 
   .fmt-summary-zone,
@@ -369,14 +272,8 @@ body.dark-theme {
     color: $dark-text-secondary;
   }
 
-  .fmt-empty,
-  .fmt-row-label {
+  .fmt-empty {
     color: $dark-text-secondary;
-  }
-
-  .fmt-row-value,
-  .fmt-group-title {
-    color: $dark-text-primary;
   }
 
   .fmt-custom,
@@ -385,24 +282,9 @@ body.dark-theme {
     border-color: $dark-border;
   }
 
-  .fmt-row {
-    border-top-color: $dark-border;
-  }
-
-  .fmt-chip {
-    border-color: $dark-border;
-    color: $dark-text-secondary;
-
-    &:hover {
-      border-color: $primary-color;
-      color: $primary-color;
-    }
-
-    &.is-active {
-      border-color: $primary-color;
-      background: $primary-color;
-      color: #ffffff;
-    }
+  .fmt-group-title,
+  .fmt-pattern-input {
+    color: $dark-text-primary;
   }
 
   .fmt-tokens {
@@ -410,16 +292,6 @@ body.dark-theme {
 
     strong {
       color: $dark-text-secondary;
-    }
-  }
-
-  .fmt-icon-btn {
-    border-color: $dark-border;
-    color: $dark-text-secondary;
-
-    &:hover {
-      border-color: $primary-color;
-      color: $primary-color;
     }
   }
 }
