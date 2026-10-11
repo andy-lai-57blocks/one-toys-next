@@ -121,6 +121,59 @@
 }
 
 // Input Options Row - Side by Side Layout
+/* The block of inputs at the top of a datetime tool. This class had NO styles
+   at all, so every field sat in its own full-width row with `.input-group`'s
+   global 2rem underneath - which is why a start/end date RANGE was stacked. */
+.input-section {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+  margin-bottom: $spacing-lg;
+
+  .input-group {
+    margin-bottom: 0;
+  }
+}
+
+/* Two fields on one line. A date range, and an amount-plus-its-unit, are both
+   pairs; stacking them was the whole complaint. */
+.input-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: $spacing-md;
+
+  @media (max-width: $breakpoint-md) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* The number needs more room than the unit list beside it. */
+  &--amount {
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+
+    @media (max-width: $breakpoint-md) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+}
+
+/* An input and its shortcut button on one line, instead of the button dropping
+   onto its own row under the field. */
+.input-with-action {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  min-width: 0;
+
+  .text-input {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .btn {
+    flex: 0 0 auto;
+  }
+}
+
 .input-options-row {
   display: flex;
   gap: $spacing-lg;

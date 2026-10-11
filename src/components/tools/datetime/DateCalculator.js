@@ -414,52 +414,84 @@ const DateCalculator = () => {
           </div>
 
           {operation === 'difference' && (
-            <>
+            <div className="input-row">
               <div className="input-group">
-                <label className="input-label">Start Date {includeTime ? '& Time' : ''}</label>
-                <input
-                  type={includeTime ? 'datetime-local' : 'date'}
-                  className="text-input"
-                  value={shownValue(startDate, includeTime)}
-                  onChange={(e) => setStartDate(e.target.value)}
-                />
-                <button className="btn btn-outline btn-small" onClick={() => setCurrentDate(setStartDate)}>
-                  📍 Now
-                </button>
+                <label className="input-label" htmlFor="calc-start">
+                  Start Date {includeTime ? '& Time' : ''}
+                </label>
+                <div className="input-with-action">
+                  <input
+                    id="calc-start"
+                    type={includeTime ? 'datetime-local' : 'date'}
+                    className="text-input"
+                    value={shownValue(startDate, includeTime)}
+                    onChange={(e) => setStartDate(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    className="btn btn-outline btn-small"
+                    onClick={() => setCurrentDate(setStartDate)}
+                  >
+                    Now
+                  </button>
+                </div>
               </div>
               <div className="input-group">
-                <label className="input-label">End Date {includeTime ? '& Time' : ''}</label>
-                <input
-                  type={includeTime ? 'datetime-local' : 'date'}
-                  className="text-input"
-                  value={shownValue(endDate, includeTime)}
-                  onChange={(e) => setEndDate(e.target.value)}
-                />
-                <button className="btn btn-outline btn-small" onClick={() => setCurrentDate(setEndDate)}>
-                  📍 Now
-                </button>
+                <label className="input-label" htmlFor="calc-end">
+                  End Date {includeTime ? '& Time' : ''}
+                </label>
+                <div className="input-with-action">
+                  <input
+                    id="calc-end"
+                    type={includeTime ? 'datetime-local' : 'date'}
+                    className="text-input"
+                    value={shownValue(endDate, includeTime)}
+                    onChange={(e) => setEndDate(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    className="btn btn-outline btn-small"
+                    onClick={() => setCurrentDate(setEndDate)}
+                  >
+                    Now
+                  </button>
+                </div>
               </div>
-            </>
+            </div>
           )}
 
           {operation === 'add' && (
             <>
               <div className="input-group">
-                <label className="input-label">Base Date {includeTime ? '& Time' : ''}</label>
-                <input
-                  type={includeTime ? 'datetime-local' : 'date'}
-                  className="text-input"
-                  value={shownValue(baseDate, includeTime)}
-                  onChange={(e) => setBaseDate(e.target.value)}
-                />
-                <button className="btn btn-outline btn-small" onClick={() => setCurrentDate(setBaseDate)}>
-                  📍 Now
-                </button>
+                <label className="input-label" htmlFor="calc-base">
+                  Base Date {includeTime ? '& Time' : ''}
+                </label>
+                <div className="input-with-action">
+                  <input
+                    id="calc-base"
+                    type={includeTime ? 'datetime-local' : 'date'}
+                    className="text-input"
+                    value={shownValue(baseDate, includeTime)}
+                    onChange={(e) => setBaseDate(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    className="btn btn-outline btn-small"
+                    onClick={() => setCurrentDate(setBaseDate)}
+                  >
+                    Now
+                  </button>
+                </div>
               </div>
               <div className="input-group">
-                <label className="input-label">Amount to Add/Subtract</label>
-                <div className="input-row">
+                <label className="input-label" htmlFor="calc-amount">
+                  Amount to Add/Subtract
+                </label>
+                {/* Was stacked as two full-width controls: .input-row had no
+                    stylesheet rule at all, so this div did nothing. */}
+                <div className="input-row input-row--amount">
                   <input
+                    id="calc-amount"
                     type="number"
                     className="text-input"
                     value={addValue}
@@ -468,6 +500,7 @@ const DateCalculator = () => {
                   />
                   <select
                     className="text-input"
+                    aria-label="Unit"
                     value={addUnit}
                     onChange={(e) => setAddUnit(e.target.value)}
                   >
