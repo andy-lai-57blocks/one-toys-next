@@ -1,401 +1,495 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import SimpleAd from '../../ads/SimpleAdSSG';
 
+// ---------------------------------------------------------------------------
+// Timezone maths.
+//
+// Offsets are derived from Intl.DateTimeFormat, never from
+// Date#getTimezoneOffset (which only reports the BROWSER's zone) and never from
+// the `new Date(date.toLocaleString(...))` trick, which is wrong across a DST
+// boundary. All offsets here are minutes east of UTC.
+//
+// The clock ticks once per second, so formatters are cached - constructing a
+// fresh Intl.DateTimeFormat per row per tick costs real milliseconds.
+// ---------------------------------------------------------------------------
+
+const FORMAT_CACHE = new Map();
+
+function formatter(timeZone, options) {
+  const key = `${timeZone}|${JSON.stringify(options)}`;
+  let instance = FORMAT_CACHE.get(key);
+  if (!instance) {
+    instance = new Intl.DateTimeFormat('en-US', { timeZone, ...options });
+    FORMAT_CACHE.set(key, instance);
+  }
+  return instance;
+}
+
+const OPT = {
+  time24: { hour: '2-digit', minute: '2-digit', hour12: false },
+  time12: { hour: 'numeric', minute: '2-digit', hour12: true },
+  dateFull: { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' },
+  hour: { hour: '2-digit', hour12: false },
+  weekday: { weekday: 'short' },
+  abbr: { timeZoneName: 'short' },
+  ymd: { year: 'numeric', month: '2-digit', day: '2-digit' },
+  ymdt: {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    // MUST be explicit. en-US defaults to h12, which returns the hour as "02"
+    // for 2 PM plus a separate dayPeriod part - read without it, every offset
+    // computed here comes out 12 hours wrong.
+    hour12: false
+  }
+};
+
+function partsOf(instant, timeZone, options) {
+  const out = {};
+  for (const part of formatter(timeZone, options).formatToParts(instant)) {
+    out[part.type] = part.value;
+  }
+  return out;
+}
+
+/** Minutes east of UTC for `timeZone` at `instant`. */
+function zoneOffsetMinutes(instant, timeZone) {
+  const p = partsOf(instant, timeZone, OPT.ymdt);
+  const hour = p.hour === '24' ? '00' : p.hour; // some engines report 24 at midnight
+  const asUTC = Date.UTC(+p.year, +p.month - 1, +p.day, +hour, +p.minute);
+  const base = Math.floor(instant.getTime() / 60000) * 60000;
+  return Math.round((asUTC - base) / 60000);
+}
+
+/**
+ * The instant at which a wall-clock reading occurs in `timeZone`. Two passes:
+ * around a DST change the offset that applies is the one in effect at the
+ * RESULT, not at the naive guess.
+ */
+function wallToInstant(wall, timeZone) {
+  const naiveUTC = Date.UTC(wall.year, wall.month - 1, wall.day, wall.hour, wall.minute);
+  const firstPass = zoneOffsetMinutes(new Date(naiveUTC), timeZone);
+  let instant = naiveUTC - firstPass * 60000;
+  const secondPass = zoneOffsetMinutes(new Date(instant), timeZone);
+  if (secondPass !== firstPass) instant = naiveUTC - secondPass * 60000;
+  return new Date(instant);
+}
+
+const pad = (n) => String(n).padStart(2, '0');
+
+/** Browser-local wall clock, i.e. a valid value for <input type="datetime-local">. */
+function wallInputValue(date) {
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+/** Wall-clock reading of `instant` AS SEEN IN `timeZone`, as an input value. */
+function wallInputValueIn(instant, timeZone) {
+  const p = partsOf(instant, timeZone, OPT.ymdt);
+  return `${p.year}-${p.month}-${p.day}T${p.hour === '24' ? '00' : p.hour}:${p.minute}`;
+}
+
+function parseWallInput(value) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(value || '');
+  if (!match) return null;
+  return { year: +match[1], month: +match[2], day: +match[3], hour: +match[4], minute: +match[5] };
+}
+
+/** en-US renders midnight as 24:xx with hour12:false, so normalise it. */
+function time24(instant, timeZone) {
+  return formatter(timeZone, OPT.time24).format(instant).replace(/^24/, '00');
+}
+
+/** "GMT+8" / "EDT" - computed for the displayed instant, so DST is always right. */
+function zoneName(instant, timeZone) {
+  return partsOf(instant, timeZone, OPT.abbr).timeZoneName || '';
+}
+
+/** Whole-day difference between the calendar dates of two zones. */
+function dayDifference(instant, fromZone, toZone) {
+  const dayNumber = (timeZone) => {
+    const p = partsOf(instant, timeZone, OPT.ymd);
+    return Math.round(Date.UTC(+p.year, +p.month - 1, +p.day) / 86400000);
+  };
+  return dayNumber(toZone) - dayNumber(fromZone);
+}
+
+/** What part of their day it is, and whether it is a reasonable time to call. */
+function describeHours(instant, timeZone) {
+  const hour = +partsOf(instant, timeZone, OPT.hour).hour % 24;
+  const weekday = formatter(timeZone, OPT.weekday).format(instant);
+  const weekend = weekday === 'Sat' || weekday === 'Sun';
+  const working = hour >= 9 && hour < 18 && !weekend;
+
+  let icon = '🌙';
+  let label = 'Night';
+  if (hour >= 5 && hour < 9) {
+    icon = '🌅';
+    label = 'Early morning';
+  } else if (hour >= 9 && hour < 12) {
+    icon = '☀️';
+    label = 'Morning';
+  } else if (hour >= 12 && hour < 18) {
+    icon = '💼';
+    label = 'Afternoon';
+  } else if (hour >= 18 && hour < 22) {
+    icon = '🌆';
+    label = 'Evening';
+  }
+  if (weekend && hour >= 9 && hour < 18) {
+    icon = '🏖️';
+    label = 'Weekend';
+  }
+
+  return { icon, label, working };
+}
+
+function formatOffset(minutes) {
+  const sign = minutes < 0 ? '−' : '+';
+  const abs = Math.abs(minutes);
+  return `UTC${sign}${Math.floor(abs / 60)}${abs % 60 ? `:${pad(abs % 60)}` : ''}`;
+}
+
+function formatDelta(minutes) {
+  if (minutes === 0) return 'same time';
+  const abs = Math.abs(minutes);
+  return `${minutes > 0 ? '+' : '−'}${Math.floor(abs / 60)}${abs % 60 ? `:${pad(abs % 60)}` : ''}h`;
+}
+
+const DAY_LABELS = { '-1': 'Yesterday', 0: 'Today', 1: 'Tomorrow' };
+const dayLabel = (days) =>
+  DAY_LABELS[days] !== undefined ? DAY_LABELS[days] : days > 0 ? `+${days} days` : `${days} days`;
+
+// One flat list, grouped by region for the pickers. City names are the label
+// because that is what people search for; the abbreviation is computed per
+// instant rather than hardcoded, so it is never wrong for the season.
+const ZONES = [
+  { v: 'Pacific/Honolulu', c: 'Honolulu', r: 'Americas' },
+  { v: 'America/Anchorage', c: 'Anchorage', r: 'Americas' },
+  { v: 'America/Los_Angeles', c: 'Los Angeles', r: 'Americas' },
+  { v: 'America/Vancouver', c: 'Vancouver', r: 'Americas' },
+  { v: 'America/Denver', c: 'Denver', r: 'Americas' },
+  { v: 'America/Chicago', c: 'Chicago', r: 'Americas' },
+  { v: 'America/Mexico_City', c: 'Mexico City', r: 'Americas' },
+  { v: 'America/New_York', c: 'New York', r: 'Americas' },
+  { v: 'America/Toronto', c: 'Toronto', r: 'Americas' },
+  { v: 'America/Bogota', c: 'Bogotá', r: 'Americas' },
+  { v: 'America/Lima', c: 'Lima', r: 'Americas' },
+  { v: 'America/Santiago', c: 'Santiago', r: 'Americas' },
+  { v: 'America/Sao_Paulo', c: 'São Paulo', r: 'Americas' },
+  { v: 'America/Argentina/Buenos_Aires', c: 'Buenos Aires', r: 'Americas' },
+  { v: 'UTC', c: 'UTC', r: 'Europe & Africa' },
+  { v: 'Europe/London', c: 'London', r: 'Europe & Africa' },
+  { v: 'Europe/Dublin', c: 'Dublin', r: 'Europe & Africa' },
+  { v: 'Europe/Lisbon', c: 'Lisbon', r: 'Europe & Africa' },
+  { v: 'Europe/Paris', c: 'Paris', r: 'Europe & Africa' },
+  { v: 'Europe/Berlin', c: 'Berlin', r: 'Europe & Africa' },
+  { v: 'Europe/Madrid', c: 'Madrid', r: 'Europe & Africa' },
+  { v: 'Europe/Rome', c: 'Rome', r: 'Europe & Africa' },
+  { v: 'Europe/Amsterdam', c: 'Amsterdam', r: 'Europe & Africa' },
+  { v: 'Europe/Stockholm', c: 'Stockholm', r: 'Europe & Africa' },
+  { v: 'Europe/Warsaw', c: 'Warsaw', r: 'Europe & Africa' },
+  { v: 'Europe/Athens', c: 'Athens', r: 'Europe & Africa' },
+  { v: 'Europe/Istanbul', c: 'Istanbul', r: 'Europe & Africa' },
+  { v: 'Europe/Moscow', c: 'Moscow', r: 'Europe & Africa' },
+  { v: 'Africa/Casablanca', c: 'Casablanca', r: 'Europe & Africa' },
+  { v: 'Africa/Lagos', c: 'Lagos', r: 'Europe & Africa' },
+  { v: 'Africa/Cairo', c: 'Cairo', r: 'Europe & Africa' },
+  { v: 'Africa/Nairobi', c: 'Nairobi', r: 'Europe & Africa' },
+  { v: 'Africa/Johannesburg', c: 'Johannesburg', r: 'Europe & Africa' },
+  { v: 'Asia/Jerusalem', c: 'Jerusalem', r: 'Asia' },
+  { v: 'Asia/Riyadh', c: 'Riyadh', r: 'Asia' },
+  { v: 'Asia/Tehran', c: 'Tehran', r: 'Asia' },
+  { v: 'Asia/Dubai', c: 'Dubai', r: 'Asia' },
+  { v: 'Asia/Karachi', c: 'Karachi', r: 'Asia' },
+  { v: 'Asia/Kolkata', c: 'Kolkata', r: 'Asia' },
+  { v: 'Asia/Colombo', c: 'Colombo', r: 'Asia' },
+  { v: 'Asia/Kathmandu', c: 'Kathmandu', r: 'Asia' },
+  { v: 'Asia/Dhaka', c: 'Dhaka', r: 'Asia' },
+  { v: 'Asia/Yangon', c: 'Yangon', r: 'Asia' },
+  { v: 'Asia/Bangkok', c: 'Bangkok', r: 'Asia' },
+  { v: 'Asia/Ho_Chi_Minh', c: 'Ho Chi Minh City', r: 'Asia' },
+  { v: 'Asia/Jakarta', c: 'Jakarta', r: 'Asia' },
+  { v: 'Asia/Kuala_Lumpur', c: 'Kuala Lumpur', r: 'Asia' },
+  { v: 'Asia/Singapore', c: 'Singapore', r: 'Asia' },
+  { v: 'Asia/Manila', c: 'Manila', r: 'Asia' },
+  { v: 'Asia/Hong_Kong', c: 'Hong Kong', r: 'Asia' },
+  { v: 'Asia/Taipei', c: 'Taipei', r: 'Asia' },
+  { v: 'Asia/Shanghai', c: 'Shanghai', r: 'Asia' },
+  { v: 'Asia/Seoul', c: 'Seoul', r: 'Asia' },
+  { v: 'Asia/Tokyo', c: 'Tokyo', r: 'Asia' },
+  { v: 'Asia/Almaty', c: 'Almaty', r: 'Asia' },
+  { v: 'Australia/Perth', c: 'Perth', r: 'Oceania' },
+  { v: 'Australia/Adelaide', c: 'Adelaide', r: 'Oceania' },
+  { v: 'Australia/Brisbane', c: 'Brisbane', r: 'Oceania' },
+  { v: 'Australia/Sydney', c: 'Sydney', r: 'Oceania' },
+  { v: 'Australia/Melbourne', c: 'Melbourne', r: 'Oceania' },
+  { v: 'Pacific/Auckland', c: 'Auckland', r: 'Oceania' },
+  { v: 'Pacific/Fiji', c: 'Fiji', r: 'Oceania' }
+];
+
+const REGIONS = ['Americas', 'Europe & Africa', 'Asia', 'Oceania'];
+
+const DEFAULT_TARGETS = ['UTC', 'America/New_York', 'Europe/London', 'Asia/Tokyo'];
+
+// ---------------------------------------------------------------------------
+// The page is ONE list. The first row is the reference zone (the source), the
+// rest are targets, so there is no separate "added timezones" area and no
+// duplicate world-clock grid. Defaulting to "Now" makes that list a live world
+// clock, which is why the old one could be removed rather than kept alongside.
+// ---------------------------------------------------------------------------
+
 const TimezoneConverter = () => {
-  const [inputTime, setInputTime] = useState('');
-  const [inputTimezone, setInputTimezone] = useState('UTC'); // Start with UTC to prevent hydration mismatch
-  const [targetTimezones, setTargetTimezones] = useState(['UTC', 'America/New_York', 'Europe/London', 'Asia/Tokyo']);
-  const [results, setResults] = useState({});
-  const [currentTimes, setCurrentTimes] = useState({});
+  const [mounted, setMounted] = useState(false);
+  const [isNow, setIsNow] = useState(true);
+  const [wall, setWall] = useState('');
+  const [now, setNow] = useState(null);
+  const [sourceZone, setSourceZone] = useState('UTC');
+  const [userZone, setUserZone] = useState('UTC');
+  const [targets, setTargets] = useState(DEFAULT_TARGETS);
+  const [copied, setCopied] = useState('');
 
+  // Hydration-safe: the browser's zone, the current time and the input value
+  // can only be resolved on the client, so the first paint shows a skeleton.
   useEffect(() => {
-    // Set user's timezone and initial time after hydration
-    if (typeof window !== 'undefined') {
-      const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      setInputTimezone(userTimezone);
-      
-      const now = new Date();
-      setInputTime(now.toISOString().slice(0, 16));
-    }
-    
-    // Update current times every second
-    const interval = setInterval(() => {
-      updateCurrentTimes();
-    }, 1000);
-
-    return () => clearInterval(interval);
+    const zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const start = new Date();
+    setUserZone(zone);
+    setSourceZone(zone);
+    setTargets(DEFAULT_TARGETS.filter((tz) => tz !== zone));
+    setWall(wallInputValue(start));
+    setNow(start);
+    setMounted(true);
   }, []);
 
+  // Only tick in "Now" mode; a fixed time does not need re-rendering.
   useEffect(() => {
-    if (inputTime) {
-      convertTimezone();
-    }
-    updateCurrentTimes();
-  }, [inputTime, inputTimezone, targetTimezones]);
+    if (!isNow) return undefined;
+    const id = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(id);
+  }, [isNow]);
 
-  const updateCurrentTimes = () => {
-    const now = new Date();
-    const times = {};
-    
-    allTimezones.forEach(tz => {
-      times[tz.value] = {
-        time: now.toLocaleString('en-US', { 
-          timeZone: tz.value,
-          hour12: false,
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit'
-        }),
-        time12: now.toLocaleString('en-US', { 
-          timeZone: tz.value,
-          hour12: true,
-          hour: 'numeric',
-          minute: '2-digit',
-          second: '2-digit'
-        }),
-        date: now.toLocaleDateString('en-US', { 
-          timeZone: tz.value,
-          weekday: 'short',
-          month: 'short',
-          day: 'numeric'
-        }),
-        offset: getTimezoneOffset(tz.value, now)
+  const instant = useMemo(() => {
+    if (!now) return null;
+    if (isNow) return now;
+    const parsed = parseWallInput(wall);
+    return parsed ? wallToInstant(parsed, sourceZone) : null;
+  }, [now, isNow, wall, sourceZone]);
+
+  const rows = useMemo(() => {
+    if (!instant) return [];
+    const zones = [sourceZone, ...targets.filter((tz) => tz !== sourceZone)];
+    const referenceOffset = zoneOffsetMinutes(instant, sourceZone);
+
+    return zones.map((tz, index) => {
+      const meta = ZONES.find((z) => z.v === tz);
+      const offset = zoneOffsetMinutes(instant, tz);
+      const deltaDays = dayDifference(instant, sourceZone, tz);
+      const hours = describeHours(instant, tz);
+      const isSource = index === 0;
+
+      return {
+        tz,
+        city: meta ? meta.c : tz,
+        isSource,
+        isUser: tz === userZone,
+        offset: formatOffset(offset),
+        zoneName: zoneName(instant, tz) || formatOffset(offset),
+        delta: formatDelta(offset - referenceOffset),
+        time24: time24(instant, tz),
+        time12: formatter(tz, OPT.time12).format(instant),
+        date: formatter(tz, OPT.dateFull).format(instant),
+        dayLabel: dayLabel(deltaDays),
+        dayTone: deltaDays < 0 ? 'before' : deltaDays > 0 ? 'after' : 'same',
+        hourIcon: hours.icon,
+        hourLabel: hours.label,
+        working: hours.working,
+        iso: instant.toISOString(),
+        copyText: `${formatter(tz, OPT.dateFull).format(instant)} ${time24(instant, tz)} (${tz})`
       };
     });
-    
-    setCurrentTimes(times);
+  }, [instant, sourceZone, targets, userZone]);
+
+  const wallValue = isNow && now ? wallInputValueIn(now, sourceZone) : wall;
+
+  const changeSource = (tz) => {
+    setSourceZone(tz);
+    setTargets((prev) => prev.filter((t) => t !== tz));
   };
 
-  const convertTimezone = () => {
-    try {
-      // Parse input time in the source timezone context
-      const inputDate = new Date(inputTime);
-      
-      if (isNaN(inputDate.getTime())) {
-        setResults({ error: 'Invalid date/time format' });
-        return;
-      }
-
-      const conversions = {};
-      
-      targetTimezones.forEach(tz => {
-        const converted = {
-          timezone: tz,
-          display: allTimezones.find(t => t.value === tz)?.label || tz,
-          time24: inputDate.toLocaleString('en-US', { 
-            timeZone: tz,
-            hour12: false,
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit'
-          }),
-          time12: inputDate.toLocaleString('en-US', { 
-            timeZone: tz,
-            hour12: true,
-            hour: 'numeric',
-            minute: '2-digit',
-            second: '2-digit'
-          }),
-          date: inputDate.toLocaleDateString('en-US', { 
-            timeZone: tz,
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-          }),
-          dateShort: inputDate.toLocaleDateString('en-US', { 
-            timeZone: tz,
-            month: 'short',
-            day: 'numeric',
-            year: 'numeric'
-          }),
-          offset: getTimezoneOffset(tz, inputDate),
-          iso: convertToTimezone(inputDate, tz).toISOString(),
-          relative: getRelativeTime(convertToTimezone(inputDate, tz))
-        };
-        
-        conversions[tz] = converted;
-      });
-
-      setResults({ conversions });
-    } catch (error) {
-      setResults({ error: 'Timezone conversion failed' });
-    }
+  const addTarget = (tz) => {
+    if (!tz) return;
+    setTargets((prev) => (prev.includes(tz) || tz === sourceZone ? prev : [...prev, tz]));
   };
 
-  const convertToTimezone = (date, timezone) => {
-    // Create a new date object that represents the same instant in the target timezone
-    return new Date(date.toLocaleString('en-US', { timeZone: timezone }));
+  const removeTarget = (tz) => setTargets((prev) => prev.filter((t) => t !== tz));
+
+  const goNow = () => {
+    const fresh = new Date();
+    setNow(fresh);
+    setIsNow(true);
+    setWall(wallInputValueIn(fresh, sourceZone));
   };
 
-  const getTimezoneOffset = (timezone, date = new Date()) => {
-    const utcDate = new Date(date.toLocaleString('en-US', { timeZone: 'UTC' }));
-    const tzDate = new Date(date.toLocaleString('en-US', { timeZone: timezone }));
-    const offset = (tzDate.getTime() - utcDate.getTime()) / (1000 * 60 * 60);
-    const sign = offset >= 0 ? '+' : '-';
-    const hours = Math.floor(Math.abs(offset));
-    const minutes = Math.floor((Math.abs(offset) % 1) * 60);
-    return `${sign}${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+  const editWall = (value) => {
+    setIsNow(false);
+    setWall(value);
   };
 
-  const getRelativeTime = (date) => {
-    const now = new Date();
-    const diff = date.getTime() - now.getTime();
-    const absDiff = Math.abs(diff);
-    
-    if (absDiff < 60000) return 'Now';
-    if (absDiff < 3600000) {
-      const mins = Math.floor(absDiff / 60000);
-      return `${mins} min ${diff > 0 ? 'from now' : 'ago'}`;
-    }
-    if (absDiff < 86400000) {
-      const hours = Math.floor(absDiff / 3600000);
-      return `${hours} hr ${diff > 0 ? 'from now' : 'ago'}`;
-    }
-    const days = Math.floor(absDiff / 86400000);
-    return `${days} day${days > 1 ? 's' : ''} ${diff > 0 ? 'from now' : 'ago'}`;
-  };
-
-  const setCurrentTime = () => {
-    const now = new Date();
-    setInputTime(now.toISOString().slice(0, 16));
-  };
-
-  const addTargetTimezone = (timezone) => {
-    if (!targetTimezones.includes(timezone)) {
-      setTargetTimezones([...targetTimezones, timezone]);
-    }
-  };
-
-  const removeTargetTimezone = (timezone) => {
-    setTargetTimezones(targetTimezones.filter(tz => tz !== timezone));
-  };
-
-  const [copied, setCopied] = useState('');
-  const copyToClipboard = (value, label) => {
-    navigator.clipboard.writeText(value).then(() => {
-      setCopied(label);
-      setTimeout(() => setCopied(''), 2000);
+  const copy = (text, key) => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(key);
+      setTimeout(() => setCopied(''), 1600);
     });
   };
 
-  const allTimezones = [
-    { value: 'UTC', label: 'UTC (Coordinated Universal Time)' },
-    { value: 'America/New_York', label: 'Eastern Time (New York)' },
-    { value: 'America/Chicago', label: 'Central Time (Chicago)' },
-    { value: 'America/Denver', label: 'Mountain Time (Denver)' },
-    { value: 'America/Los_Angeles', label: 'Pacific Time (Los Angeles)' },
-    { value: 'America/Anchorage', label: 'Alaska Time (Anchorage)' },
-    { value: 'Pacific/Honolulu', label: 'Hawaii Time (Honolulu)' },
-    { value: 'America/Toronto', label: 'Eastern Time (Toronto)' },
-    { value: 'America/Vancouver', label: 'Pacific Time (Vancouver)' },
-    { value: 'America/Mexico_City', label: 'Central Time (Mexico City)' },
-    { value: 'America/Sao_Paulo', label: 'Brazil Time (São Paulo)' },
-    { value: 'America/Argentina/Buenos_Aires', label: 'Argentina Time (Buenos Aires)' },
-    { value: 'Europe/London', label: 'Greenwich Mean Time (London)' },
-    { value: 'Europe/Paris', label: 'Central European Time (Paris)' },
-    { value: 'Europe/Berlin', label: 'Central European Time (Berlin)' },
-    { value: 'Europe/Rome', label: 'Central European Time (Rome)' },
-    { value: 'Europe/Madrid', label: 'Central European Time (Madrid)' },
-    { value: 'Europe/Amsterdam', label: 'Central European Time (Amsterdam)' },
-    { value: 'Europe/Stockholm', label: 'Central European Time (Stockholm)' },
-    { value: 'Europe/Moscow', label: 'Moscow Time (Moscow)' },
-    { value: 'Europe/Istanbul', label: 'Turkey Time (Istanbul)' },
-    { value: 'Africa/Cairo', label: 'Eastern European Time (Cairo)' },
-    { value: 'Africa/Johannesburg', label: 'South Africa Time (Johannesburg)' },
-    { value: 'Asia/Dubai', label: 'Gulf Standard Time (Dubai)' },
-    { value: 'Asia/Karachi', label: 'Pakistan Standard Time (Karachi)' },
-    { value: 'Asia/Kolkata', label: 'India Standard Time (Mumbai)' },
-    { value: 'Asia/Bangkok', label: 'Indochina Time (Bangkok)' },
-    { value: 'Asia/Shanghai', label: 'China Standard Time (Shanghai)' },
-    { value: 'Asia/Tokyo', label: 'Japan Standard Time (Tokyo)' },
-    { value: 'Asia/Seoul', label: 'Korea Standard Time (Seoul)' },
-    { value: 'Asia/Singapore', label: 'Singapore Standard Time' },
-    { value: 'Asia/Hong_Kong', label: 'Hong Kong Time' },
-    { value: 'Australia/Sydney', label: 'Australian Eastern Time (Sydney)' },
-    { value: 'Australia/Melbourne', label: 'Australian Eastern Time (Melbourne)' },
-    { value: 'Australia/Perth', label: 'Australian Western Time (Perth)' },
-    { value: 'Pacific/Auckland', label: 'New Zealand Time (Auckland)' },
-    { value: 'Pacific/Fiji', label: 'Fiji Time' }
-  ];
-
-  const popularTimezones = [
-    'UTC', 'America/New_York', 'America/Los_Angeles', 'Europe/London', 
-    'Europe/Paris', 'Asia/Tokyo', 'Asia/Shanghai', 'Australia/Sydney'
-  ];
+  const regionOptions = (zone) => ZONES.filter((z) => z.r === zone);
+  const addableIn = (region) =>
+    ZONES.filter((z) => z.r === region && z.v !== sourceZone && !targets.includes(z.v));
 
   return (
-    <div className="tool-container">
-        {/* Current World Clock */}
-        <div className="world-clock-section">
-          <h3>🕐 Current Time Around the World</h3>
-          <div className="world-clock-grid">
-            {popularTimezones.map(tz => {
-              const tzInfo = allTimezones.find(t => t.value === tz);
-              const currentTime = currentTimes[tz];
-              return (
-                <div key={tz} className="world-clock-item">
-                  <div className="clock-city">{tzInfo?.label.split(' (')[1]?.replace(')', '') || tz}</div>
-                  <div className="clock-time">{currentTime?.time12 || '...'}</div>
-                  <div className="clock-date">{currentTime?.date || '...'}</div>
-                  <div className="clock-offset">{currentTime?.offset || '...'}</div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        <div className="input-section">
-          <div className="input-group">
-            <label className="input-label">Date & Time to Convert</label>
+    <div className="tool-container tz-converter">
+      <div className="tz-controls">
+        <div className="input-group">
+          <label className="input-label" htmlFor="tz-at">Convert</label>
+          <div className="tz-time-input">
             <input
+              id="tz-at"
               type="datetime-local"
               className="text-input"
-              value={inputTime}
-              onChange={(e) => setInputTime(e.target.value)}
+              value={wallValue}
+              onChange={(event) => editWall(event.target.value)}
             />
-            <button className="btn btn-outline btn-small" onClick={setCurrentTime}>
-              📍 Current Time
+            <button
+              type="button"
+              className={`btn btn-small ${isNow ? 'btn-primary' : 'btn-outline'}`}
+              aria-pressed={isNow}
+              onClick={goNow}
+            >
+              Now
             </button>
           </div>
+        </div>
 
-          <div className="input-group">
-            <label className="input-label">Source Timezone (Optional - defaults to local)</label>
-            <select
-              className="text-input"
-              value={inputTimezone}
-              onChange={(e) => setInputTimezone(e.target.value)}
-            >
-              {allTimezones.map(tz => (
-                <option key={tz.value} value={tz.value}>{tz.label}</option>
-              ))}
-            </select>
-          </div>
-
-          <div className="input-group">
-            <label className="input-label">Target Timezones</label>
-            <div className="timezone-selector">
-              <select
-                className="text-input"
-                onChange={(e) => addTargetTimezone(e.target.value)}
-                value=""
-              >
-                <option value="">Add timezone...</option>
-                {allTimezones.filter(tz => !targetTimezones.includes(tz.value)).map(tz => (
-                  <option key={tz.value} value={tz.value}>{tz.label}</option>
+        <div className="input-group">
+          <label className="input-label" htmlFor="tz-from">in timezone</label>
+          <select
+            id="tz-from"
+            className="text-input"
+            value={sourceZone}
+            onChange={(event) => changeSource(event.target.value)}
+          >
+            {REGIONS.map((region) => (
+              <optgroup key={region} label={region}>
+                {regionOptions(region).map((zone) => (
+                  <option key={zone.v} value={zone.v}>{zone.c}</option>
                 ))}
-              </select>
-            </div>
-            
-            <div className="selected-timezones">
-              {targetTimezones.map(tz => {
-                const tzInfo = allTimezones.find(t => t.value === tz);
-                return (
-                  <div key={tz} className="timezone-tag">
-                    <span>{tzInfo?.label || tz}</span>
-                    <button 
-                      className="remove-timezone"
-                      onClick={() => removeTargetTimezone(tz)}
-                      title="Remove timezone"
-                    >
-                      ×
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+              </optgroup>
+            ))}
+          </select>
         </div>
+      </div>
 
-        {results.error ? (
-          <div className="error-section">
-            <p className="error-text">❌ {results.error}</p>
-          </div>
-        ) : results.conversions ? (
-          <div className="results-section">
-            <h3>🔄 Timezone Conversion Results</h3>
-            
-            <div className="conversion-results">
-              {Object.entries(results.conversions).map(([tz, data]) => (
-                <div key={tz} className="conversion-item">
-                  <div className="conversion-header">
-                    <h4>{data.display}</h4>
-                    <span className="timezone-offset">{data.offset}</span>
-                  </div>
-                  
-                  <div className="conversion-content">
-                    <div className="time-display">
-                      <div className="time-main">{data.time12}</div>
-                      <div className="time-24">{data.time24}</div>
-                    </div>
-                    
-                    <div className="date-display">
-                      <div className="date-full">{data.date}</div>
-                      <div className="date-short">{data.dateShort}</div>
-                    </div>
-                    
-                    <div className="conversion-actions">
-                      <button 
-                        className="btn btn-outline btn-small"
-                        onClick={() => copyToClipboard(data.time24, `${tz}-time24`)}
-                      >
-                        {copied === `${tz}-time24` ? '✓' : '📋'} 24h
-                      </button>
-                      <button 
-                        className="btn btn-outline btn-small"
-                        onClick={() => copyToClipboard(data.time12, `${tz}-time12`)}
-                      >
-                        {copied === `${tz}-time12` ? '✓' : '📋'} 12h
-                      </button>
-                      <button 
-                        className="btn btn-outline btn-small"
-                        onClick={() => copyToClipboard(data.iso, `${tz}-iso`)}
-                      >
-                        {copied === `${tz}-iso` ? '✓' : '📋'} ISO
-                      </button>
-                    </div>
-                  </div>
+      {!mounted ? (
+        <div className="tz-skeleton" aria-hidden="true" />
+      ) : rows.length === 0 ? (
+        <p className="tz-empty">Enter a valid date and time to convert.</p>
+      ) : (
+        <div className="tz-rows">
+          {rows.map((row) => (
+            <div key={row.tz} className={`tz-row${row.isSource ? ' tz-row-source' : ''}`}>
+              <div className="tz-zone">
+                <div className="tz-city">
+                  {row.city}
+                  {row.isUser && <span className="tz-you">you</span>}
                 </div>
-              ))}
-            </div>
-          </div>
-        ) : null}
+                <div className="tz-meta">
+                  <span className="tz-abbr" title={row.offset}>{row.zoneName}</span>
+                  {!row.isSource && <span className="tz-delta">{row.delta}</span>}
+                  {row.isSource && !row.isUser && <span className="tz-delta">reference</span>}
+                </div>
+              </div>
 
-        <div className="timezone-info">
-          <h3>ℹ️ Timezone Information</h3>
-          <div className="info-grid">
-            <div className="info-item">
-              <span className="info-label">Your Current Timezone:</span>
-              <span className="info-value">{Intl.DateTimeFormat().resolvedOptions().timeZone}</span>
+              <div className="tz-time">
+                <span className="tz-clock">{row.time24}</span>
+                <span className="tz-clock-12">{row.time12}</span>
+              </div>
+
+              <div className="tz-date">
+                <span className="tz-date-text">{row.date}</span>
+                {!row.isSource && (
+                  <span className={`tz-day tz-day-${row.dayTone}`}>{row.dayLabel}</span>
+                )}
+              </div>
+
+              <span className={`tz-slot${row.working ? ' tz-slot-ok' : ''}`}>
+                {row.working ? '💼 Working hours' : `${row.hourIcon} ${row.hourLabel}`}
+              </span>
+
+              <div className="tz-actions">
+                <button
+                  type="button"
+                  className="btn btn-outline btn-small"
+                  aria-label={`Copy ${row.city} time`}
+                  onClick={() => copy(row.copyText, `${row.tz}-copy`)}
+                >
+                  {copied === `${row.tz}-copy` ? '✓' : '📋'}
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-outline btn-small"
+                  title="Copy ISO 8601"
+                  aria-label={`Copy ${row.city} ISO 8601 timestamp`}
+                  onClick={() => copy(row.iso, `${row.tz}-iso`)}
+                >
+                  {copied === `${row.tz}-iso` ? '✓' : 'ISO'}
+                </button>
+                {!row.isSource && (
+                  <button
+                    type="button"
+                    className="tz-remove"
+                    title={`Remove ${row.city}`}
+                    aria-label={`Remove ${row.city}`}
+                    onClick={() => removeTarget(row.tz)}
+                  >
+                    ×
+                  </button>
+                )}
+              </div>
             </div>
-            <div className="info-item">
-              <span className="info-label">Current UTC Offset:</span>
-              <span className="info-value">{getTimezoneOffset(Intl.DateTimeFormat().resolvedOptions().timeZone)}</span>
-            </div>
-            <div className="info-item">
-              <span className="info-label">Daylight Saving:</span>
-              <span className="info-value">{isDaylightSaving() ? 'Active' : 'Not Active'}</span>
-            </div>
-          </div>
+          ))}
         </div>
+      )}
+
+      <div className="tz-add">
+        <label className="input-label" htmlFor="tz-add">Add a timezone</label>
+        <select
+          id="tz-add"
+          className="text-input"
+          value=""
+          onChange={(event) => addTarget(event.target.value)}
+        >
+          <option value="">Choose a city…</option>
+          {REGIONS.map((region) => {
+            const zones = addableIn(region);
+            if (zones.length === 0) return null;
+            return (
+              <optgroup key={region} label={region}>
+                {zones.map((zone) => (
+                  <option key={zone.v} value={zone.v}>{zone.c}</option>
+                ))}
+              </optgroup>
+            );
+          })}
+        </select>
+      </div>
+
       <SimpleAd adSlot="8095900796" style={{ width: '100%', marginTop: '1.5rem' }} />
     </div>
   );
-
-  function isDaylightSaving() {
-    const now = new Date();
-    const january = new Date(now.getFullYear(), 0, 1);
-    const july = new Date(now.getFullYear(), 6, 1);
-    return Math.max(january.getTimezoneOffset(), july.getTimezoneOffset()) !== now.getTimezoneOffset();
-  }
 };
 
 export default TimezoneConverter;

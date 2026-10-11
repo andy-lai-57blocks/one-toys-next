@@ -1,0 +1,340 @@
+/* Timezone Converter - redesigned 2026-10-11.
+   One list is both the input and the output: the first row is the reference
+   zone, the rest are targets. That removed the separate "added timezones" chip
+   area and the standalone world-clock grid, which were showing the same cities
+   twice and pushing the actual task below the fold.
+   Dark mode keys off `body.dark-theme` (the class ThemeContext toggles on
+   <body>), NOT `.dark-mode` - that one only ever sits on `.tool-container`, and
+   this block lives inside it but is not a descendant of a `.dark-mode` element
+   once the tool stops adding the class. */
+
+.tz-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: $spacing-md;
+  padding-bottom: $spacing-lg;
+  border-bottom: 2px solid $bg-subtle;
+
+  .input-group {
+    margin-bottom: 0;
+  }
+
+  @media (max-width: $breakpoint-md) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.tz-time-input {
+  display: flex;
+  gap: $spacing-sm;
+
+  .text-input {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .btn {
+    flex: 0 0 auto;
+  }
+}
+
+.tz-rows {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+  margin-top: $spacing-lg;
+}
+
+.tz-row {
+  display: grid;
+  grid-template-columns: minmax(130px, 1.1fr) auto minmax(150px, 1fr) auto auto;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-md $spacing-lg;
+  background: $bg-card;
+  border: 2px solid $bg-subtle;
+  border-radius: $border-radius-xl;
+  transition: border-color $transition-fast;
+
+  &:hover {
+    border-color: $border-light;
+  }
+
+  /* Below this the five columns no longer fit side by side, so every cell gets
+     its own line rather than the row overflowing. */
+  @media (max-width: $breakpoint-md) {
+    grid-template-columns: 1fr;
+    row-gap: $spacing-sm;
+    padding: $spacing-md;
+  }
+}
+
+.tz-row-source {
+  border-color: rgba($primary-color, 0.35);
+  background: linear-gradient(135deg, rgba($primary-color, 0.06), $bg-card);
+}
+
+.tz-zone {
+  min-width: 0;
+}
+
+.tz-city {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  font-size: $font-size-base;
+  font-weight: 700;
+  color: $text-primary;
+}
+
+.tz-you {
+  font-size: $font-size-xs;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: $primary-color;
+  background: rgba($primary-color, 0.12);
+  padding: 1px 6px;
+  border-radius: $border-radius-sm;
+}
+
+.tz-meta {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  margin-top: 2px;
+}
+
+.tz-abbr {
+  font-family: $font-family-mono;
+  font-size: $font-size-xs;
+  color: $text-secondary;
+}
+
+.tz-delta {
+  font-size: $font-size-xs;
+  font-weight: 700;
+  color: $primary-color;
+}
+
+.tz-time {
+  display: flex;
+  align-items: baseline;
+  gap: $spacing-sm;
+  white-space: nowrap;
+}
+
+.tz-clock {
+  font-size: $font-size-2xl;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+  color: $text-primary;
+}
+
+.tz-clock-12 {
+  font-size: $font-size-sm;
+  color: $text-secondary;
+}
+
+.tz-date {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  min-width: 0;
+}
+
+.tz-date-text {
+  font-size: $font-size-sm;
+  color: $text-secondary;
+}
+
+.tz-day {
+  flex: 0 0 auto;
+  font-size: $font-size-xs;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: $border-radius-sm;
+  background: $bg-subtle;
+  color: $text-secondary;
+
+  /* Amber = the date has moved forward, grey = it has moved back, green = same
+     day. The colour is the whole point: "tomorrow" is the mistake people make. */
+  &-after {
+    background: rgba($warning-color, 0.16);
+    color: #b45309;
+  }
+
+  &-before {
+    background: rgba($secondary-color, 0.16);
+    color: #4b5563;
+  }
+
+  &-same {
+    background: rgba($success-color, 0.14);
+    color: #047857;
+  }
+}
+
+.tz-slot {
+  white-space: nowrap;
+  font-size: $font-size-xs;
+  font-weight: 600;
+  color: $text-secondary;
+  background: $bg-subtle;
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $border-radius-lg;
+}
+
+.tz-slot-ok {
+  color: #047857;
+  background: rgba($success-color, 0.14);
+}
+
+.tz-actions {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  justify-content: flex-end;
+}
+
+.tz-remove {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: $font-size-lg;
+  line-height: 1;
+  color: $text-muted;
+  padding: 0 $spacing-xs;
+  border-radius: $border-radius-sm;
+
+  &:hover {
+    color: $error-color;
+    background: rgba($error-color, 0.1);
+  }
+}
+
+.tz-add {
+  margin-top: $spacing-lg;
+
+  .text-input {
+    max-width: 320px;
+  }
+}
+
+.tz-skeleton {
+  min-height: 340px;
+  margin-top: $spacing-lg;
+  border-radius: $border-radius-xl;
+  background: linear-gradient(90deg, $bg-subtle 25%, #ffffff 37%, $bg-subtle 63%);
+  background-size: 400% 100%;
+  animation: tz-shimmer 1.4s ease infinite;
+}
+
+@keyframes tz-shimmer {
+  0% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0 50%;
+  }
+}
+
+.tz-empty {
+  margin-top: $spacing-lg;
+  padding: $spacing-lg;
+  text-align: center;
+  color: $text-secondary;
+  background: $bg-subtle;
+  border-radius: $border-radius-xl;
+}
+
+/* Dark mode -------------------------------------------------------------- */
+body.dark-theme {
+  .tz-controls {
+    border-bottom-color: #334155;
+  }
+
+  .tz-row {
+    background: #1e293b;
+    border-color: #334155;
+
+    &:hover {
+      border-color: #475569;
+    }
+  }
+
+  .tz-row-source {
+    border-color: rgba($primary-color, 0.5);
+    background: linear-gradient(135deg, rgba($primary-color, 0.16), #1e293b);
+  }
+
+  .tz-city,
+  .tz-clock {
+    color: $dark-text-primary;
+  }
+
+  .tz-abbr,
+  .tz-date-text {
+    color: $dark-text-secondary;
+  }
+
+  .tz-delta {
+    color: #93c5fd;
+  }
+
+  .tz-you {
+    color: #bfdbfe;
+    background: rgba($primary-color, 0.24);
+  }
+
+  .tz-day {
+    background: #334155;
+    color: $dark-text-secondary;
+
+    &-same {
+      background: rgba($success-color, 0.22);
+      color: #6ee7b7;
+    }
+
+    &-after {
+      background: rgba($warning-color, 0.22);
+      color: #fcd34d;
+    }
+
+    &-before {
+      background: rgba($secondary-color, 0.3);
+      color: #cbd5e1;
+    }
+  }
+
+  .tz-slot {
+    background: #334155;
+    color: $dark-text-secondary;
+  }
+
+  .tz-slot-ok {
+    background: rgba($success-color, 0.22);
+    color: #6ee7b7;
+  }
+
+  .tz-remove {
+    color: #94a3b8;
+
+    &:hover {
+      color: #fca5a5;
+      background: rgba($error-color, 0.18);
+    }
+  }
+
+  .tz-skeleton {
+    background: linear-gradient(90deg, #1e293b 25%, #334155 37%, #1e293b 63%);
+    background-size: 400% 100%;
+  }
+
+  .tz-empty {
+    background: #1e293b;
+    color: $dark-text-secondary;
+  }
+}
