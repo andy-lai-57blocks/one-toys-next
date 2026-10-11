@@ -2,6 +2,26 @@
 
 import React, { useState, useEffect } from 'react';
 import SimpleAd from '../../ads/SimpleAdSSG';
+import { wallInputValue } from '@/utils/timezone';
+
+/**
+ * Value for an <input type="date" | "datetime-local">.
+ *
+ * MUST be the LOCAL wall clock. `new Date().toISOString()` is UTC, and pouring
+ * that into one of these inputs (which the browser reads back as local) put the
+ * default start/end 8 hours out at GMT+8, and a whole day out for anyone east
+ * of UTC during their evening. Same bug the timezone and date-format tools had;
+ * wallInputValue is the shared fix.
+ */
+const dateInputValue = (date, withTime) =>
+  (withTime ? wallInputValue(date) : wallInputValue(date).slice(0, 10));
+
+/**
+ * The other half of the same rule: a `date` input REJECTS a 16-character value
+ * (it only accepts yyyy-MM-dd), so the stored value is trimmed to match the
+ * input's type whenever the "include time" switch is off.
+ */
+const shownValue = (value, withTime) => (withTime ? value : value.slice(0, 10));
 
 const DateCalculator = () => {
   const [operation, setOperation] = useState('difference');
@@ -20,11 +40,13 @@ const DateCalculator = () => {
       const tomorrow = new Date(now);
       tomorrow.setDate(tomorrow.getDate() + 1);
       
-      setStartDate(now.toISOString().slice(0, includeTime ? 16 : 10));
-      setEndDate(tomorrow.toISOString().slice(0, includeTime ? 16 : 10));
-      setBaseDate(now.toISOString().slice(0, includeTime ? 16 : 10));
+      setStartDate(dateInputValue(now, includeTime));
+      setEndDate(dateInputValue(tomorrow, includeTime));
+      setBaseDate(dateInputValue(now, includeTime));
     }
-  }, [includeTime]);
+    /* Mount only. This used to depend on `includeTime`, so merely ticking the
+       checkbox threw away whatever dates the user had entered. */
+  }, []);
 
   useEffect(() => {
     calculateResults();
@@ -99,7 +121,7 @@ const DateCalculator = () => {
         minutes: minutes % 60,
         seconds: seconds % 60
       },
-      humanReadable: formatHumanReadable(diff)
+      humanReadable: formatDuration(start, end, includeTime)
     });
   };
 
@@ -273,29 +295,74 @@ const DateCalculator = () => {
     return result;
   };
 
-  const formatHumanReadable = (ms) => {
+  const plural = (n, unit) => `${n} ${unit}${n === 1 ? '' : 's'}`;
+
+  /* Relative wording - "2 days ago" / "2 days from now". Only valid when one
+     side of the comparison is NOW, which is why the difference mode must not
+     use it (it used to, and read as "1 days from now"). */
+  const formatRelative = (ms) => {
     const absMs = Math.abs(ms);
-    const isNegative = ms < 0;
-    const prefix = isNegative ? '' : '';
-    const suffix = isNegative ? ' ago' : ' from now';
+    const suffix = ms < 0 ? ' ago' : ' from now';
 
     if (absMs < 60000) return 'Less than a minute' + suffix;
-    if (absMs < 3600000) return Math.floor(absMs / 60000) + ' minutes' + suffix;
-    if (absMs < 86400000) return Math.floor(absMs / 3600000) + ' hours' + suffix;
-    if (absMs < 2592000000) return Math.floor(absMs / 86400000) + ' days' + suffix;
-    if (absMs < 31536000000) return Math.floor(absMs / 2592000000) + ' months' + suffix;
-    return Math.floor(absMs / 31536000000) + ' years' + suffix;
+    if (absMs < 3600000) return plural(Math.floor(absMs / 60000), 'minute') + suffix;
+    if (absMs < 86400000) return plural(Math.floor(absMs / 3600000), 'hour') + suffix;
+    if (absMs < 2592000000) return plural(Math.floor(absMs / 86400000), 'day') + suffix;
+    if (absMs < 31536000000) return plural(Math.floor(absMs / 2592000000), 'month') + suffix;
+    return plural(Math.floor(absMs / 31536000000), 'year') + suffix;
+  };
+
+  /**
+   * Calendar breakdown of the gap between two instants, borrowed from the age
+   * calculation below so both agree. Borrowing (not dividing) is what makes
+   * 31 Jan -> 28 Feb read as days rather than a phantom 1.07 months.
+   */
+  const diffParts = (from, to) => {
+    const a = from <= to ? from : to;
+    const b = from <= to ? to : from;
+
+    let years = b.getFullYear() - a.getFullYear();
+    let months = b.getMonth() - a.getMonth();
+    let days = b.getDate() - a.getDate();
+    let hours = b.getHours() - a.getHours();
+    let minutes = b.getMinutes() - a.getMinutes();
+
+    if (minutes < 0) { minutes += 60; hours -= 1; }
+    if (hours < 0) { hours += 24; days -= 1; }
+    if (days < 0) {
+      months -= 1;
+      days += new Date(b.getFullYear(), b.getMonth(), 0).getDate();
+    }
+    if (months < 0) { years -= 1; months += 12; }
+
+    return { years, months, days, hours, minutes };
+  };
+
+  /* The headline answer for the difference mode: "1 year, 2 months, 3 days".
+     Hours and minutes only appear when the inputs actually carry a time - a
+     date-only comparison should not report "0 hours, 0 minutes". */
+  const formatDuration = (from, to, withTime) => {
+    const p = diffParts(from, to);
+    const chunks = [];
+    if (p.years > 0) chunks.push(plural(p.years, 'year'));
+    if (p.months > 0) chunks.push(plural(p.months, 'month'));
+    if (p.days > 0) chunks.push(plural(p.days, 'day'));
+    if (withTime) {
+      if (p.hours > 0) chunks.push(plural(p.hours, 'hour'));
+      if (p.minutes > 0) chunks.push(plural(p.minutes, 'minute'));
+    }
+    return chunks.length ? chunks.join(', ') : 'The same day';
   };
 
   const getRelativeTime = (date) => {
     const now = new Date();
     const diff = date.getTime() - now.getTime();
-    return formatHumanReadable(diff);
+    return formatRelative(diff);
   };
 
   const setCurrentDate = (setter) => {
     const now = new Date();
-    setter(now.toISOString().slice(0, includeTime ? 16 : 10));
+    setter(dateInputValue(now, includeTime));
   };
 
   const [copied, setCopied] = useState('');
@@ -309,26 +376,29 @@ const DateCalculator = () => {
   return (
     <div className="tool-container">
         <div className="operation-selector">
-          <div className="button-group">
-            <button 
-              className={`btn ${operation === 'difference' ? 'btn-primary' : 'btn-outline'}`}
+          <nav className="tab-navigation" aria-label="Calculation mode">
+            <button
+              type="button"
+              className={`tab-button${operation === 'difference' ? ' active' : ''}`}
               onClick={() => setOperation('difference')}
             >
-              📊 Date Difference
+              Date Difference
             </button>
-            <button 
-              className={`btn ${operation === 'add' ? 'btn-primary' : 'btn-outline'}`}
+            <button
+              type="button"
+              className={`tab-button${operation === 'add' ? ' active' : ''}`}
               onClick={() => setOperation('add')}
             >
-              ➕ Add/Subtract Time
+              Add / Subtract
             </button>
-            <button 
-              className={`btn ${operation === 'age' ? 'btn-primary' : 'btn-outline'}`}
+            <button
+              type="button"
+              className={`tab-button${operation === 'age' ? ' active' : ''}`}
               onClick={() => setOperation('age')}
             >
-              🎂 Age Calculator
+              Age
             </button>
-          </div>
+          </nav>
         </div>
 
         <div className="input-section">
@@ -350,7 +420,7 @@ const DateCalculator = () => {
                 <input
                   type={includeTime ? 'datetime-local' : 'date'}
                   className="text-input"
-                  value={startDate}
+                  value={shownValue(startDate, includeTime)}
                   onChange={(e) => setStartDate(e.target.value)}
                 />
                 <button className="btn btn-outline btn-small" onClick={() => setCurrentDate(setStartDate)}>
@@ -362,7 +432,7 @@ const DateCalculator = () => {
                 <input
                   type={includeTime ? 'datetime-local' : 'date'}
                   className="text-input"
-                  value={endDate}
+                  value={shownValue(endDate, includeTime)}
                   onChange={(e) => setEndDate(e.target.value)}
                 />
                 <button className="btn btn-outline btn-small" onClick={() => setCurrentDate(setEndDate)}>
@@ -379,7 +449,7 @@ const DateCalculator = () => {
                 <input
                   type={includeTime ? 'datetime-local' : 'date'}
                   className="text-input"
-                  value={baseDate}
+                  value={shownValue(baseDate, includeTime)}
                   onChange={(e) => setBaseDate(e.target.value)}
                 />
                 <button className="btn btn-outline btn-small" onClick={() => setCurrentDate(setBaseDate)}>
@@ -422,7 +492,7 @@ const DateCalculator = () => {
               <input
                 type={includeTime ? 'datetime-local' : 'date'}
                 className="text-input"
-                value={startDate}
+                value={shownValue(startDate, includeTime)}
                 onChange={(e) => setStartDate(e.target.value)}
               />
             </div>
@@ -435,105 +505,99 @@ const DateCalculator = () => {
           </div>
         ) : results.type ? (
           <div className="results-section">
-            <h3 className="section-title">📊 Calculation Results</h3>
-
+            {/* The answer first. It used to be the THIRD card on the page, below
+                six rows that each in turn fully depended on it. */}
             {results.type === 'difference' && (
               <>
-                <div className="result-group">
-                  <h4>📏 Time Difference {results.isNegative && '(Negative)'}</h4>
-                  <div className="result-grid">
-                    <div className="result-item">
-                      <span className="result-label">Years:</span>
-                      <span className="result-value">{results.absolute.years.toLocaleString()}</span>
-                    </div>
-                    <div className="result-item">
-                      <span className="result-label">Months:</span>
-                      <span className="result-value">{results.absolute.months.toLocaleString()}</span>
-                    </div>
-                    <div className="result-item">
-                      <span className="result-label">Weeks:</span>
-                      <span className="result-value">{results.absolute.weeks.toLocaleString()}</span>
-                    </div>
-                    <div className="result-item">
-                      <span className="result-label">Days:</span>
-                      <span className="result-value">{results.absolute.days.toLocaleString()}</span>
-                    </div>
-                    <div className="result-item">
-                      <span className="result-label">Hours:</span>
-                      <span className="result-value">{results.absolute.hours.toLocaleString()}</span>
-                    </div>
-                    <div className="result-item">
-                      <span className="result-label">Minutes:</span>
-                      <span className="result-value">{results.absolute.minutes.toLocaleString()}</span>
-                    </div>
+                <div className="calc-answer">
+                  <p className="calc-answer-value">
+                    {results.isNegative ? '−' : ''}{results.humanReadable}
+                  </p>
+                </div>
+
+                <div className="result-grid calc-primary">
+                  <div className="result-item">
+                    <span className="result-label">Total days:</span>
+                    <span className="result-value">{results.absolute.days.toLocaleString()}</span>
+                  </div>
+                  <div className="result-item">
+                    <span className="result-label">Business days:</span>
+                    <span className="result-value">{results.detailed.businessDays.toLocaleString()}</span>
+                  </div>
+                  <div className="result-item">
+                    <span className="result-label">Weeks:</span>
+                    <span className="result-value">{results.absolute.weeks.toLocaleString()}</span>
+                  </div>
+                  <div className="result-item">
+                    <span className="result-label">Weekend days:</span>
+                    <span className="result-value">{results.detailed.weekends.toLocaleString()}</span>
                   </div>
                 </div>
 
-                <div className="result-group">
-                  <h4>💼 Business Days Analysis</h4>
-                  <div className="result-grid">
-                    <div className="result-item">
-                      <span className="result-label">Business Days:</span>
-                      <span className="result-value">{results.detailed.businessDays.toLocaleString()}</span>
-                    </div>
-                    <div className="result-item">
-                      <span className="result-label">Weekend Days:</span>
-                      <span className="result-value">{results.detailed.weekends.toLocaleString()}</span>
-                    </div>
-                    <div className="result-item">
-                      <span className="result-label">Complete Weeks:</span>
-                      <span className="result-value">{results.detailed.completeWeeks.toLocaleString()}</span>
-                    </div>
+                {/* Same duration, other units. Real data, but nobody reads all
+                    of it - it is the reason the page was 1600px tall. */}
+                <details className="calc-more">
+                  <summary>Same duration in other units</summary>
+                  <div className="result-item">
+                    <span className="result-label">Years:</span>
+                    <span className="result-value">{results.absolute.years.toLocaleString()}</span>
                   </div>
+                  <div className="result-item">
+                    <span className="result-label">Months:</span>
+                    <span className="result-value">{results.absolute.months.toLocaleString()}</span>
+                  </div>
+                  <div className="result-item">
+                    <span className="result-label">Hours:</span>
+                    <span className="result-value">{results.absolute.hours.toLocaleString()}</span>
+                  </div>
+                  <div className="result-item">
+                    <span className="result-label">Minutes:</span>
+                    <span className="result-value">{results.absolute.minutes.toLocaleString()}</span>
+                  </div>
+                  <div className="result-item">
+                    <span className="result-label">Whole weeks:</span>
+                    <span className="result-value">{results.detailed.completeWeeks.toLocaleString()}</span>
+                  </div>
+                </details>
+              </>
+            )}
+
+            {results.type === 'addition' && (
+              <>
+                <div className="calc-answer">
+                  <p className="calc-answer-value">{results.formatted.local}</p>
+                  {results.formatted.relative && (
+                    <p className="calc-answer-note">{results.formatted.relative}</p>
+                  )}
+                  <button
+                    type="button"
+                    className="btn btn-outline btn-small calc-answer-copy"
+                    onClick={() => copyToClipboard(results.formatted.iso, 'result')}
+                  >
+                    {copied === 'result' ? '✓ Copied' : '📋 Copy'}
+                  </button>
                 </div>
 
-                <div className="result-group">
-                  <h4>📝 Human Readable</h4>
-                  <div className="human-readable-result">
-                    <span className="result-value large">{results.humanReadable}</span>
+                <div className="result-grid calc-primary">
+                  <div className="result-item">
+                    <span className="result-label">ISO 8601:</span>
+                    <span className="result-value">{results.formatted.iso}</span>
+                  </div>
+                  <div className="result-item">
+                    <span className="result-label">Date only:</span>
+                    <span className="result-value">{results.formatted.date}</span>
+                  </div>
+                  <div className="result-item">
+                    <span className="result-label">Time only:</span>
+                    <span className="result-value">{results.formatted.time}</span>
                   </div>
                 </div>
               </>
             )}
 
-            {results.type === 'addition' && (
-              <div className="result-group">
-                <h4>📅 {results.operation} Result</h4>
-                <div className="result-grid">
-                  <div className="result-item">
-                    <span className="result-label">Result Date:</span>
-                    <span className="result-value">{results.formatted.local}</span>
-                    <button 
-                      className="icon-btn"
-                      onClick={() => copyToClipboard(results.formatted.iso, 'result')}
-                    >
-                      {copied === 'result' ? '✓' : '📋'}
-                    </button>
-                  </div>
-                  <div className="result-item">
-                    <span className="result-label">ISO Format:</span>
-                    <span className="result-value">{results.formatted.iso}</span>
-                  </div>
-                  <div className="result-item">
-                    <span className="result-label">Date Only:</span>
-                    <span className="result-value">{results.formatted.date}</span>
-                  </div>
-                  <div className="result-item">
-                    <span className="result-label">Time Only:</span>
-                    <span className="result-value">{results.formatted.time}</span>
-                  </div>
-                  <div className="result-item">
-                    <span className="result-label">Relative:</span>
-                    <span className="result-value">{results.formatted.relative}</span>
-                  </div>
-                </div>
-              </div>
-            )}
-
             {results.type === 'age' && (
               <>
-                <div className="result-group">
-                  <h4>🎂 Current Age</h4>
+                <div className="calc-answer">
                   <div className="age-display">
                     <div className="age-main">
                       <span className="age-number">{results.exact.years}</span>
@@ -544,47 +608,32 @@ const DateCalculator = () => {
                       <span className="age-unit">days</span>
                     </div>
                   </div>
+                  {/* Was three separate rows in its own card; it is one
+                      sentence and belongs next to the age it qualifies. */}
+                  <p className="calc-answer-note">
+                    Next birthday {results.nextBirthday.date} - in {results.nextBirthday.daysUntil} days, turning {results.nextBirthday.ageOnNext}.
+                  </p>
                 </div>
 
-                <div className="result-group">
-                  <h4>📊 Age in Different Units</h4>
-                  <div className="result-grid">
-                    <div className="result-item">
-                      <span className="result-label">Total Days:</span>
-                      <span className="result-value">{results.approximate.days.toLocaleString()}</span>
-                    </div>
-                    <div className="result-item">
-                      <span className="result-label">Total Hours:</span>
-                      <span className="result-value">{results.approximate.hours.toLocaleString()}</span>
-                    </div>
-                    <div className="result-item">
-                      <span className="result-label">Total Minutes:</span>
-                      <span className="result-value">{results.approximate.minutes.toLocaleString()}</span>
-                    </div>
-                    <div className="result-item">
-                      <span className="result-label">Total Seconds:</span>
-                      <span className="result-value">{results.approximate.seconds.toLocaleString()}</span>
-                    </div>
+                <details className="calc-more">
+                  <summary>Same age in other units</summary>
+                  <div className="result-item">
+                    <span className="result-label">Total days:</span>
+                    <span className="result-value">{results.approximate.days.toLocaleString()}</span>
                   </div>
-                </div>
-
-                <div className="result-group">
-                  <h4>🎉 Next Birthday</h4>
-                  <div className="result-grid">
-                    <div className="result-item">
-                      <span className="result-label">Date:</span>
-                      <span className="result-value">{results.nextBirthday.date}</span>
-                    </div>
-                    <div className="result-item">
-                      <span className="result-label">Days Until:</span>
-                      <span className="result-value">{results.nextBirthday.daysUntil}</span>
-                    </div>
-                    <div className="result-item">
-                      <span className="result-label">Age on Next Birthday:</span>
-                      <span className="result-value">{results.nextBirthday.ageOnNext}</span>
-                    </div>
+                  <div className="result-item">
+                    <span className="result-label">Total hours:</span>
+                    <span className="result-value">{results.approximate.hours.toLocaleString()}</span>
                   </div>
-                </div>
+                  <div className="result-item">
+                    <span className="result-label">Total minutes:</span>
+                    <span className="result-value">{results.approximate.minutes.toLocaleString()}</span>
+                  </div>
+                  <div className="result-item">
+                    <span className="result-label">Total seconds:</span>
+                    <span className="result-value">{results.approximate.seconds.toLocaleString()}</span>
+                  </div>
+                </details>
               </>
             )}
           </div>

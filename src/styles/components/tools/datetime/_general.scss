@@ -12,6 +12,9 @@
   margin-bottom: $spacing-md;
   gap: $spacing-sm;
   justify-content: flex-start;
+  /* Three tabs do not fit on a 320px phone (the calculator has three, the
+     timestamp converter two) - wrap instead of overflowing the card. */
+  flex-wrap: wrap;
 }
 
 .tab-button {
@@ -417,12 +420,81 @@
   }
 }
 
-.human-readable-result {
-  text-align: center;
+/* The answer, shown once and first. Replaced three headed cards (Time
+   Difference / Business Days Analysis / Human Readable) in which the answer
+   people actually came for sat THIRD, under six rows that all depended on it. */
+.calc-answer {
   padding: $card-pad;
-  background: rgba($primary-color, 0.06);
-  border-radius: $radius-card;
   border: 1px solid rgba($primary-color, 0.22);
+  border-radius: $radius-card;
+  background: rgba($primary-color, 0.06);
+  text-align: center;
+}
+
+.calc-answer-value {
+  margin: 0;
+  font-family: $font-family-mono;
+  font-size: $font-size-xl;
+  font-weight: 700;
+  line-height: 1.35;
+  color: $primary-color;
+  overflow-wrap: anywhere;
+
+  @media (max-width: $breakpoint-sm) {
+    font-size: $font-size-lg;
+  }
+}
+
+.calc-answer-note {
+  margin: $spacing-sm 0 0;
+  font-size: $font-size-sm;
+  color: $text-secondary;
+}
+
+.calc-answer-copy {
+  margin-top: $spacing-md;
+}
+
+.calc-primary {
+  margin-top: $spacing-md;
+}
+
+/* Progressive disclosure for the long tail - the same figure restated in other
+   units. Those rows were why one answer measured ~1600px of page. */
+.calc-more {
+  margin-top: $spacing-md;
+  border: 1px solid $line;
+  border-radius: $radius-card;
+  background: $surface-card;
+  overflow: hidden;
+
+  > summary {
+    padding: $row-pad;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+    font-size: $font-size-sm;
+    font-weight: 600;
+    color: $text-secondary;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    &::after {
+      content: '▾';
+      float: right;
+      color: $text-muted;
+    }
+  }
+
+  &[open] > summary::after {
+    content: '▴';
+  }
+
+  .result-item:first-of-type {
+    border-top: 1px solid $line-soft;
+  }
 }
 
 // Timezone Converter Specific Styles
@@ -859,10 +931,26 @@ body.dark-theme {
     }
   }
   
-  .human-readable-result {
+  .calc-answer {
     background: rgba(96, 165, 250, 0.12);
-    border: 1px solid rgba(96, 165, 250, 0.3);
+    border-color: rgba(96, 165, 250, 0.3);
+  }
+
+  .calc-answer-value {
     color: #60a5fa;
+  }
+
+  .calc-answer-note {
+    color: $dark-text-secondary;
+  }
+
+  .calc-more {
+    background: #1e293b;
+    border-color: $dark-border;
+
+    > summary {
+      color: $dark-text-secondary;
+    }
   }
   
   .timezone-tag {
