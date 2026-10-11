@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import SimpleAd from '../../ads/SimpleAdSSG';
+import { openDatePicker } from '@/utils/dateInput';
 
 const TimestampConverter = () => {
   const [activeTab, setActiveTab] = useState('timestamp'); // 'timestamp' or 'datetime'
@@ -257,6 +258,7 @@ const TimestampConverter = () => {
                 type="datetime-local"
                 className="text-input"
                 value={dateTime}
+                onClick={openDatePicker}
                 onChange={(e) => setDateTime(e.target.value)}
               />
               <small className="input-hint">

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import SimpleAd from '../../ads/SimpleAdSSG';
+import { openDatePicker } from '@/utils/dateInput';
 import {
   formatter,
   numericParts,
@@ -235,6 +236,7 @@ export default function DateFormatter() {
                 type="datetime-local"
                 className="text-input fmt-input"
                 value={wallValue}
+                onClick={openDatePicker}
                 onChange={(event) => {
                   setWall(event.target.value);
                   setIsNow(false);

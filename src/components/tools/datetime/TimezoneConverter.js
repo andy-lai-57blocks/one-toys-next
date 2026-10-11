@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import SimpleAd from '../../ads/SimpleAdSSG';
+import { openDatePicker } from '@/utils/dateInput';
 import {
   formatter,
   OPT,
@@ -272,6 +273,7 @@ const TimezoneConverter = () => {
               type="datetime-local"
               className="text-input"
               value={wallValue}
+              onClick={openDatePicker}
               onChange={(event) => editWall(event.target.value)}
             />
             <button

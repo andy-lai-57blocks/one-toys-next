@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import SimpleAd from '../../ads/SimpleAdSSG';
+import { openDatePicker } from '@/utils/dateInput';
 import { wallInputValue } from '@/utils/timezone';
 
 /**
@@ -425,6 +426,7 @@ const DateCalculator = () => {
                     type={includeTime ? 'datetime-local' : 'date'}
                     className="text-input"
                     value={shownValue(startDate, includeTime)}
+                    onClick={openDatePicker}
                     onChange={(e) => setStartDate(e.target.value)}
                   />
                   <button
@@ -446,6 +448,7 @@ const DateCalculator = () => {
                     type={includeTime ? 'datetime-local' : 'date'}
                     className="text-input"
                     value={shownValue(endDate, includeTime)}
+                    onClick={openDatePicker}
                     onChange={(e) => setEndDate(e.target.value)}
                   />
                   <button
@@ -472,6 +475,7 @@ const DateCalculator = () => {
                     type={includeTime ? 'datetime-local' : 'date'}
                     className="text-input"
                     value={shownValue(baseDate, includeTime)}
+                    onClick={openDatePicker}
                     onChange={(e) => setBaseDate(e.target.value)}
                   />
                   <button
@@ -526,6 +530,7 @@ const DateCalculator = () => {
                 type={includeTime ? 'datetime-local' : 'date'}
                 className="text-input"
                 value={shownValue(startDate, includeTime)}
+                onClick={openDatePicker}
                 onChange={(e) => setStartDate(e.target.value)}
               />
             </div>
