@@ -210,7 +210,9 @@
     border-color: #3e3e3e;
     
     .preview-placeholder {
-      color: #666;
+      /* Was #666 - DARKER than the light-mode #999, i.e. the empty-state text
+         got harder to read in dark mode (2.9:1). */
+      color: #94a3b8;
     }
     
     h1, h2 {

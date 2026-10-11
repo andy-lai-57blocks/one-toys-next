@@ -293,6 +293,11 @@
   font-weight: 600;
 }
 
+/* #6b7280 on a dark card measured 2.56:1 - under the 3:1 minimum. */
+body.dark-theme .tool-count {
+  color: #cbd5e1;
+}
+
 .category-progress-bar {
   width: 100%;
   height: 4px;

@@ -1271,7 +1271,11 @@
         min-height: auto;
 
         &.btn-primary {
-          background: linear-gradient(135deg, $primary-color, #60a5fa);
+          /* Was (...$primary-color, #60a5fa): this selector is (0,5,0), so it
+             outranks BOTH .btn-primary and body.dark-theme .btn-primary - the
+             buttons were light blue with near-white text in every theme
+             (2.48:1). Deeper blues keep the white label legible. */
+          background: linear-gradient(135deg, #2563eb, #1d4ed8);
           border: none;
           box-shadow: 0 2px 6px rgba($primary-color, 0.2);
 

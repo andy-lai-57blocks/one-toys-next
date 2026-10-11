@@ -422,7 +422,9 @@
   justify-content: space-between;
   gap: $spacing-md;
   padding: $row-pad;
-  background: $surface-card;
+  /* Transparent, so a row always takes its PANEL's surface. Painting it
+     $surface-card here is exactly what let a white row survive into dark mode. */
+  background: transparent;
   transition: background 0.15s ease;
 
   & + .result-item {
@@ -960,13 +962,26 @@ body.dark-theme {
     }
   }
   
+  /* .result-grid is the PANEL and it MUST be restated here: it is
+     `$surface-card` in light mode. Leaving it out left a white panel in dark
+     mode, and the rows above composited to mid grey rgb(143,148,157) - so
+     labels rendered #94a3b8 on mid grey, a contrast ratio of 1.19, which is
+     effectively invisible. */
+  .result-grid {
+    background: #1e293b;
+    border-color: $dark-border;
+  }
+
   .result-item {
-    background: rgba(30, 41, 59, 0.5);
-    border: 1px solid #475569;
-    
+    background: transparent;
+    border: none;
+
+    & + .result-item {
+      border-top: 1px solid #334155;
+    }
+
     &:hover {
-      background: rgba(51, 65, 85, 0.7);
-      border-color: #64748b;
+      background: rgba(51, 65, 85, 0.6);
     }
   }
   

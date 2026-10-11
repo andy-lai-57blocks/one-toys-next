@@ -204,13 +204,17 @@ body.dark-theme {
     }
   }
   
+  /* Was linear-gradient(#60a5fa, #3b82f6) - white text on #60a5fa is only
+     2.48:1, below even the 3:1 large-text floor. Deeper blues keep the white
+     label legible (5.2:1 -> 6.6:1) while still reading as the primary action
+     on a dark page. */
   .btn-primary {
-    background: linear-gradient(135deg, #60a5fa, #3b82f6);
-    box-shadow: 0 4px 6px -1px rgba(96, 165, 250, 0.4);
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.45);
     
     &:hover {
-      background: linear-gradient(135deg, #3b82f6, #2563eb);
-      box-shadow: 0 6px 12px -2px rgba(96, 165, 250, 0.5);
+      background: linear-gradient(135deg, #1d4ed8, #1e40af);
+      box-shadow: 0 6px 12px -2px rgba(37, 99, 235, 0.55);
     }
   }
   

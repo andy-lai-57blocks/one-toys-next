@@ -213,10 +213,11 @@ body.dark-theme {
         }
 
         &.active {
-          background: #60a5fa;
+          /* Was #60a5fa with white text: 2.48:1. */
+          background: #2563eb;
           color: white;
-          border-color: #60a5fa;
-          box-shadow: 0 2px 4px rgba(96, 165, 250, 0.3);
+          border-color: #2563eb;
+          box-shadow: 0 2px 4px rgba(37, 99, 235, 0.35);
         }
       }
     }
@@ -236,7 +237,8 @@ body.dark-theme {
     }
 
     .slider-labels {
-      color: #64748b;
+      /* Was #64748b - 2.6:1 on the dark surface. */
+      color: #94a3b8;
     }
 
     .preview-info {
