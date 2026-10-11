@@ -4,24 +4,25 @@
   "outputDirectory": "out",
   "installCommand": "yarn install",
   "trailingSlash": true,
-  "routes": [
-    { "handle": "filesystem" },
-    { "src": "/(.*)", "status": 404, "dest": "/404.html" }
-  ],
   "redirects": [
     {
-      "source": "/(.*)",
+      "source": "/:path*",
       "has": [
         {
           "type": "host",
           "value": "www.one-toys.com"
         }
       ],
-      "destination": "https://one-toys.com/$1",
+      "destination": "https://one-toys.com/:path*",
       "permanent": true
     },
     {
       "source": "/info",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/info/",
       "destination": "/",
       "permanent": true
     },
@@ -49,20 +50,6 @@
       "source": "/code/hls/",
       "destination": "/media/hls/",
       "permanent": true
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/sitemap.xml",
-      "destination": "/sitemap.xml"
-    },
-    {
-      "source": "/robots.txt",
-      "destination": "/robots.txt"
-    },
-    {
-      "source": "/ads.txt",
-      "destination": "/ads.txt"
     }
   ],
   "headers": [
@@ -94,4 +81,3 @@
     }
   ]
 }
-
