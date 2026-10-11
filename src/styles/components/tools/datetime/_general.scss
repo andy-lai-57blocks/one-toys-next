@@ -16,8 +16,8 @@
 
 .tab-button {
   padding: 0.5rem 1rem;
-  border: 2px solid #e2e8f0;
-  background: #fafafa;
+  border: 1px solid $line;
+  background: $surface-card;
   color: $text-secondary;
   font-size: $font-size-sm;
   font-weight: 500;
@@ -36,8 +36,8 @@
   letter-spacing: 0.025em;
 
   &:hover {
-    border-color: #cbd5e1;
-    background: #ffffff;
+    border-color: $line-control;
+    background: $surface-inset;
     color: $text-primary;
   }
 
@@ -68,11 +68,11 @@
   display: flex;
   align-items: center;
   gap: $spacing-md;
-  margin-bottom: $spacing-lg;
-  padding: $spacing-md;
-  background: rgba(59, 130, 246, 0.05);
-  border: 1px solid rgba(59, 130, 246, 0.1);
-  border-radius: $border-radius-lg;
+  margin-bottom: $card-pad;
+  padding: $spacing-md $card-pad;
+  background: $surface-card;
+  border: 1px solid $line;
+  border-radius: $radius-card;
 
   .toggle-label {
     font-size: $font-size-sm;
@@ -84,8 +84,8 @@
   .toggle-buttons {
     display: flex;
     gap: 2px;
-    background: #e2e8f0;
-    border-radius: $border-radius-md;
+    background: $bg-subtle;
+    border-radius: $radius-control;
     padding: 2px;
   }
 
@@ -96,7 +96,7 @@
     color: $text-secondary;
     font-size: $font-size-sm;
     font-weight: 500;
-    border-radius: calc($border-radius-md - 2px);
+    border-radius: calc($radius-control - 2px);
     cursor: pointer;
     transition: all $transition-fast;
     display: flex;
@@ -132,10 +132,11 @@
 // Quick Select Section (left side)
 .quick-select-section {
   flex: 1;
-  background: linear-gradient(135deg, #fafafa 0%, $bg-card 100%);
-  border: 2px solid #f1f5f9;
-  border-radius: $border-radius-xl;
-  padding: $spacing-lg;
+  min-width: 0;
+  background: $surface-card;
+  border: 1px solid $line;
+  border-radius: $radius-card;
+  padding: $card-pad;
 
   h3 {
     font-size: $font-size-lg;
@@ -165,10 +166,11 @@
 // Manual Input Section (right side)
 .manual-input-section {
   flex: 1;
-  background: linear-gradient(135deg, #fafafa 0%, $bg-card 100%);
-  border: 2px solid #f1f5f9;
-  border-radius: $border-radius-xl;
-  padding: $spacing-lg;
+  min-width: 0;
+  background: $surface-card;
+  border: 1px solid $line;
+  border-radius: $radius-card;
+  padding: $card-pad;
 
   h3 {
     font-size: $font-size-lg;
@@ -203,7 +205,7 @@
   align-items: center;
   gap: $spacing-sm;
   padding-bottom: $spacing-sm;
-  border-bottom: 2px solid #f1f5f9;
+  border-bottom: 1px solid $line;
 }
 
 // Status indicators for timestamp converter
@@ -314,16 +316,15 @@
 }
 
 .result-group {
-  background: $bg-card;
-  border: 2px solid #f1f5f9;
-  border-radius: $border-radius-xl;
-  padding: $spacing-lg;
-  margin-bottom: $spacing-lg;
-  transition: $transition-normal;
+  background: $surface-card;
+  border: 1px solid $line;
+  border-radius: $radius-card;
+  padding: $card-pad;
+  margin-bottom: $card-pad;
+  transition: border-color 0.15s ease;
 
   &:hover {
-    border-color: #e2e8f0;
-    box-shadow: $shadow-sm;
+    border-color: $line-control;
   }
 
   h4 {
@@ -344,15 +345,19 @@
 }
 
 .result-grid {
+  /* ONE framed list with hairline rows, not a grid of individually bordered
+     and filled cards. Measured before: 3 columns of 383px boxes on timestamp,
+     and on format 34 separate boxes each with its own blue-bordered copy
+     button - per-row chrome was the single biggest source of noise here.
+     A single minmax(0, 1fr) track also removes the old clipping hazard: a
+     fixed `minmax(300px, 1fr)` track cannot shrink below 300px inside a 280px
+     card, and `.content-area { overflow: hidden }` CLIPPED it silently. */
   display: grid;
-  /* `min(300px, 100%)` and never a bare `300px`. A fixed track minimum cannot
-     shrink, so on a 320px phone (card content box ~280px) every row was forced
-     to 300px wide, overhung the card, and was then CLIPPED by
-     `.content-area { overflow: hidden }` - the right edge went missing with no
-     page-level scrollbar to reveal it. min() keeps the two-column behaviour
-     whenever there is room and lets the track shrink when there is not. */
-  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
-  gap: $spacing-md;
+  grid-template-columns: minmax(0, 1fr);
+  border: 1px solid $line;
+  border-radius: $radius-card;
+  background: $surface-card;
+  overflow: hidden;
 }
 
 .result-item {
@@ -360,15 +365,16 @@
   align-items: center;
   justify-content: space-between;
   gap: $spacing-md;
-  padding: 0.75rem;
-  background: #fafafa;
-  border: 1px solid #f1f5f9;
-  border-radius: $border-radius-lg;
-  transition: all $transition-fast;
+  padding: $row-pad;
+  background: $surface-card;
+  transition: background 0.15s ease;
+
+  & + .result-item {
+    border-top: 1px solid $line-soft;
+  }
 
   &:hover {
-    background: $bg-card;
-    border-color: #e2e8f0;
+    background: $surface-inset;
   }
 
   &.large {
@@ -413,10 +419,10 @@
 
 .human-readable-result {
   text-align: center;
-  padding: $spacing-md;
-  background: linear-gradient(135deg, #eff6ff, #dbeafe);
-  border-radius: $border-radius-lg;
-  border: 2px solid #bfdbfe;
+  padding: $card-pad;
+  background: rgba($primary-color, 0.06);
+  border-radius: $radius-card;
+  border: 1px solid rgba($primary-color, 0.22);
 }
 
 // Timezone Converter Specific Styles
@@ -669,8 +675,8 @@ body.dark-theme {
 
   // Dark theme quick select section
   .quick-select-section {
-    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-    border: 2px solid #475569;
+    background: #1e293b;
+    border: 1px solid $dark-border;
     box-shadow: 
       0 4px 6px -1px rgba(0, 0, 0, 0.3), 
       0 2px 4px -1px rgba(0, 0, 0, 0.2),
@@ -695,8 +701,8 @@ body.dark-theme {
 
   // Dark theme manual input section  
   .manual-input-section {
-    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-    border: 2px solid #475569;
+    background: #1e293b;
+    border: 1px solid $dark-border;
     box-shadow: 
       0 4px 6px -1px rgba(0, 0, 0, 0.3), 
       0 2px 4px -1px rgba(0, 0, 0, 0.2),
@@ -804,8 +810,8 @@ body.dark-theme {
   }
   
   .result-group {
-    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-    border: 2px solid #475569;
+    background: #1e293b;
+    border: 1px solid $dark-border;
     box-shadow: 
       0 4px 6px -1px rgba(0, 0, 0, 0.3), 
       0 2px 4px -1px rgba(0, 0, 0, 0.2),
@@ -854,10 +860,9 @@ body.dark-theme {
   }
   
   .human-readable-result {
-    background: linear-gradient(135deg, rgba(96, 165, 250, 0.15), rgba(59, 130, 246, 0.08));
-    border: 2px solid rgba(96, 165, 250, 0.3);
+    background: rgba(96, 165, 250, 0.12);
+    border: 1px solid rgba(96, 165, 250, 0.3);
     color: #60a5fa;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   }
   
   .timezone-tag {
@@ -1041,7 +1046,7 @@ body.dark-theme {
 
 .format-help {
   margin-top: $spacing-sm;
-  font-size: 0.85rem;
+  font-size: $font-size-sm;
   line-height: 1.55;
   color: $text-secondary;
 }

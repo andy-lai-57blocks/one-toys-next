@@ -294,7 +294,7 @@ export default function DateFormatter() {
                 />
                 <button
                   type="button"
-                  className="btn btn-outline btn-small"
+                  className="icon-btn"
                   onClick={() => copy(customResult, 'custom')}
                   aria-label="Copy custom format result"
                   title="Copy"
@@ -339,7 +339,7 @@ export default function DateFormatter() {
                           <span className="result-value">{value}</span>
                           <button
                             type="button"
-                            className="btn btn-outline btn-small"
+                            className="icon-btn"
                             onClick={() => copy(value, label)}
                             aria-label={`Copy ${label}`}
                             title="Copy"

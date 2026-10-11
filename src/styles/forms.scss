@@ -15,40 +15,42 @@
   display: block;
   font-weight: 600;
   color: #374151;
-  margin-bottom: 0.75rem;
-  font-size: 0.925rem;
-  letter-spacing: 0.025em;
+  margin-bottom: 0.5rem;
+  font-size: $font-size-sm;
+  letter-spacing: 0.01em;
 }
 
+/* 1px + 8px radius, not 2px + 12px: a 2px border on every control and every
+   card was the single heaviest thing on these pages, and mixing 2px borders
+   with 1px hairlines made the whole layout read as a wireframe. */
 .text-input,
 .text-area {
   width: 100%;
-  padding: 1rem 1.25rem;
-  border: 2px solid #e2e8f0;
-  border-radius: $border-radius-xl;
-  font-size: 0.925rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid $line-control;
+  border-radius: $radius-control;
+  font-size: $font-size-sm;
   /* Form controls do NOT inherit font-family by default - without this every
      input/select on the site renders in the UA's Arial instead of the page
      font, which reads as "the fonts do not match". */
   font-family: inherit;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background: #fafafa;
-  color: #1f2937;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  background: $surface-card;
+  color: $text-primary;
 }
 
 .text-input:hover,
 .text-area:hover {
-  border-color: #cbd5e1;
-  background: #ffffff;
+  border-color: #94a3b8;
+  background: $surface-card;
 }
 
 .text-input:focus,
 .text-area:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  background: #ffffff;
-  transform: translateY(-1px);
+  border-color: $primary-color;
+  box-shadow: $focus-ring;
+  background: $surface-card;
 }
 
 .text-area {
@@ -222,6 +224,12 @@ body.dark-theme {
       box-shadow: 0 4px 6px -1px rgba(96, 165, 250, 0.4);
     }
   }
+
+  .btn.is-active {
+    background: rgba(96, 165, 250, 0.16);
+    border-color: #60a5fa;
+    color: #93c5fd;
+  }
   
   .btn-secondary {
     background: #334155;
@@ -348,6 +356,15 @@ body.dark-theme {
   border-color: #cbd5e1;
   transform: translateY(-2px);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Toggled-on state for a button used as a switch ("Now" / "Local" / "UTC").
+   Was re-invented per page as a filled blue button, which read as a SECOND
+   primary action next to the real one. */
+.btn.is-active {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: $primary-color;
+  color: $primary-color;
 }
 
 /* The inline-utility tier. Deliberately smaller than .btn (it sits inside rows

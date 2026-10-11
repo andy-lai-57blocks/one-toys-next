@@ -504,7 +504,7 @@ const DateCalculator = () => {
                     <span className="result-label">Result Date:</span>
                     <span className="result-value">{results.formatted.local}</span>
                     <button 
-                      className="btn btn-outline btn-small"
+                      className="icon-btn"
                       onClick={() => copyToClipboard(results.formatted.iso, 'result')}
                     >
                       {copied === 'result' ? '✓' : '📋'}

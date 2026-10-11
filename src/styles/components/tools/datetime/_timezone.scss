@@ -13,7 +13,7 @@
   grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
   gap: $spacing-md;
   padding-bottom: $spacing-lg;
-  border-bottom: 2px solid $bg-subtle;
+  border-bottom: 1px solid $line;
 
   .input-group {
     margin-bottom: 0;
@@ -59,9 +59,9 @@
   align-items: center;
   gap: $spacing-md;
   padding: $spacing-md $spacing-lg;
-  background: $bg-card;
-  border: 2px solid $bg-subtle;
-  border-radius: $border-radius-xl;
+  background: $surface-card;
+  border: 1px solid $line;
+  border-radius: $radius-card;
   transition: border-color $transition-fast;
 
   &:hover {
@@ -142,7 +142,7 @@
   color: $primary-color;
   background: rgba($primary-color, 0.12);
   padding: 1px 6px;
-  border-radius: $border-radius-sm;
+  border-radius: $radius-small;
 }
 
 .tz-meta {
@@ -201,8 +201,8 @@
   font-size: $font-size-xs;
   font-weight: 700;
   padding: 1px 7px;
-  border-radius: $border-radius-sm;
-  background: $bg-subtle;
+  border-radius: $radius-small;
+  background: $surface-inset;
   color: $text-secondary;
 
   /* Amber = the date has moved forward, grey = it has moved back, green = same
@@ -228,9 +228,9 @@
   font-size: $font-size-xs;
   font-weight: 600;
   color: $text-secondary;
-  background: $bg-subtle;
+  background: $surface-inset;
   padding: $spacing-xs $spacing-sm;
-  border-radius: $border-radius-lg;
+  border-radius: $radius-small;
 }
 
 .tz-slot-ok {
@@ -279,8 +279,8 @@
   padding: $spacing-lg;
   text-align: center;
   color: $text-secondary;
-  background: $bg-subtle;
-  border-radius: $border-radius-xl;
+  background: $surface-inset;
+  border-radius: $radius-card;
 }
 
 /* Dark mode -------------------------------------------------------------- */

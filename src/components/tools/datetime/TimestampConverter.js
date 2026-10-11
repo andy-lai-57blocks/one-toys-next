@@ -272,22 +272,22 @@ const TimestampConverter = () => {
             Or choose a common timestamp
           </p>
           <div className="button-group">
-            <button className="btn btn-outline btn-small" onClick={() => setQuickTimestamp('now')}>
+            <button className="chip" onClick={() => setQuickTimestamp('now')}>
               Now
             </button>
-            <button className="btn btn-outline btn-small" onClick={() => setQuickTimestamp('1h-ago')}>
+            <button className="chip" onClick={() => setQuickTimestamp('1h-ago')}>
               1h ago
             </button>
-            <button className="btn btn-outline btn-small" onClick={() => setQuickTimestamp('1d-ago')}>
+            <button className="chip" onClick={() => setQuickTimestamp('1d-ago')}>
               Yesterday
             </button>
-            <button className="btn btn-outline btn-small" onClick={() => setQuickTimestamp('1w-ago')}>
+            <button className="chip" onClick={() => setQuickTimestamp('1w-ago')}>
               1 week ago
             </button>
-            <button className="btn btn-outline btn-small" onClick={() => setQuickTimestamp('day-start')}>
+            <button className="chip" onClick={() => setQuickTimestamp('day-start')}>
               Start of Day
             </button>
-            <button className="btn btn-outline btn-small" onClick={() => setQuickTimestamp('day-end')}>
+            <button className="chip" onClick={() => setQuickTimestamp('day-end')}>
               End of Day
             </button>
           </div>
@@ -308,7 +308,7 @@ const TimestampConverter = () => {
                 <span className="result-label">Unix Timestamp:</span>
                 <span className="result-value">{results.unix}</span>
                 <button 
-                  className="btn btn-outline btn-small"
+                  className="icon-btn"
                   onClick={() => copyToClipboard(results.unix, 'unix')}
                 >
                   {copied === 'unix' ? '✓' : '📋'}
@@ -318,7 +318,7 @@ const TimestampConverter = () => {
                 <span className="result-label">ISO Format:</span>
                 <span className="result-value">{results.iso}</span>
                 <button 
-                  className="btn btn-outline btn-small"
+                  className="icon-btn"
                   onClick={() => copyToClipboard(results.iso, 'iso')}
                 >
                   {copied === 'iso' ? '✓' : '📋'}
@@ -328,7 +328,7 @@ const TimestampConverter = () => {
                 <span className="result-label">Readable Format:</span>
                 <span className="result-value">{results.readable}</span>
                 <button 
-                  className="btn btn-outline btn-small"
+                  className="icon-btn"
                   onClick={() => copyToClipboard(results.readable, 'readable')}
                 >
                   {copied === 'readable' ? '✓' : '📋'}
@@ -338,7 +338,7 @@ const TimestampConverter = () => {
                 <span className="result-label">Relative Time:</span>
                 <span className="result-value">{results.relative}</span>
                 <button 
-                  className="btn btn-outline btn-small"
+                  className="icon-btn"
                   onClick={() => copyToClipboard(results.relative, 'relative')}
                 >
                   {copied === 'relative' ? '✓' : '📋'}

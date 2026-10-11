@@ -71,7 +71,8 @@
   }
 }
 
-/* Only layout, no metrics - .btn-small already carries height/padding/min-width. */
+/* Only layout, no metrics - .btn-small already carries height/padding/min-width,
+   and the toggled-on state comes from the shared .btn.is-active. */
 .fmt-now {
   flex: 0 0 auto;
 }
@@ -80,11 +81,11 @@
 
 .fmt-summary {
   margin: 0;
-  padding: $spacing-md;
-  border: 1px solid $bg-subtle;
+  padding: $card-pad-sm $card-pad;
+  border: 1px solid $line;
   border-left: 3px solid $primary-color;
-  border-radius: $border-radius-md;
-  background: $bg-subtle;
+  border-radius: $radius-card;
+  background: $surface-inset;
   font-size: $font-size-base;
   line-height: 1.5;
   color: $text-primary;
@@ -111,10 +112,10 @@
   display: flex;
   flex-direction: column;
   gap: $spacing-sm;
-  padding: $spacing-lg;
-  border: 1px solid $bg-subtle;
-  border-radius: $border-radius-lg;
-  background: $bg-card;
+  padding: $card-pad;
+  border: 1px solid $line;
+  border-radius: $radius-card;
+  background: $surface-card;
 }
 
 .fmt-pattern {
@@ -134,8 +135,9 @@
 .fmt-pattern-out {
   display: block;
   padding: $spacing-md;
-  border-radius: $border-radius-md;
-  background: $bg-subtle;
+  border: 1px solid $line;
+  border-radius: $radius-control;
+  background: $surface-inset;
   font-family: $font-family-mono;
   font-size: $font-size-lg;
   font-weight: 700;
@@ -169,9 +171,9 @@
 }
 
 .fmt-group {
-  border: 1px solid $bg-subtle;
-  border-radius: $border-radius-lg;
-  background: $bg-card;
+  border: 1px solid $line;
+  border-radius: $radius-card;
+  background: $surface-card;
   overflow: hidden;
 }
 
@@ -227,13 +229,17 @@
   color: $text-secondary;
 }
 
+/* The framed hairline list, exactly like .result-grid - a formatter row, a
+   timestamp row and a calculator row should read as the same object. */
 .fmt-rows {
   display: flex;
   flex-direction: column;
-  gap: $spacing-sm;
-  margin: 0;
-  padding: 0 $spacing-md $spacing-md;
+  margin: 0 $spacing-md $spacing-md;
+  padding: 0;
   list-style: none;
+  border: 1px solid $line;
+  border-radius: $radius-card;
+  overflow: hidden;
 }
 
 /* Mobile: a long value (ISO string, full date) cannot share a line with its
@@ -264,6 +270,7 @@ body.dark-theme {
   }
 
   .fmt-pattern-out {
+    border-color: $dark-border;
     color: #60a5fa;
   }
 

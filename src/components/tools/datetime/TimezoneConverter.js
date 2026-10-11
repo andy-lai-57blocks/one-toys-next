@@ -276,7 +276,7 @@ const TimezoneConverter = () => {
             />
             <button
               type="button"
-              className={`btn btn-small ${isNow ? 'btn-primary' : 'btn-outline'}`}
+              className={`btn btn-outline btn-small${isNow ? ' is-active' : ''}`}
               aria-pressed={isNow}
               onClick={goNow}
             >
@@ -343,7 +343,7 @@ const TimezoneConverter = () => {
               <div className="tz-actions">
                 <button
                   type="button"
-                  className="btn btn-outline btn-small"
+                  className="icon-btn"
                   aria-label={`Copy ${row.city} time`}
                   onClick={() => copy(row.copyText, `${row.tz}-copy`)}
                 >
@@ -351,7 +351,7 @@ const TimezoneConverter = () => {
                 </button>
                 <button
                   type="button"
-                  className="btn btn-outline btn-small"
+                  className="btn btn-secondary btn-small"
                   title="Copy ISO 8601"
                   aria-label={`Copy ${row.city} ISO 8601 timestamp`}
                   onClick={() => copy(row.iso, `${row.tz}-iso`)}

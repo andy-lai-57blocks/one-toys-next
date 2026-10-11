@@ -71,6 +71,42 @@ $border-radius-lg: 0.5rem;   // 8px
 $border-radius-xl: 0.75rem;  // 12px
 $border-radius-2xl: 1rem;    // 16px
 
+// ---------------------------------------------------------------------------
+// UI SCALE (2026-10-11) - the one set of surface / line / radius / spacing
+// values new code should use instead of inventing its own.
+// MUST stay below $spacing-* and $border-radius-* (SCSS variables are not
+// hoisted - referencing them earlier fails the build with "Undefined variable").
+//
+// Why it exists: measured across the five datetime tools, the fills in use were
+// #fafafa AND #f8f9fa AND #f8fafc AND #f1f5f9 (three of those are visually
+// indistinguishable), the borders were #f1f5f9 / #e2e8f0 / #dee2e6 / #cbd5e1 /
+// blue, border WIDTH flipped between 1px and 2px per page, and the dominant
+// radius changed page to page (6px on one, 8px on another, pills on a third).
+// That mix - not any single page being wrong - is what read as "these pages do
+// not belong to one product".
+//
+// RULE: blue is for INTERACTION (primary button, active tab/chip, focus, link).
+// It is never used for structure - a copy button or a card frame is neutral.
+// ---------------------------------------------------------------------------
+$surface-card: #ffffff;
+$surface-inset: $bg-secondary;   // #f8fafc - rows, empty states, quiet fills
+$surface-page: $bg-subtle;       // #f1f5f9
+
+$line: #e2e8f0;                  // structural border (cards, group frames)
+$line-soft: $bg-subtle;          // divider INSIDE a card - never a box
+$line-control: #cbd5e1;          // inputs, quiet buttons
+
+$radius-card: $border-radius-xl;     // 12px
+$radius-control: $border-radius-lg;  //  8px
+$radius-small: $border-radius-md;    //  6px
+
+$card-pad: $spacing-lg;          // 24px
+$card-pad-sm: $spacing-md;       // 16px
+$row-pad: 0.75rem $spacing-md;   // 12px 16px
+
+$focus-ring: 0 0 0 3px rgba(59, 130, 246, 0.15);
+$shadow-card: 0 1px 2px rgba(15, 23, 42, 0.04);
+
 // Layout containers
 // Shared by the content area (common.scss / responsive.scss) AND the sticky top
 // navigation (topnav.scss). The nav has to line its first item up with the left
