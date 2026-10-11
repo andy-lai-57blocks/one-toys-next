@@ -341,7 +341,13 @@
 
 .result-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  /* `min(300px, 100%)` and never a bare `300px`. A fixed track minimum cannot
+     shrink, so on a 320px phone (card content box ~280px) every row was forced
+     to 300px wide, overhung the card, and was then CLIPPED by
+     `.content-area { overflow: hidden }` - the right edge went missing with no
+     page-level scrollbar to reveal it. min() keeps the two-column behaviour
+     whenever there is room and lets the track shrink when there is not. */
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
   gap: $spacing-md;
 }
 
