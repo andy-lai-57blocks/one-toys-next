@@ -80,22 +80,41 @@ const JSONEscaper = () => {
     }
   };
 
+  // Remove every carriage return / line break together with the whitespace around it,
+  // then strip any leading or trailing whitespace that remains.
+  const flattenToSingleLine = (str) =>
+    str.replace(/[^\S\r\n]*(?:\r\n|\r|\n)+[^\S\r\n]*/g, ' ').trim();
+
+  // Escape mode: flatten the source, then escape it.
+  // Unescape mode: flatten the restored result.
+  const handleRemoveLineBreaks = () => {
+    if (mode === 'escape') {
+      if (!input) return;
+      setOutput(escapeJSON(flattenToSingleLine(input)));
+    } else {
+      if (!output) return;
+      setOutput(flattenToSingleLine(output));
+    }
+  };
+
   const handleClear = () => {
     setInput('');
     setOutput('');
   };
 
   const loadSample = () => {
+    // A small, valid JSON document: the most common thing you want to embed as an escaped string.
+    const jsonSample = `{
+  "name": "One Toys",
+  "description": "Escape \\"quotes\\", backslashes \\\\, tabs \\t and newlines \\n",
+  "symbols": "→ ♥ ★ ☆ < > &",
+  "tags": ["json", "escape", "text"]
+}`;
+
     if (mode === 'escape') {
-      setInput(`Hello "World"!
-This text contains:
-	- Tab character
-	- New line character
-	- Backslashes: C:\\Users\\Documents\\file.txt
-	- Unicode: → ♥ ★ ☆
-	- Special chars: & < > ' "`);
+      setInput(jsonSample);
     } else {
-      setInput(`Hello \\"World\\"!\\nThis text contains:\\n\\t- Tab character\\n\\t- New line character\\n\\t- Backslashes: C:\\\\Users\\\\Documents\\\\file.txt\\n\\t- Unicode: \\u2192 \\u2665 \\u2605 \\u2606\\n\\t- Special chars: & < > ' \\"`);
+      setInput(escapeJSON(jsonSample));
     }
     setOutput('');
   };
@@ -155,6 +174,11 @@ This text contains:
             <button className="btn btn-outline" onClick={handleClear}>
               🗑️ Clear
             </button>
+            {(mode === 'escape' ? input : output) && (
+              <button className="btn btn-outline" onClick={handleRemoveLineBreaks}>
+                ⏎ Remove Line Breaks
+              </button>
+            )}
             {output && (
               <button className="btn btn-outline" onClick={handleDownload}>
                 💾 Download
