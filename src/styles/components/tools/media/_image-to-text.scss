@@ -93,6 +93,7 @@
     display: flex;
     flex-wrap: wrap;
     align-items: flex-end;
+    justify-content: space-between;
     gap: 1rem;
     margin-top: 1rem;
     padding: 1rem 1.25rem;
@@ -101,12 +102,38 @@
     background: $surface-inset;
   }
 
+  .ocr-fields {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 1rem 1.25rem;
+    flex: 1 1 20rem;
+    min-width: 0;
+  }
+
   .ocr-control {
     display: flex;
     flex-direction: column;
     gap: 0.375rem;
-    flex: 1 1 12rem;
+    flex: 1 1 11rem;
     min-width: 0;
+  }
+
+  .ocr-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-bottom: 0.75rem;
+    font-size: $font-size-sm;
+    color: $text-primary;
+    cursor: pointer;
+    white-space: nowrap;
+
+    input {
+      width: auto;
+      margin: 0;
+      cursor: pointer;
+    }
   }
 
   .ocr-control-label {
@@ -291,6 +318,10 @@ body.dark-theme {
     .ocr-controls {
       background: $dark-bg-secondary;
       border-color: $dark-border;
+    }
+
+    .ocr-toggle {
+      color: $dark-text-primary;
     }
 
     .ocr-status {

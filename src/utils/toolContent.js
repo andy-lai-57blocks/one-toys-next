@@ -1195,7 +1195,8 @@ export const toolContent = {
         title: 'What this OCR tool does',
         paragraphs: [
           'It reads the text out of a screenshot, scan or photo and puts it in an editable box you can copy or download. Recognition runs in a Web Worker in your browser using tesseract, a long-standing open-source OCR engine compiled to WebAssembly, so the image is never uploaded and nothing is stored on a server.',
-          'The engine and one language model are downloaded the first time you press Extract text — roughly 5 to 8 MB depending on the language. The browser caches both, so the second run starts almost immediately.'
+          'The engine and one language model are downloaded the first time you press Extract text — roughly 5 to 8 MB depending on the language. The browser caches both, so the second run starts almost immediately.',
+          'Before recognition the image is upscaled when its text is small, converted to grayscale, contrast-stretched and inverted when the text is light on dark. A High contrast switch applies a black-and-white threshold for flat screenshots. Those steps matter more than the engine choice on the images people actually paste in.',
         ]
       },
       {
@@ -1223,6 +1224,11 @@ export const toolContent = {
         question: 'Why is the first run slow?',
         answer:
           'It downloads the WebAssembly engine (about 4 MB) and one language model (1 to 3 MB). The browser caches both, and the language model is also stored in IndexedDB, so subsequent runs on the same device start in about a second.'
+      },
+      {
+        question: 'How can I improve the accuracy?',
+        answer:
+          'Crop to the text, keep the camera parallel to the page, and check the Text layout setting: the default “Text block” is best for documents and screenshots, “Sparse text” for labels and forms, and “Single line” for one cropped line. For a flat screenshot, turn on High contrast (B/W). The tool already upscales small text, normalises contrast and inverts light-on-dark images automatically.'
       },
       {
         question: 'Which languages are supported?',
