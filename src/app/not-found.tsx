@@ -1,9 +1,19 @@
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import AppLayout from '@/components/layout/AppLayout';
 
 // Rendered to out/404.html at build time. Vercel serves this for unmatched
 // routes (see the `routes` block in vercel.json) so that unknown URLs answer
 // with a real 404 status instead of the homepage.
+//
+// Without this export the 404 page inherits the ROOT layout's title
+// ("One Toys - Comprehensive Platform..."), which reads like a valid page in
+// the browser tab and in any screenshot of the page.
+export const metadata: Metadata = {
+  title: 'Page Not Found | One Toys',
+  description: 'The requested page does not exist. Browse the code, text, datetime and media tools instead.',
+};
+
 const POPULAR_TOOLS = [
   { path: '/code/json', title: 'JSON Formatter' },
   { path: '/code/jwt-decoder', title: 'JWT Decoder' },
