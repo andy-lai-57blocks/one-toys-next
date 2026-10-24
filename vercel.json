@@ -4,80 +4,72 @@
   "outputDirectory": "out",
   "installCommand": "yarn install",
   "trailingSlash": true,
-  "redirects": [
+  "routes": [
     {
-      "source": "/:path*",
+      "src": "/(.*)",
       "has": [
         {
           "type": "host",
           "value": "www.one-toys.com"
         }
       ],
-      "destination": "https://one-toys.com/:path*",
-      "permanent": true
+      "status": 308,
+      "headers": {
+        "Location": "https://one-toys.com/$1"
+      }
     },
     {
-      "source": "/info",
-      "destination": "/",
-      "permanent": true
+      "src": "/info/?",
+      "status": 308,
+      "headers": {
+        "Location": "/"
+      }
     },
     {
-      "source": "/info/",
-      "destination": "/",
-      "permanent": true
+      "src": "/info/(.*)",
+      "status": 308,
+      "headers": {
+        "Location": "/"
+      }
     },
     {
-      "source": "/info/:path*",
-      "destination": "/",
-      "permanent": true
+      "src": "/datetime/countdown/?",
+      "status": 308,
+      "headers": {
+        "Location": "/datetime/"
+      }
     },
     {
-      "source": "/datetime/countdown",
-      "destination": "/datetime/",
-      "permanent": true
+      "src": "/code/hls/?",
+      "status": 308,
+      "headers": {
+        "Location": "/media/hls/"
+      }
     },
     {
-      "source": "/datetime/countdown/",
-      "destination": "/datetime/",
-      "permanent": true
+      "src": "/(.*)",
+      "headers": {
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "DENY",
+        "X-XSS-Protection": "1; mode=block",
+        "Referrer-Policy": "strict-origin-when-cross-origin"
+      },
+      "continue": true
     },
     {
-      "source": "/code/hls",
-      "destination": "/media/hls/",
-      "permanent": true
+      "src": "/sw.js",
+      "headers": {
+        "Cache-Control": "public, max-age=0, must-revalidate"
+      },
+      "continue": true
     },
     {
-      "source": "/code/hls/",
-      "destination": "/media/hls/",
-      "permanent": true
-    }
-  ],
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        },
-        {
-          "key": "X-Frame-Options",
-          "value": "DENY"
-        },
-        {
-          "key": "X-XSS-Protection",
-          "value": "1; mode=block"
-        }
-      ]
+      "handle": "filesystem"
     },
     {
-      "source": "/sw.js",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=0, must-revalidate"
-        }
-      ]
+      "src": "/(.*)",
+      "status": 404,
+      "dest": "/404.html"
     }
   ]
 }
