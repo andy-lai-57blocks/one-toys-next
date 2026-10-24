@@ -31,9 +31,9 @@ export const seoData = {
   },
 
   '/media': {
-    title: 'Media Tools - Image Compressor & HLS Player | One Toys',
-    description: 'Compress and resize images, and play or inspect HLS streams, entirely in your browser. Nothing you open is uploaded, so your files never leave your device.',
-    keywords: 'media tools, image compressor, compress image, image optimizer, hls player, m3u8 player, http live streaming, video streaming tools',
+    title: 'Media Tools - QR Code, Image Compressor & HLS Player | One Toys',
+    description: 'Generate QR codes for links and Wi-Fi, compress and resize images, and play or inspect HLS streams, entirely in your browser. Nothing you open is uploaded, so your files never leave your device.',
+    keywords: 'media tools, qr code generator, create qr code, wifi qr code, image compressor, compress image, image optimizer, hls player, m3u8 player, http live streaming, video streaming tools',
     type: 'website'
   },
 
