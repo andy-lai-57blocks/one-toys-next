@@ -31,9 +31,9 @@ export const seoData = {
   },
 
   '/media': {
-    title: 'Media Tools - QR Code, Image Compressor & HLS Player | One Toys',
-    description: 'Generate QR codes for links and Wi-Fi, compress and resize images, and play or inspect HLS streams, entirely in your browser. Nothing you open is uploaded, so your files never leave your device.',
-    keywords: 'media tools, qr code generator, create qr code, wifi qr code, image compressor, compress image, image optimizer, hls player, m3u8 player, http live streaming, video streaming tools',
+    title: 'Media Tools - OCR, QR Code & Image Tools | One Toys',
+    description: 'Extract text from images with OCR, generate QR codes for links and Wi-Fi, compress and resize images, and play HLS streams — all in your browser, with nothing uploaded.',
+    keywords: 'media tools, image to text, ocr, ocr online, extract text from image, qr code generator, create qr code, wifi qr code, image compressor, compress image, image optimizer, hls player, m3u8 player, http live streaming',
     type: 'website'
   },
 
@@ -112,6 +112,13 @@ export const seoData = {
     title: 'QR Code Generator - Links, Text & Wi-Fi | One Toys',
     description: 'Create a QR code for a link, text or Wi-Fi network in your browser. Choose the size, error correction and colours, then download a PNG or a sharp SVG. Nothing is uploaded.',
     keywords: 'qr code generator, create qr code, free qr code, qr code png, qr code svg, wifi qr code, qr generator, link qr code, barcode generator online',
+    type: 'tool'
+  },
+
+  '/media/image-to-text': {
+    title: 'Image to Text (OCR) - Extract Text From Images | One Toys',
+    description: 'Extract text from screenshots, scans and photos with OCR that runs in your browser. Choose the language, read the recognized text, then copy or download it as .txt. The image is never uploaded.',
+    keywords: 'image to text, ocr, ocr online, free ocr, extract text from image, image text converter, text from screenshot, screenshot to text, photo to text, scan to text, recognize text, tesseract ocr',
     type: 'tool'
   },
 

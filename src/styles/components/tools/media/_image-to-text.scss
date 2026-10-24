@@ -1,0 +1,325 @@
+// Image to Text (OCR) — image in, text out, so it does not use the
+// `.three-column-layout` + CodeEditor *input* pattern. The result editor is
+// loaded lazily (see ImageToText.js) and the engine only when "Extract text"
+// is pressed.
+
+.image-to-text {
+  .ocr-layout {
+    display: grid;
+    // `min()` in the track minimum: a bare `minmax(320px, 1fr)` cannot shrink and
+    // gets CLIPPED by the card below that width.
+    grid-template-columns: minmax(min(320px, 100%), 1fr) minmax(min(320px, 100%), 1.15fr);
+    gap: 2rem;
+    align-items: start;
+  }
+
+  .ocr-panel {
+    min-width: 0;
+  }
+
+  .ocr-drop {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1.5rem;
+    border: 2px dashed $border-medium;
+    border-radius: $border-radius-xl;
+    background: $bg-secondary;
+    text-align: center;
+    transition: border-color 0.15s ease, background 0.15s ease;
+
+    &.is-dragging {
+      border-color: $primary-color;
+      background: rgba($primary-color, 0.06);
+    }
+
+    &.has-file {
+      border-style: solid;
+      padding: 1rem;
+    }
+  }
+
+  .ocr-preview {
+    display: block;
+    width: 100%;
+    max-height: 220px;
+    object-fit: contain;
+    border-radius: $border-radius-lg;
+    background: #ffffff;
+  }
+
+  .ocr-file-meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+    font-size: $font-size-xs;
+    color: $text-muted;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .ocr-drop-icon {
+    font-size: 2rem;
+    line-height: 1;
+  }
+
+  .ocr-drop-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: $text-primary;
+  }
+
+  .ocr-drop-hint {
+    font-size: $font-size-sm;
+    color: $text-secondary;
+  }
+
+  .ocr-drop-button {
+    position: relative;
+    overflow: hidden;
+
+    // The native input stays in the DOM for keyboard and screen-reader access;
+    // the visible control is the label.
+    input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+  }
+
+  .ocr-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid $line;
+    border-radius: $radius-card;
+    background: $surface-inset;
+  }
+
+  .ocr-control {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    flex: 1 1 12rem;
+    min-width: 0;
+  }
+
+  .ocr-control-label {
+    font-size: $font-size-xs;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: $text-muted;
+  }
+
+  .ocr-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .ocr-status {
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid $line;
+    border-radius: $radius-control;
+    background: $surface-card;
+  }
+
+  .ocr-status-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+    font-size: $font-size-sm;
+    color: $text-secondary;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .ocr-progress {
+    height: 6px;
+    border-radius: 999px;
+    background: $bg-subtle;
+    overflow: hidden;
+
+    span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: $primary-color;
+      transition: width 0.2s ease;
+    }
+
+    // Downloading the engine gives no useful percentage, so show motion rather
+    // than a fake number.
+    &.is-indeterminate span {
+      width: 40%;
+      animation: ocr-progress-slide 1.2s ease-in-out infinite;
+    }
+  }
+
+  .ocr-error {
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid rgba($error-color, 0.25);
+    border-radius: $radius-control;
+    background: rgba($error-color, 0.08);
+    color: $error-color;
+    font-size: $font-size-sm;
+  }
+
+  .ocr-note {
+    margin-top: 1rem;
+    font-size: $font-size-sm;
+    line-height: 1.55;
+    color: $text-secondary;
+  }
+
+  .ocr-result {
+    min-width: 0;
+  }
+
+  .ocr-result-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .ocr-result-title {
+    font-size: $font-size-sm;
+    font-weight: 600;
+    color: $text-primary;
+  }
+
+  .ocr-result-meta {
+    font-size: $font-size-xs;
+    color: $text-muted;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .ocr-result-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 420px;
+    padding: 1.5rem;
+    border: 1px dashed $border-medium;
+    border-radius: $border-radius-lg;
+    background: $bg-secondary;
+    text-align: center;
+    font-size: $font-size-sm;
+    color: $text-secondary;
+  }
+
+  .ocr-result-hint {
+    max-width: 26rem;
+    font-size: $font-size-xs;
+    line-height: 1.55;
+    color: $text-muted;
+  }
+
+  .ocr-editor-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 420px;
+    border: 1px solid $line;
+    border-radius: $border-radius-lg;
+    background: $bg-secondary;
+    font-size: $font-size-sm;
+    color: $text-secondary;
+  }
+
+  .ocr-result-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+}
+
+@keyframes ocr-progress-slide {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(250%); }
+}
+
+@media (max-width: 900px) {
+  .image-to-text {
+    .ocr-layout {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .ocr-result-placeholder {
+      min-height: 240px;
+    }
+  }
+}
+
+body.dark-theme {
+  .image-to-text {
+    .ocr-drop {
+      border-color: #475569;
+      background: $dark-bg-secondary;
+
+      &.is-dragging {
+        border-color: #60a5fa;
+        background: rgba(96, 165, 250, 0.08);
+      }
+    }
+
+    .ocr-drop-title,
+    .ocr-result-title {
+      color: $dark-text-primary;
+    }
+
+    .ocr-drop-hint,
+    .ocr-note,
+    .ocr-result-placeholder {
+      color: $dark-text-secondary;
+    }
+
+    .ocr-controls {
+      background: $dark-bg-secondary;
+      border-color: $dark-border;
+    }
+
+    .ocr-status {
+      background: #1e293b;
+      border-color: $dark-border;
+    }
+
+    .ocr-status-row {
+      color: $dark-text-secondary;
+    }
+
+    .ocr-progress {
+      background: #334155;
+    }
+
+    .ocr-result-placeholder,
+    .ocr-editor-loading {
+      border-color: #475569;
+      background: $dark-bg-secondary;
+    }
+
+    .ocr-editor-loading {
+      color: $dark-text-secondary;
+    }
+
+    .ocr-error {
+      color: #fca5a5;
+      border-color: rgba(248, 113, 113, 0.4);
+      background: rgba(248, 113, 113, 0.12);
+    }
+  }
+}

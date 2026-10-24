@@ -1189,6 +1189,71 @@ export const toolContent = {
     ]
   },
 
+  '/media/image-to-text': {
+    sections: [
+      {
+        title: 'What this OCR tool does',
+        paragraphs: [
+          'It reads the text out of a screenshot, scan or photo and puts it in an editable box you can copy or download. Recognition runs in a Web Worker in your browser using tesseract, a long-standing open-source OCR engine compiled to WebAssembly, so the image is never uploaded and nothing is stored on a server.',
+          'The engine and one language model are downloaded the first time you press Extract text — roughly 5 to 8 MB depending on the language. The browser caches both, so the second run starts almost immediately.'
+        ]
+      },
+      {
+        title: 'What makes a readable image',
+        paragraphs: [
+          'Resolution and contrast matter more than anything else. Tesseract is happiest with text around 300 DPI, which is why a screenshot reads almost perfectly while a photo of a screen at an angle often does not. Straighten the page, crop to the text, and avoid shadows across the lines.',
+          'A 12 MP photo is not automatically better: the tool caps the long edge at 3000 pixels, which keeps recognition fast without discarding detail that matters. If the result is full of nonsense characters, the usual cause is a low-contrast original or text that is only a few pixels tall.'
+        ]
+      },
+      {
+        title: 'Languages, layout and handwriting',
+        paragraphs: [
+          'Pick the language of the text, not the language of the interface. For mixed Chinese and English pages choose a combined option such as Chinese (Simplified) + English, which loads both models and lets the engine switch between them. Each extra language adds download size and time.',
+          'OCR returns lines in reading order, not a layout: columns, tables and sidebars are flattened, and images are ignored. Handwriting is generally not recognized — the models are trained on printed type, so signatures and notes will come back as noise even when the rest of the page is clean.'
+        ]
+      }
+    ],
+    faq: [
+      {
+        question: 'Is my image uploaded to a server?',
+        answer:
+          'No. The image is decoded and recognized locally, in a Web Worker on your own device. Only the OCR engine and the language model are downloaded — never the image. You can confirm this in the DevTools Network tab while extracting text.'
+      },
+      {
+        question: 'Why is the first run slow?',
+        answer:
+          'It downloads the WebAssembly engine (about 4 MB) and one language model (1 to 3 MB). The browser caches both, and the language model is also stored in IndexedDB, so subsequent runs on the same device start in about a second.'
+      },
+      {
+        question: 'Which languages are supported?',
+        answer:
+          'English, Chinese (Simplified and Traditional, each optionally combined with English), Japanese, Korean, Spanish, French and German. Additional tesseract language models can be added to the tool if you need another one.'
+      },
+      {
+        question: 'Can it read handwriting?',
+        answer:
+          'Not reliably. The models are trained on printed text, so handwriting, signatures and stylised logos usually come back as garbage. Clean printed text — screenshots, PDFs rendered to images, book scans — is what this tool is for.'
+      },
+      {
+        question: 'Does it keep tables and columns?',
+        answer:
+          'No. Recognition returns text in reading order; the visual layout is not reconstructed. For a two-column page you may need to crop each column separately, or reorder the lines after pasting the result into an editor.'
+      },
+      {
+        question: 'What does the confidence percentage mean?',
+        answer:
+          'It is the average per-character confidence reported by the engine. Above roughly 85% the text is usually accurate; below 60% expect mistakes and check numbers, names and punctuation against the image. Low confidence almost always points at the source image rather than the language setting.'
+      }
+    ],
+    related: [
+      { path: '/media/image-compress', title: 'Image Compressor', description: 'shrink the image before sharing it' },
+      { path: '/media/qr-code', title: 'QR Code Generator', description: 'turn a link into a scannable code' },
+      { path: '/text/character-count', title: 'Character Count', description: 'count words and characters in the result' },
+      { path: '/text/space-remover', title: 'Space Remover', description: 'clean up broken line breaks and spacing' },
+      { path: '/text/case-converter', title: 'Case Converter', description: 'normalise the extracted casing' }
+    ]
+  },
+
   '/media/qr-code': {
     sections: [
       {

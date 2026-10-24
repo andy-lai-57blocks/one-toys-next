@@ -14,6 +14,12 @@ const Media = () => {
       icon: '🖼️'
     },
     {
+      path: '/media/image-to-text',
+      title: 'Image to Text (OCR)',
+      description: 'Extract text from screenshots, scans and photos with in-browser OCR',
+      icon: '\uD83D\uDD8D\uFE0F'
+    },
+    {
       path: '/media/qr-code',
       title: 'QR Code Generator',
       description: 'Create QR codes for links, text and Wi-Fi networks, then download PNG or SVG',

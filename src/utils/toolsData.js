@@ -127,6 +127,15 @@ export const allTools = [
     keywords: ['qr', 'qr code', 'qr code generator', 'create qr code', 'generate qr code', 'wifi qr code', 'qr png', 'qr svg', 'link qr code', 'barcode', 'scan code', 'free qr code']
   },
   {
+    path: '/media/image-to-text',
+    title: 'Image to Text (OCR)',
+    description: 'Extract text from screenshots, scans and photos with in-browser OCR',
+    icon: '\uD83D\uDD8D\uFE0F',
+    category: 'Generators',
+    section: 'Media',
+    keywords: ['image to text', 'ocr', 'ocr online', 'extract text from image', 'image text converter', 'text from screenshot', 'text from photo', 'picture to text', 'scan to text', 'recognize text', 'tesseract']
+  },
+  {
     path: '/media/hls',
     title: 'HLS Stream Player',
     description: 'Play and analyze HTTP Live Streaming (HLS) content',
@@ -356,6 +365,9 @@ export const subdomainRoutes = {
   'hls': '/media/hls',
   'qr': '/media/qr-code',
   'qrcode': '/media/qr-code',
+  'ocr': '/media/image-to-text',
+  'text-from-image': '/media/image-to-text',
+  'imagetotext': '/media/image-to-text',
   'image': '/media/image-compress',
   'compress': '/media/image-compress',
   'resize': '/media/image-compress',

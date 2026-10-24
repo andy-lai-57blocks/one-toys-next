@@ -27,7 +27,7 @@ const CATEGORIES = [
   { path: '/code', title: 'Code tools', description: 'Encoders, decoders, formatters' },
   { path: '/text', title: 'Text tools', description: 'Convert, count, clean up text' },
   { path: '/datetime', title: 'DateTime tools', description: 'Timestamps, cron, time zones' },
-  { path: '/media', title: 'Media tools', description: 'Compress images, generate QR codes, play HLS streams' }
+  { path: '/media', title: 'Media tools', description: 'Compress images, extract text from images, generate QR codes, play HLS streams' }
 ];
 
 export default function NotFound() {

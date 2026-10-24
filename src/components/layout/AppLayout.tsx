@@ -76,6 +76,7 @@ const NAV_ITEMS: NavItem[] = [
     icon: '🖼️',
     submenu: [
       { path: '/media/image-compress', title: 'Image Compressor' },
+      { path: '/media/image-to-text', title: 'Image to Text' },
       { path: '/media/qr-code', title: 'QR Code' },
       { path: '/media/hls', title: 'HLS Player' },
     ],
