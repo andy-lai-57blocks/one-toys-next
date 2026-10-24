@@ -14,6 +14,12 @@ const Media = () => {
       icon: '🖼️'
     },
     {
+      path: '/media/qr-code',
+      title: 'QR Code Generator',
+      description: 'Create QR codes for links, text and Wi-Fi networks, then download PNG or SVG',
+      icon: '\uD83D\uDD33'
+    },
+    {
       path: '/media/hls',
       title: 'HLS Stream Player',
       description: 'Play and analyze HTTP Live Streaming (HLS) content',

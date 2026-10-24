@@ -118,6 +118,15 @@ export const allTools = [
     keywords: ['image', 'compress', 'compressor', 'resize', 'shrink', 'reduce image size', 'jpeg', 'jpg', 'png', 'webp', 'optimize image', 'image optimizer', 'photo']
   },
   {
+    path: '/media/qr-code',
+    title: 'QR Code Generator',
+    description: 'Create QR codes for links, text and Wi-Fi networks, then download PNG or SVG',
+    icon: '\uD83D\uDD33',
+    category: 'Generators',
+    section: 'Media',
+    keywords: ['qr', 'qr code', 'qr code generator', 'create qr code', 'generate qr code', 'wifi qr code', 'qr png', 'qr svg', 'link qr code', 'barcode', 'scan code', 'free qr code']
+  },
+  {
     path: '/media/hls',
     title: 'HLS Stream Player',
     description: 'Play and analyze HTTP Live Streaming (HLS) content',
@@ -345,6 +354,8 @@ export const subdomainRoutes = {
   'password': '/code/password',
   'uuid': '/code/uuid',
   'hls': '/media/hls',
+  'qr': '/media/qr-code',
+  'qrcode': '/media/qr-code',
   'image': '/media/image-compress',
   'compress': '/media/image-compress',
   'resize': '/media/image-compress',

@@ -108,6 +108,13 @@ export const seoData = {
     type: 'tool'
   },
 
+  '/media/qr-code': {
+    title: 'QR Code Generator - Links, Text & Wi-Fi | One Toys',
+    description: 'Create a QR code for a link, text or Wi-Fi network in your browser. Choose the size, error correction and colours, then download a PNG or a sharp SVG. Nothing is uploaded.',
+    keywords: 'qr code generator, create qr code, free qr code, qr code png, qr code svg, wifi qr code, qr generator, link qr code, barcode generator online',
+    type: 'tool'
+  },
+
   '/code/vast': {
     title: 'VAST Formatter - Format Video Ad XML | One Toys',
     description: 'Professional VAST (Video Ad Serving Template) formatter and validator. Pretty print, minify, and validate VAST XML for video advertising. Supports VAST 2.0, 3.0, and 4.0.',

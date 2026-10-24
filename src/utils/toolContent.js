@@ -1189,6 +1189,70 @@ export const toolContent = {
     ]
   },
 
+  '/media/qr-code': {
+    sections: [
+      {
+        title: 'What this QR code generator does',
+        paragraphs: [
+          'It turns a link, a block of text or a Wi-Fi network into a QR code and lets you download it as a PNG or an SVG. Everything is encoded in your browser, so the text, network name and password never reach a server. That matters for Wi-Fi codes, where the password is literally part of the image.',
+          'The code is static: the data is stored inside the pattern itself, so it keeps working forever and does not depend on this site or on a redirect service.'
+        ]
+      },
+      {
+        title: 'Size, error correction and colours',
+        paragraphs: [
+          'Error correction decides how much of the code can be damaged or covered before it stops scanning: L recovers about 7% of the pattern, M about 15%, Q about 25% and H about 30%. Higher levels survive more wear and a partially covered corner, but they also pack more redundancy into the same square, so the modules get smaller for the same content. M is the sensible default; use H if the code will be printed small, laminated, or placed where it can be scratched.',
+          'Keep the quiet zone: the blank margin around the pattern is what scanners use to find its edges. Removing it is a common reason a code that looks fine will not scan. Keep the foreground dark and the background light, and test the printed size — anything much under two centimetres square is unreliable for a phone camera at arm’s length.'
+        ]
+      },
+      {
+        title: 'Wi-Fi codes share the password',
+        paragraphs: [
+          'A Wi-Fi QR code is a convenience format that iOS and Android both understand: scanning it offers to join the network without anyone typing the password. Because the password is written into the code in plain text, treat a printed Wi-Fi code exactly like a written-down password. Change the network password and every old code stops working.'
+        ]
+      }
+    ],
+    faq: [
+      {
+        question: 'Are the QR codes generated on a server?',
+        answer:
+          'No. The encoding and the PNG/SVG rendering both run in your browser, so the content is never uploaded. You can confirm it in the DevTools Network tab while generating a code.'
+      },
+      {
+        question: 'Which error correction level should I use?',
+        answer:
+          'M (about 15% recoverable) is a good default for screens and ordinary print. Choose H when the code may be creased, scratched or partly covered, and L when the content is long and you need the smallest possible pattern.'
+      },
+      {
+        question: 'Do these QR codes expire?',
+        answer:
+          'No. This tool creates static codes: the content lives inside the pattern, so there is no redirect and nothing to expire. Dynamic QR codes, which point at a short link, do expire or stop working if the link service is discontinued.'
+      },
+      {
+        question: 'Why will my phone not scan the code?',
+        answer:
+          'The usual causes are too little contrast, a missing quiet zone, a printed size that is too small, or a screen brightness that is too low. Try downloading the PNG at 512px or larger and scanning it from a second screen to separate a content problem from a printing problem.'
+      },
+      {
+        question: 'What is the difference between the PNG and the SVG?',
+        answer:
+          'PNG is a fixed-size image and is the safe choice for chat apps, slides and websites. SVG is vector, so it stays sharp at any print size — use it for posters, packaging and anything going to a printer.'
+      },
+      {
+        question: 'Can I use the generated code commercially?',
+        answer:
+          'Yes. The code is generated locally from your own content and there is no watermark or licence restriction on the output. As always, do not put a third party’s trademark or logo into a code you do not have the right to use.'
+      }
+    ],
+    related: [
+      { path: '/media/image-compress', title: 'Image Compressor', description: 'shrink the artwork the code is printed on' },
+      { path: '/code/url', title: 'URL Encoder/Decoder', description: 'clean up a link before encoding it' },
+      { path: '/code/base64', title: 'Base64 Encoder/Decoder', description: 'handle the data behind a link' },
+      { path: '/code/uuid', title: 'UUID Generator', description: 'give each printed code a unique name' },
+      { path: '/media/hls', title: 'HLS Stream Player', description: 'play the video a QR code links to' }
+    ]
+  },
+
   '/media/hls': {
     sections: [
       {
