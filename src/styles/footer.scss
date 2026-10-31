@@ -1,0 +1,215 @@
+/* Site footer --------------------------------------------------------------
+   Sits outside .content-area so it reads as page chrome rather than a second
+   card. Three deliberate decisions:
+
+   1. SURFACE = the page tint ($bg-secondary), not white. The content card is
+      the only white surface on the page; a white footer made the page look
+      like two stacked cards with an arbitrary gap between them.
+   2. COLUMNS = `1fr auto auto`. The old `2fr 1fr 1fr` gave the brand a 664px
+      track for 416px of text, leaving 280px of dead space in the middle of the
+      footer. Now the brand takes the slack and the two link groups hug the
+      right edge, so the last column ends where the card ends.
+   3. ONE HAIRLINE, not two. The bottom row's divider was $line-soft (#f1f5f9),
+      invisible against either surface. It is $line now, like the top border.
+
+   The gutter is `chrome-gutter` from topnav.scss - the same mixin the nav rows
+   use - so the footer, both nav rows and the content card cannot drift apart. */
+
+/* Footer ink. Measured on the #f1f5f9 surface: the shared $text-secondary
+   (#6b7280) is 4.36:1 there, under the 4.5:1 floor for body-size text, so these
+   are stated explicitly rather than borrowed by value. */
+$footer-link: #4b5563;   // 6.2:1 on #f1f5f9
+$footer-quiet: #475569;  // 6.7:1 on #f1f5f9
+
+.site-footer {
+  width: 100%;
+  padding-top: $spacing-xl;
+  /* One step darker than the page tint ($bg-secondary). Without that step the
+     top hairline separated two identical colours and read as an accident.
+     .main-content already leaves 24px of page tint under the card, so there is
+     no margin here. */
+  background: $bg-subtle;
+  border-top: 1px solid $line;
+}
+
+.footer-inner {
+  @include chrome-gutter;
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) repeat(3, minmax(0, 1fr));
+  align-items: start;
+  column-gap: $spacing-xl;
+  row-gap: $spacing-lg;
+  padding-bottom: $spacing-lg;
+}
+
+.footer-brand {
+  min-width: 0;
+}
+
+.footer-logo {
+  display: inline-block;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: $text-primary;
+  text-decoration: none;
+
+  &:hover {
+    color: $primary-color;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $primary-color;
+    outline-offset: 2px;
+    border-radius: $radius-small;
+  }
+}
+
+.footer-tagline {
+  max-width: 30rem;
+  margin-top: $spacing-sm;
+  font-size: 0.84375rem;
+  line-height: 1.65;
+  color: $footer-link;
+}
+
+.footer-col {
+  min-width: 0;
+}
+
+.footer-heading {
+  margin: 0 0 $spacing-sm;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: $footer-quiet;
+}
+
+.footer-col ul {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.footer-col a {
+  display: inline-block;
+  font-size: 0.84375rem;
+  line-height: 1.4;
+  color: $footer-link;
+  text-decoration: none;
+
+  &:hover {
+    color: $primary-color;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $primary-color;
+    outline-offset: 2px;
+    border-radius: $radius-small;
+  }
+}
+
+.footer-bottom {
+  @include chrome-gutter;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-md;
+  padding-top: $spacing-md;
+  padding-bottom: $spacing-md;
+  border-top: 1px solid $line;
+}
+
+.footer-bottom p {
+  margin: 0;
+  font-size: $font-size-xs;
+  color: $footer-quiet;
+}
+
+.footer-contact a {
+  color: inherit;
+  text-decoration: none;
+
+  &:hover {
+    color: $primary-color;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $primary-color;
+    outline-offset: 2px;
+    border-radius: $radius-small;
+  }
+}
+
+/* Dark mode. body.dark-theme is the real toggle (see ThemeContext); the tool
+   containers' own .dark-mode class does not reach this element. */
+body.dark-theme .site-footer {
+  background: #0f172a;
+  border-top-color: #334155;
+}
+
+body.dark-theme .footer-logo {
+  color: $dark-text-primary;
+}
+
+body.dark-theme .footer-tagline,
+body.dark-theme .footer-col a,
+body.dark-theme .footer-bottom p {
+  color: $dark-text-secondary;
+}
+
+body.dark-theme .footer-heading {
+  color: #94a3b8;
+}
+
+body.dark-theme .footer-bottom {
+  border-top-color: #334155;
+}
+
+body.dark-theme .footer-logo:hover,
+body.dark-theme .footer-col a:hover,
+body.dark-theme .footer-contact a:hover {
+  color: #60a5fa;
+}
+
+/* Mobile/tablet: brand on its own row, then the three link groups side by side.
+   Two columns was tried first and pushed the third group onto a THIRD row,
+   making the footer 466px tall at 375px - no better than the stacked version it
+   replaced. Three narrow columns keep it near 280px because the labels are all
+   short ("Code tools", "DateTime tools", "Image Compressor"). */
+@media (max-width: 900px) {
+  .footer-inner {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: $spacing-md;
+    row-gap: $spacing-md;
+  }
+
+  .footer-brand {
+    grid-column: 1 / -1;
+  }
+
+  .footer-tagline,
+  .footer-col a {
+    font-size: 0.8125rem;
+  }
+
+  .footer-heading {
+    margin-bottom: $spacing-xs;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $spacing-xs;
+  }
+}

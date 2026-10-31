@@ -28,7 +28,11 @@ body {
   flex: 1;
   width: 100%;
   padding: 0.5rem $content-gutter 1.5rem $content-gutter;
-  min-height: 100vh;
+  /* No min-height: `.app` is a flex column with min-height:100vh and this
+     element has flex:1, so it already stretches. The old `min-height: 100vh`
+     stacked on top of `.content-area`'s own `calc(100vh - 9.5rem)` and left
+     ~144px of empty tint below the card on short pages (e.g. /media/), which
+     pushed the footer into a visible dead zone. */
   background: #f8fafc;
 }
 

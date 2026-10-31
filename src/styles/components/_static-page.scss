@@ -1,0 +1,123 @@
+/* Static pages (About / Privacy / Contact).
+   These sit straight inside .content-area with no tool card, so they set their
+   own reading column. 46rem is wider than the tool-content column (38rem)
+   because these pages are prose-only — there is no editor beside the text to
+   compete with. */
+
+.static-page {
+  padding: 1.5rem;
+}
+
+.static-page-inner {
+  max-width: 46rem;
+  margin: 0 auto;
+}
+
+.static-page h1 {
+  margin: 0;
+  font-size: $font-size-3xl;
+  font-weight: 700;
+  line-height: 1.2;
+  color: $text-primary;
+}
+
+.static-page-lead {
+  margin-top: $spacing-md;
+  font-size: $font-size-base;
+  line-height: 1.7;
+  color: $text-secondary;
+}
+
+.static-page h2 {
+  margin: $spacing-xl 0 $spacing-sm;
+  font-size: $font-size-lg;
+  font-weight: 700;
+  line-height: 1.3;
+  color: $text-primary;
+}
+
+.static-page p,
+.static-page li {
+  font-size: 0.975rem;
+  line-height: 1.7;
+  color: $text-primary;
+}
+
+.static-page p + p {
+  margin-top: $spacing-md;
+}
+
+.static-page ul {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+  margin: $spacing-sm 0 0;
+  padding-left: 1.25rem;
+}
+
+.static-page a {
+  color: $primary-color;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.static-page a:hover {
+  text-decoration-thickness: 2px;
+}
+
+.static-page a:focus-visible {
+  outline: 2px solid $primary-color;
+  outline-offset: 2px;
+  border-radius: $radius-small;
+}
+
+.static-page code {
+  padding: 1px 5px;
+  font-family: $font-family-mono;
+  font-size: 0.85em;
+  background: $surface-inset;
+  border: 1px solid $line;
+  border-radius: $radius-small;
+}
+
+.static-page-updated {
+  margin-top: $spacing-xl;
+  font-size: $font-size-xs;
+  color: $text-muted;
+}
+
+/* Dark mode — keyed on body.dark-theme, which is what ThemeContext toggles. */
+body.dark-theme .static-page h1,
+body.dark-theme .static-page h2,
+body.dark-theme .static-page p,
+body.dark-theme .static-page li {
+  color: $dark-text-primary;
+}
+
+body.dark-theme .static-page-lead {
+  color: $dark-text-secondary;
+}
+
+body.dark-theme .static-page a {
+  color: #60a5fa;
+}
+
+body.dark-theme .static-page code {
+  background: #334155;
+  border-color: $dark-border;
+  color: $dark-text-primary;
+}
+
+body.dark-theme .static-page-updated {
+  color: $text-muted;
+}
+
+@media (max-width: 576px) {
+  .static-page {
+    padding: 1rem;
+  }
+
+  .static-page h1 {
+    font-size: $font-size-2xl;
+  }
+}

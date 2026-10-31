@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { useTheme } from '@/contexts/ThemeContext';
 import { Breadcrumbs } from '@/components/shared';
 import GlobalSearch from '@/components/search/GlobalSearch';
+import SiteFooter from './SiteFooter';
 
 interface NavTool {
   path: string;
@@ -229,6 +230,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
           </div>
         </div>
       </main>
+      <SiteFooter />
       <FloatingThemeToggle />
     </div>
   );

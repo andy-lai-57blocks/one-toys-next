@@ -10,6 +10,10 @@ const withSlash = (path: string) => `${BASE_URL}${path.endsWith('/') ? path : `$
 // Category landing pages
 const CATEGORY_PATHS = ['/code', '/text', '/datetime', '/media'];
 
+// About / Privacy / Contact. Lower priority than the tools, but these are the
+// pages a directory reviewer or a journalist looks for.
+const STATIC_PAGE_PATHS = ['/about', '/privacy', '/contact'];
+
 export const dynamic = 'force-static';
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -33,6 +37,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified,
       changeFrequency: 'monthly' as const,
       priority: 0.8,
+    })),
+    ...STATIC_PAGE_PATHS.map((path) => ({
+      url: withSlash(path),
+      lastModified,
+      changeFrequency: 'yearly' as const,
+      priority: 0.5,
     })),
   ];
 }

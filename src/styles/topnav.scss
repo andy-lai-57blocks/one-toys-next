@@ -38,6 +38,47 @@
   margin: 0 auto;
 }
 
+// Responsive page gutter for full-width chrome (both nav rows, the site footer).
+// Mirrors what .main-content + .content-container ACTUALLY apply at each width,
+// which is not the same as $content-gutter + $content-inset-tablet at every
+// breakpoint because .main-content drops to $content-gutter-mobile <= 768px and
+// 0.5rem <= 320px:
+//   577-768   main 12 + inset 16 = 28
+//   769-1199  main 24 + inset 16 = 40
+//   <=320     main  8
+// Measured drift before this mixin: at 768px the content card started at x=28
+// while both nav rows started at x=40; at 320px the card was at x=8 and the nav
+// at x=12. Use this mixin, never a bare nav-gutter, for page-level chrome.
+@mixin chrome-gutter {
+  @include nav-gutter($content-gutter, $content-max-width);
+
+  @media (max-width: 320px) {
+    @include nav-gutter(0.5rem, $content-max-width);
+  }
+
+  @media (min-width: 321px) and (max-width: 576px) {
+    @include nav-gutter($content-gutter-mobile, $content-max-width);
+  }
+
+  @media (min-width: 577px) and (max-width: 768px) {
+    @include nav-gutter(
+      $content-gutter-mobile + $content-inset-tablet,
+      $content-max-width
+    );
+  }
+
+  @media (min-width: 769px) and (max-width: 1199px) {
+    @include nav-gutter(
+      $content-gutter + $content-inset-tablet,
+      $content-max-width
+    );
+  }
+
+  @media (min-width: 1600px) {
+    @include nav-gutter($content-gutter-2xl, $content-max-width-2xl);
+  }
+}
+
 .topnav {
   position: sticky;
   top: 0;
@@ -48,8 +89,6 @@
 
 /* Row 1 ------------------------------------------------------------------- */
 .topnav-bar {
-  @include nav-gutter($content-gutter, $content-max-width);
-
   position: relative;
   display: flex;
   // stretch, so the tabs can run the full height of the bar and hang their
@@ -262,8 +301,6 @@
 }
 
 .subnav-scroll {
-  @include nav-gutter($content-gutter, $content-max-width);
-
   overflow-x: auto;
   scrollbar-width: none;
   overscroll-behavior-x: contain;
@@ -409,31 +446,14 @@
   }
 }
 
-/* Gutter overrides — mirror .main-content + .content-container at each range.
-   Ordered narrowest-first; the ranges do not overlap, so neither does the
-   cascade. */
-@media (max-width: 576px) {
-  .topnav-bar,
-  .subnav-scroll {
-    @include nav-gutter($content-gutter-mobile, $content-max-width);
-  }
-}
-
-@media (min-width: 577px) and (max-width: 1199px) {
-  $nav-inset-tablet: $content-gutter + $content-inset-tablet;
-
-  .topnav-bar,
-  .subnav-scroll {
-    @include nav-gutter($nav-inset-tablet, $content-max-width);
-  }
+/* Gutter — one definition for every full-width chrome element, so the nav rows
+   and the footer necessarily share it and land on the content card's x. */
+.topnav-bar,
+.subnav-scroll {
+  @include chrome-gutter;
 }
 
 @media (min-width: 1600px) {
-  .topnav-bar,
-  .subnav-scroll {
-    @include nav-gutter($content-gutter-2xl, $content-max-width-2xl);
-  }
-
   .topnav-search {
     width: 320px;
   }

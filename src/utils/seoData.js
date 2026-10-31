@@ -37,6 +37,29 @@ export const seoData = {
     type: 'website'
   },
 
+  // Static pages (About / Privacy / Contact). `type: 'page'` keeps
+  // generateToolJsonLd from emitting WebApplication schema for them.
+  '/about': {
+    title: 'About One Toys — Free Browser-Based Developer Tools',
+    description: 'One Toys is 27 free developer utilities that run entirely in your browser. No account, no upload, no server-side processing — your text and files never leave your device.',
+    keywords: 'about one toys, browser based developer tools, client side tools, no upload, privacy friendly tools',
+    type: 'page'
+  },
+
+  '/privacy': {
+    title: 'Privacy Policy | One Toys',
+    description: 'What stays on your device, what leaves it, and which third parties are involved. The tools run client-side, so nothing you type or paste is sent to us.',
+    keywords: 'privacy policy, one toys privacy, client side processing, data protection',
+    type: 'page'
+  },
+
+  '/contact': {
+    title: 'Contact | One Toys',
+    description: 'Report a bug, a security issue or an incorrect explanation, and see what to include so it can be reproduced quickly.',
+    keywords: 'contact one toys, report a bug, security report, developer tools support',
+    type: 'page'
+  },
+
   // Code Tools
   '/code/jwt-decoder': {
     title: 'JWT Decoder — Decode & Verify JSON Web Tokens | One Toys',
@@ -237,7 +260,20 @@ export const getBreadcrumbs = (path) => {
       'media': 'Media Tools'
     };
 
-    if (categoryLabels[category]) {
+    // Top-level pages that are not tool categories. Without this, the crumb
+    // trail on /about was a single "Home" item linking to itself.
+    const staticPageLabels = {
+      'about': 'About',
+      'privacy': 'Privacy Policy',
+      'contact': 'Contact'
+    };
+
+    if (staticPageLabels[category]) {
+      breadcrumbs.push({
+        label: staticPageLabels[category],
+        path: `/${category}`
+      });
+    } else if (categoryLabels[category]) {
       breadcrumbs.push({
         label: categoryLabels[category],
         path: `/${category}`

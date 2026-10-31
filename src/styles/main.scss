@@ -9,6 +9,7 @@
 
 // Page styles
 @import 'pages';
+@import 'footer';
 
 // Component styles - Text Tools
 @import 'components/tools/text/index';
@@ -25,6 +26,7 @@
 // Component styles - Shared Components
 @import 'components/breadcrumbs';
 @import 'components/tool-content';
+@import 'components/static-page';
 
 // Component styles - Search
 @import 'components/global-search';
