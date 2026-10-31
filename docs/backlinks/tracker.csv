@@ -1,0 +1,19 @@
+date,priority,target,target_url,status,link_type,notes
+2026-10-31,0,/about page,,done,,Shipped with footer + AboutPage/Organization JSON-LD
+2026-10-31,0,/privacy page,,done,,Names Vercel / AdSense / jsDelivr / HLS host honestly
+2026-10-31,0,Site footer,,done,,About / Privacy / Contact + 4 categories on every page
+,0,Screenshots (1280x800 x4),,not-started,,JSON Fixer / JWT / Image Compress / Timezone
+,0,Organization sameAs,,not-started,,Needs real profile URLs; node exists on /about
+,1,AlternativeTo,https://alternativeto.net/manage/add-app/,not-started,verify,One listing per tool where it genuinely competes
+,1,SaaSHub,https://www.saashub.com/submit,not-started,verify,
+,1,Public GitHub repo + README,,not-started,,Best value-to-effort item; remote is personal.git today
+,1,Product Hunt,https://www.producthunt.com/posts/new,not-started,nofollow,Needs launch copy + first comment
+,1,Indie Hackers,https://www.indiehackers.com,not-started,nofollow,Post matters more than the product entry
+,1,Slant,https://www.slant.co,not-started,verify,Add under existing "best X for Y" questions
+,2,Hacker News Show HN,https://news.ycombinator.com/submit,not-started,nofollow,One shot — lead with engineering
+,2,r/InternetIsBeautiful,https://www.reddit.com/r/InternetIsBeautiful/submit,not-started,nofollow,Plain title only
+,2,r/webdev Showoff Saturday,https://www.reddit.com/r/webdev/submit,not-started,nofollow,Saturdays only
+,2,dev.to — indexed PNG post,https://dev.to/new,not-started,dofollow,Canonical back to one-toys.com
+,2,Hashnode — Tesseract post,https://hashnode.com,not-started,dofollow,
+,2,V2EX 分享创造,https://www.v2ex.com/go/create,not-started,nofollow,Only if CN audience matters
+,3,Editorial round-up outreach,,not-started,dofollow,3-5 personalised emails per week
