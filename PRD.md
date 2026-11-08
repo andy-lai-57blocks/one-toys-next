@@ -92,7 +92,9 @@
 
 页面 = `AppLayout`（面包屑 / 搜索 / 侧边栏）+ `WebApplication` JSON-LD + 工具组件 + 可选的 `<ToolPageContent path="..." />`。
 
-**每个工具页必须有一个广告位**：工具组件里渲染 `<SimpleAd />`（`src/components/ads/SimpleAdSSG`）。三栏布局的页面放在 `.action-column` 内（与 JSON Formatter 一致）；堆叠式布局的页面放在工具容器末尾。根布局已全局加载 `adsbygoogle.js`，组件本身无需再引脚本。
+**每个工具页必须有一个广告位**：工具组件里渲染 `<SimpleAd />`（`src/components/ads/SimpleAdSSG`）。三栏布局的页面放在 `.action-column` 内（与 JSON Formatter 一致）；堆叠式布局的页面放在工具容器末尾。
+
+**广告位与网络解耦**：调用点只传 `adSlot`，由哪个平台填充由 `src/utils/adConfig.js` 决定 —— `NEXT_PUBLIC_AD_PROVIDERS` 配置全局填充顺序（第一个填上的平台胜出，超时或未填充自动降级到下一个），`SLOT_CHAINS` 可单独指定某个 slot 的平台；`SLOT_SNIPPETS` 用于粘贴其它平台的原始 HTML/JS 代码（Adsterra、PropellerAds、直接赞助等），会在隔离 iframe 中渲染。新增平台只需在 `providers/` 下加一个组件并注册到 `PROVIDER_COMPONENTS`。
 
 **内容区（`src/components/shared/ToolPageContent.tsx`）的规则：**
 
