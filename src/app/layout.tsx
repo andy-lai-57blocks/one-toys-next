@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Analytics } from '@vercel/analytics/react';
 import { ThemeProvider } from '../contexts/ThemeContext';
+import { getAdLoaderScript } from '../utils/adConfig';
 import "../styles/main.scss";
 
 export const metadata: Metadata = {
@@ -17,12 +18,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* AdSense Script */}
-        <script 
-          async 
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8806399994474387" 
-          crossOrigin="anonymous"
-        ></script>
+        {/* AdSense loader: only injects the library on allow-listed hosts, so
+            preview deployments and localhost never request ads. */}
+        <script
+          data-adsense-bootstrap="1"
+          dangerouslySetInnerHTML={{ __html: getAdLoaderScript() }}
+        />
         {/* Mobile Zoom Prevention */}
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover" />
       </head>

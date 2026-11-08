@@ -1,43 +1,57 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
+import { ADSENSE_CLIENT, DEFAULT_AD_SLOT, isAdHostAllowed, isLocalDevHost } from '../../utils/adConfig';
 
-const SimpleAdSSG = ({ 
+const SimpleAdSSG = ({
   className = '',
   style = {},
-  adSlot = '1681486325',
-  adClient = 'ca-pub-8806399994474387'
+  adSlot = DEFAULT_AD_SLOT,
+  adClient = ADSENSE_CLIENT
 }) => {
   // Extract width from style prop, default to '300px'
   const containerWidth = style.width || '300px';
-  const adRef = useRef(null);
-  const [isLocalhost, setIsLocalhost] = useState(false);
+  const insRef = useRef(null);
 
-  // Check localhost on client-side only to prevent hydration mismatch
+  // 'ssr' keeps the ad markup in the server HTML so it hydrates without a
+  // layout shift; the effect below resolves the real host verdict.
+  const [hostState, setHostState] = useState('ssr');
+
+  // Only allow-listed hosts serve ads, so preview deployments and tunnel hosts
+  // never request them (invalid-traffic protection).
   useEffect(() => {
-    setIsLocalhost(
-      window.location.hostname === 'localhost' || 
-      window.location.hostname === '127.0.0.1'
-    );
+    const hostname = window.location.hostname || '';
+    if (isAdHostAllowed(hostname)) {
+      setHostState('allowed');
+    } else {
+      setHostState(isLocalDevHost(hostname) ? 'dev' : 'blocked');
+    }
   }, []);
 
   useEffect(() => {
-    // Skip ads on localhost
-    if (isLocalhost) return;
+    if (hostState !== 'allowed') return;
 
-    // Simple AdSense initialization
-    if (typeof window !== 'undefined' && window.adsbygoogle && adRef.current) {
-      try {
-        (window.adsbygoogle = window.adsbygoogle || []).push({});
-      } catch (error) {
-        // AdSense errors are usually non-critical
-        console.warn('AdSense initialization:', error);
-      }
+    const ins = insRef.current;
+    if (!ins || ins.dataset.adInitialized === '1') return;
+
+    // Marked before pushing. The library is injected asynchronously, so a
+    // remount could otherwise queue the same <ins> twice and AdSense drops the
+    // duplicate with a console error.
+    ins.dataset.adInitialized = '1';
+
+    try {
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    } catch (error) {
+      // AdSense errors are usually non-critical
+      console.warn('AdSense initialization:', error);
     }
-  }, [isLocalhost]);
+  }, [hostState]);
+
+  // Preview/staging hosts: the slot should not exist in the DOM at all.
+  if (hostState === 'blocked') return null;
 
   // Development placeholder
-  if (isLocalhost) {
+  if (hostState === 'dev') {
     return (
       <div 
         className={`ad-placeholder ${className}`}
@@ -71,9 +85,9 @@ const SimpleAdSSG = ({
         margin: '0 auto',
         ...style
       }} 
-      ref={adRef}
     >
       <ins 
+        ref={insRef}
         className="adsbygoogle"
         style={{ 
           display: 'block', 
