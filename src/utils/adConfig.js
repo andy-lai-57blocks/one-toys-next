@@ -118,11 +118,66 @@ export function getAdLoaderScript() {
  * Its tag is rendered inside an isolated iframe, so document.write based
  * snippets cannot blow away the page.
  *
- * Per-slot raw creatives live here, keyed by the adSlot id already passed by the
- * tool components:
+ * `width` / `height` are the creative's native size; the slot scales it down to
+ * fit narrower containers instead of clipping it. Pass `scaleToFit: false` to
+ * render at native size with the overflow hidden.
+ */
+export const ADSTERRA_BANNER = {
+  width: 728,
+  height: 90,
+  html: `<script>
+  atOptions = {
+    'key' : '31a6fa105aec634f785b2b08520fd3e5',
+    'format' : 'iframe',
+    'height' : 90,
+    'width' : 728,
+    'params' : {}
+  };
+</script>
+<script src="https://bauval.org/22/31a6fa105aec634f785b2b08520fd3e5"></script>`,
+};
+
+export const CODE_ADSTERRA_BANNER = {
+  width: 300,
+  height: 250,
+  html: `<script>
+  atOptions = {
+    'key' : 'f992eac809efe5968cc2a199b7af994f',
+    'format' : 'iframe',
+    'height' : 250,
+    'width' : 300,
+    'params' : {}
+  };
+</script>
+<script src="https://bauval.org/22/f992eac809efe5968cc2a199b7af994f"></script>`,
+};
+
+/**
+ * Per-slot raw creatives, keyed by the adSlot id already passed by the tool
+ * components. Which slots actually use them is decided by PATH_CHAINS below.
  */
 const SLOT_SNIPPETS = {
-  // '1681486325': { html: '<a href="..."><img src="..." alt=""></a>', height: 250 },
+  '8095900796': ADSTERRA_BANNER,
+  '1681486325': ADSTERRA_BANNER,
+};
+
+const PATH_SNIPPETS = {
+  '/code': CODE_ADSTERRA_BANNER,
+  '/text': CODE_ADSTERRA_BANNER,
+};
+
+/**
+ * Per-route network chains. Matched on the pathname prefix so categories can
+ * use their own Adsterra creative without relying on shared slot ids.
+ *
+ * AdSense still goes first: Adsterra only takes the space when AdSense returns
+ * no fill (account on hold, no inventory, request blocked).
+ */
+const PATH_CHAINS = {
+  '/code': ['adsense', 'snippet'],
+  '/datetime': ['adsense', 'snippet'],
+  '/media': ['adsense', 'snippet'],
+  '/text': ['adsense', 'snippet'],
 };
 
 /**
@@ -131,9 +186,7 @@ const SLOT_SNIPPETS = {
  * e.g. keeping AdSense on most pages while an affiliate banner fills the
  * compressor slot.
  */
-const SLOT_CHAINS = {
-  // '8095900796': ['ethicalads'],
-};
+const SLOT_CHAINS = {};
 
 const PROVIDER_ALIASES = {
   adsense: 'adsense',
@@ -167,7 +220,12 @@ export function getCarbonConfig() {
   };
 }
 
-export function getSlotSnippet(slot) {
+export function getSlotSnippet(slot, pathname) {
+  const path = Object.keys(PATH_SNIPPETS)
+    .sort((a, b) => b.length - a.length)
+    .find((prefix) => matchesPath(pathname, prefix));
+
+  if (path) return PATH_SNIPPETS[path];
   return SLOT_SNIPPETS[slot] || null;
 }
 
@@ -189,7 +247,7 @@ export function getProviderOrder() {
   return configured.length ? [...new Set(configured)] : ['adsense'];
 }
 
-export function isProviderConfigured(name, slot) {
+export function isProviderConfigured(name, slot, pathname) {
   switch (name) {
     case 'adsense':
       return Boolean(ADSENSE_CLIENT);
@@ -200,10 +258,23 @@ export function isProviderConfigured(name, slot) {
       return Boolean(serve && placement);
     }
     case 'snippet':
-      return Boolean(getSlotSnippet(slot));
+      return Boolean(getSlotSnippet(slot, pathname));
     default:
       return false;
   }
+}
+
+function matchesPath(pathname, prefix) {
+  if (!pathname) return false;
+  return pathname === prefix || pathname.startsWith(`${prefix}/`);
+}
+
+function getPathChain(pathname) {
+  const match = Object.keys(PATH_CHAINS)
+    .sort((a, b) => b.length - a.length)
+    .find((prefix) => matchesPath(pathname, prefix));
+
+  return match ? PATH_CHAINS[match] : null;
 }
 
 /**
@@ -211,16 +282,19 @@ export function isProviderConfigured(name, slot) {
  * rather than rendered blank, so the chain degrades to whatever the site
  * actually has credentials for.
  */
-export function getSlotProviders(slot) {
-  const chain = SLOT_CHAINS[slot] || getProviderOrder();
+export function getSlotProviders(slot, pathname) {
+  const chain = getPathChain(pathname) || SLOT_CHAINS[slot] || getProviderOrder();
 
   return chain
     .map(normalizeProviderName)
     .filter((name, index, list) => name && list.indexOf(name) === index)
-    .filter((name) => isProviderConfigured(name, slot));
+    .filter((name) => isProviderConfigured(name, slot, pathname));
 }
 
 function isAdsenseInUse() {
   if (getProviderOrder().includes('adsense')) return true;
-  return Object.values(SLOT_CHAINS).some((chain) => chain.map(normalizeProviderName).includes('adsense'));
+
+  return [...Object.values(SLOT_CHAINS), ...Object.values(PATH_CHAINS)].some((chain) =>
+    chain.map(normalizeProviderName).includes('adsense')
+  );
 }

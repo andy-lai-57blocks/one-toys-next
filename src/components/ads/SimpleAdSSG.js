@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import {
   AD_PROVIDER_LABELS,
   DEFAULT_AD_SLOT,
@@ -39,8 +40,9 @@ const SimpleAdSSG = ({
   // Extract width from style prop, default to '300px'
   const containerWidth = style.width || '300px';
 
-  const providers = useMemo(() => getSlotProviders(adSlot), [adSlot]);
-  const snippet = useMemo(() => getSlotSnippet(adSlot), [adSlot]);
+  const pathname = usePathname();
+  const providers = useMemo(() => getSlotProviders(adSlot, pathname), [adSlot, pathname]);
+  const snippet = useMemo(() => getSlotSnippet(adSlot, pathname), [adSlot, pathname]);
 
   // 'ssr' keeps the ad markup in the server HTML so it hydrates without a
   // layout shift; the effect below resolves the real host verdict.
