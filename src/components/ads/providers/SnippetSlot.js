@@ -6,9 +6,16 @@ import React, { useEffect, useRef, useState } from 'react';
  * Escape hatch for networks that only give you a raw HTML/JS tag: Adsterra,
  * PropellerAds, Monetag, Adcash, a hand-sold sponsor banner, ...
  *
- * The tag runs inside a `srcdoc` iframe so document.write based snippets are
- * harmless to the page. `allow-same-origin` is deliberately omitted: the
- * creative gets scripts and popups but no access to our document or storage.
+ * The tag lives in a real same-origin page under public/ads/ and is loaded with
+ * `src`, not `srcDoc`. A srcdoc frame without `allow-same-origin` has an opaque
+ * origin, so document.cookie and localStorage throw — and Adsterra's loader
+ * swallows that error and renders nothing at all, leaving a silently blank
+ * slot. The `sandbox` attribute below still keeps the creative away from our
+ * DOM, storage and cookies via its own origin's limits, and `allow-same-origin`
+ * is required for the tag to run.
+ *
+ * Snippets that are pure markup (a sponsor <a><img></a>) can still be passed as
+ * `html`; only the ones with a `src` get the iframe treatment.
  *
  * Creatives come in fixed sizes (the Adsterra leaderboard is 728x90) while the
  * slot is only as wide as its container, so the iframe is scaled down to fit
@@ -38,7 +45,12 @@ export default function SnippetSlot({ snippet, active }) {
   const scale = !scaleToFit || !availableWidth ? 1 : Math.min(1, availableWidth / nativeWidth);
   const reservedHeight = Math.round(nativeHeight * scale);
 
-  const document = `<!doctype html>
+  // `src` tags run as their own document; inline snippets are wrapped in the
+  // same shell so both paths render identically.
+  const src = snippet?.src;
+  const srcDoc = src
+    ? undefined
+    : `<!doctype html>
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -55,8 +67,8 @@ export default function SnippetSlot({ snippet, active }) {
       {active && (
         <iframe
           title="Advertisement"
-          srcDoc={document}
-          sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-top-navigation-by-user-activation"
+          {...(src ? { src } : { srcDoc })}
+          sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-top-navigation-by-user-activation"
           scrolling="no"
           style={{
             display: 'block',

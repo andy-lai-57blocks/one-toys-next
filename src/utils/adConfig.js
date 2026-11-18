@@ -118,6 +118,14 @@ export function getAdLoaderScript() {
  * Its tag is rendered inside an isolated iframe, so document.write based
  * snippets cannot blow away the page.
  *
+ * `src` points at a real same-origin page under public/ads/ rather than being
+ * inlined as srcdoc. That matters: a srcdoc iframe without `allow-same-origin`
+ * gets an opaque origin, and every storage/cookie read then throws a
+ * SecurityError. Adsterra's loader catches that silently and never renders a
+ * single iframe, so the slot stays blank with nothing in the console. Serving
+ * the tag as a document gives it a real origin while the iframe's sandbox
+ * attribute still caps what it may do.
+ *
  * `width` / `height` are the creative's native size; the slot scales it down to
  * fit narrower containers instead of clipping it. Pass `scaleToFit: false` to
  * render at native size with the overflow hidden.
@@ -125,31 +133,13 @@ export function getAdLoaderScript() {
 export const ADSTERRA_BANNER = {
   width: 728,
   height: 90,
-  html: `<script>
-  atOptions = {
-    'key' : '31a6fa105aec634f785b2b08520fd3e5',
-    'format' : 'iframe',
-    'height' : 90,
-    'width' : 728,
-    'params' : {}
-  };
-</script>
-<script src="https://bauval.org/22/31a6fa105aec634f785b2b08520fd3e5"></script>`,
+  src: '/ads/adsterra-728x90/',
 };
 
 export const CODE_ADSTERRA_BANNER = {
   width: 300,
   height: 250,
-  html: `<script>
-  atOptions = {
-    'key' : 'f992eac809efe5968cc2a199b7af994f',
-    'format' : 'iframe',
-    'height' : 250,
-    'width' : 300,
-    'params' : {}
-  };
-</script>
-<script src="https://bauval.org/22/f992eac809efe5968cc2a199b7af994f"></script>`,
+  src: '/ads/adsterra-300x250/',
 };
 
 /**
